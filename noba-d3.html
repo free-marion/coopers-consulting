@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOBA II — The Lodge Wall</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Special+Elite&family=Oswald:wght@300;400;600;700&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* ==========================
+   WALL BACKGROUND
+========================== */
+body {
+  background-color: #120d06;
+  color: #e8dfc0;
+  font-family: 'Special Elite', serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Wood plank vertical grain */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 76px,
+      rgba(255,200,100,0.04) 76px,
+      rgba(255,200,100,0.04) 78px,
+      transparent 78px,
+      transparent 158px,
+      rgba(255,200,100,0.025) 158px,
+      rgba(255,200,100,0.025) 160px,
+      transparent 160px,
+      transparent 240px,
+      rgba(255,200,100,0.035) 240px,
+      rgba(255,200,100,0.035) 241px,
+      transparent 241px
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Subtle horizontal grain lines for planks */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image:
+    repeating-linear-gradient(
+      180deg,
+      transparent 0px,
+      transparent 119px,
+      rgba(0,0,0,0.15) 119px,
+      rgba(0,0,0,0.15) 120px
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ==========================
+   WALL SECTIONS
+========================== */
+.wall {
+  position: relative;
+  z-index: 1;
+  padding: 0;
+}
+
+/* ==========================
+   HERO WALL SECTION
+========================== */
+.wall-hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 60px 24px;
+  overflow: hidden;
+}
+
+/* Lantern glow — center warm pool */
+.wall-hero::before {
+  content: '';
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 500px;
+  background: radial-gradient(ellipse at center, rgba(200,130,10,0.08) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.carved-noba {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(64px, 15vw, 128px);
+  font-weight: 900;
+  color: #c89858;
+  letter-spacing: 0.15em;
+  text-shadow:
+    2px 3px 6px rgba(0,0,0,0.7),
+    0 1px 0 rgba(200,152,88,0.3),
+    1px 2px 4px rgba(0,0,0,0.5),
+    -1px -1px 2px rgba(0,0,0,0.4);
+  position: relative;
+  z-index: 2;
+  line-height: 0.9;
+  text-align: center;
+}
+
+.carved-year {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(18px, 4vw, 28px);
+  font-weight: 400;
+  color: rgba(200,152,88,0.55);
+  letter-spacing: 0.35em;
+  text-shadow: 1px 2px 4px rgba(0,0,0,0.8);
+  margin-top: 12px;
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+/* ==========================
+   PINNED NOTE BASE STYLES
+========================== */
+.pinned-note {
+  background: #e8dfc0;
+  color: #1a140a;
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.5),
+    0 2px 4px rgba(0,0,0,0.3),
+    inset 0 0 40px rgba(0,0,0,0.06);
+  padding: 28px 28px 32px;
+  position: relative;
+  max-width: 420px;
+  transition: box-shadow 0.3s ease;
+}
+
+.pinned-note:hover {
+  box-shadow:
+    0 8px 24px rgba(0,0,0,0.6),
+    0 4px 8px rgba(0,0,0,0.4),
+    inset 0 0 40px rgba(0,0,0,0.06);
+}
+
+/* Nail head pseudo-element */
+.pinned-note::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(circle at 35% 35%, #7a6a5a, #4a4438 60%, #2a2018);
+  border-radius: 50%;
+  box-shadow:
+    0 2px 4px rgba(0,0,0,0.6),
+    inset 1px 1px 2px rgba(255,255,255,0.15);
+  z-index: 10;
+}
+
+/* Red thumbtack variant */
+.pinned-note.red-tack::before {
+  background: radial-gradient(circle at 35% 35%, #c83030, #8a1a0a 60%, #5a1008);
+  width: 14px;
+  height: 14px;
+  top: -9px;
+  box-shadow:
+    0 2px 6px rgba(138,26,10,0.6),
+    0 1px 3px rgba(0,0,0,0.5),
+    inset 1px 1px 2px rgba(255,255,255,0.2);
+}
+
+.note-label {
+  font-family: 'Oswald', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(26,20,10,0.4);
+  margin-bottom: 10px;
+  display: block;
+}
+
+.note-heading {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a140a;
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+
+.note-body {
+  font-family: 'Special Elite', serif;
+  font-size: 13px;
+  color: #2a200a;
+  line-height: 1.75;
+}
+
+.note-body p + p {
+  margin-top: 10px;
+}
+
+/* ==========================
+   WALL LAYOUT SECTIONS
+========================== */
+.wall-section {
+  padding: 60px 24px;
+  position: relative;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.wall-section-full {
+  padding: 0;
+  position: relative;
+  width: 100%;
+}
+
+/* ==========================
+   FIRST PINNED NOTE — WHAT NOBA IS
+========================== */
+.section-first-note {
+  padding: 80px 24px 60px;
+  display: flex;
+  justify-content: flex-start;
+  position: relative;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.first-note {
+  transform: rotate(-2.5deg);
+  margin-left: clamp(20px, 8vw, 120px);
+}
+
+/* ==========================
+   BURNED STRIP — TAGLINE
+========================== */
+.burned-strip {
+  width: 100%;
+  background: #0a0704;
+  padding: 22px 40px;
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid rgba(74,68,56,0.3);
+  border-bottom: 1px solid rgba(74,68,56,0.3);
+}
+
+.burned-strip::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent 0px,
+    transparent 79px,
+    rgba(255,200,100,0.03) 79px,
+    rgba(255,200,100,0.03) 80px
+  );
+  pointer-events: none;
+}
+
+.burned-text {
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(18px, 4vw, 32px);
+  font-weight: 700;
+  letter-spacing: 0.4em;
+  color: rgba(232,223,192,0.75);
+  text-transform: uppercase;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 0 20px rgba(200,130,10,0.2);
+}
+
+/* ==========================
+   OVERLAPPING NOTES CLUSTER
+========================== */
+.overlap-cluster {
+  padding: 80px 24px 60px;
+  position: relative;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  gap: 0;
+}
+
+.note-overlap-a {
+  transform: rotate(-3.5deg);
+  z-index: 2;
+  position: relative;
+  margin-right: -32px;
+}
+
+.note-overlap-b {
+  transform: rotate(2deg);
+  z-index: 3;
+  position: relative;
+  margin-top: 40px;
+}
+
+/* ==========================
+   SPARSE WALL SECTION — SINGLE CARVED SENTENCE
+========================== */
+.wall-sparse {
+  min-height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+  position: relative;
+}
+
+/* Lantern glow for sparse section */
+.wall-sparse::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 700px;
+  height: 300px;
+  background: radial-gradient(ellipse at center, rgba(200,130,10,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.carved-sentence {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(18px, 3.5vw, 28px);
+  font-weight: 400;
+  font-style: italic;
+  color: #c89858;
+  text-align: center;
+  text-shadow:
+    1px 2px 4px rgba(0,0,0,0.8),
+    0 1px 0 rgba(200,152,88,0.2);
+  max-width: 640px;
+  letter-spacing: 0.03em;
+  line-height: 1.5;
+  position: relative;
+  z-index: 1;
+}
+
+/* ==========================
+   DENSE THREE-NOTE CLUSTER
+========================== */
+.three-note-cluster {
+  padding: 60px 24px 80px;
+  position: relative;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Lantern glow — warm cluster */
+.three-note-cluster::before {
+  content: '';
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 800px;
+  height: 600px;
+  background: radial-gradient(ellipse at center, rgba(200,130,10,0.07) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.three-note-inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  align-items: flex-start;
+  position: relative;
+  z-index: 1;
+}
+
+.note-three-a {
+  transform: rotate(-4deg);
+  margin-top: 20px;
+  flex: 0 0 340px;
+}
+
+.note-three-b {
+  transform: rotate(1.5deg);
+  margin-top: -10px;
+  flex: 0 0 320px;
+}
+
+.note-three-c {
+  transform: rotate(-1.5deg);
+  margin-top: 30px;
+  flex: 0 0 360px;
+}
+
+/* ==========================
+   REGISTRATION NOTE
+========================== */
+.register-wall {
+  padding: 80px 24px 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+/* Lantern glow for register section */
+.register-wall::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(ellipse at center, rgba(200,130,10,0.09) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.register-note {
+  max-width: 480px;
+  width: 100%;
+  transform: rotate(1deg);
+  position: relative;
+  z-index: 1;
+  padding: 36px 36px 40px;
+}
+
+.register-note-label {
+  font-family: 'Oswald', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: rgba(26,20,10,0.5);
+  margin-bottom: 12px;
+  display: block;
+}
+
+.register-heading {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(20px, 4vw, 28px);
+  font-weight: 700;
+  color: #1a140a;
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+
+.register-body-text {
+  font-family: 'Special Elite', serif;
+  font-size: 13px;
+  color: #2a200a;
+  line-height: 1.75;
+  margin-bottom: 24px;
+}
+
+/* Stamp mark on register note */
+.note-stamp {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: rgba(122,26,10,0.45);
+  border: 1.5px solid rgba(122,26,10,0.35);
+  padding: 4px 8px 3px;
+  transform: rotate(-8deg);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.register-btn {
+  display: inline-block;
+  font-family: 'Special Elite', serif;
+  font-size: 16px;
+  color: #1a140a;
+  text-decoration: none;
+  padding: 0 0 4px;
+  border-bottom: 2px solid #1a140a;
+  letter-spacing: 0.05em;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.register-btn::after {
+  content: ' →';
+  font-family: 'Special Elite', serif;
+}
+
+.register-btn:hover {
+  color: #7a1a0a;
+  border-bottom-color: #7a1a0a;
+}
+
+/* ==========================
+   IRON DIVIDER BAND
+========================== */
+.iron-band {
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(to bottom, #4a4438, #3a3428 50%, #4a4438);
+  position: relative;
+}
+
+.iron-band::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: rgba(200,200,180,0.1);
+}
+
+/* ==========================
+   CARVED WALL TEXT — inline with planks
+========================== */
+.wall-text-carved {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(14px, 2.5vw, 20px);
+  color: rgba(200,152,88,0.4);
+  letter-spacing: 0.12em;
+  text-shadow: 1px 2px 3px rgba(0,0,0,0.9);
+  font-style: italic;
+}
+
+/* Aged paper texture on notes via gradient */
+.pinned-note::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(0,0,0,0.03) 0%,
+    transparent 40%,
+    rgba(0,0,0,0.04) 100%
+  );
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* ==========================
+   YEAR LABEL ON WALL
+========================== */
+.wall-year-label {
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.4em;
+  color: rgba(200,152,88,0.35);
+  text-align: center;
+  padding: 16px 0;
+  text-transform: uppercase;
+}
+
+/* ==========================
+   RESPONSIVE
+========================== */
+@media (max-width: 640px) {
+  .carved-noba {
+    font-size: clamp(52px, 18vw, 88px);
+    letter-spacing: 0.1em;
+  }
+
+  .first-note {
+    transform: rotate(-1deg);
+    margin-left: 0;
+  }
+
+  .overlap-cluster {
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .note-overlap-a {
+    margin-right: 0;
+    transform: rotate(-1.5deg);
+  }
+
+  .note-overlap-b {
+    margin-top: 0;
+    transform: rotate(1deg);
+  }
+
+  .three-note-inner {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .note-three-a,
+  .note-three-b,
+  .note-three-c {
+    transform: rotate(-1deg);
+    margin-top: 0;
+    flex: none;
+    width: 100%;
+    max-width: 380px;
+  }
+
+  .note-three-b {
+    transform: rotate(1deg);
+  }
+
+  .burned-text {
+    letter-spacing: 0.2em;
+    font-size: clamp(14px, 4vw, 22px);
+  }
+
+  .register-note {
+    transform: rotate(0deg);
+    padding: 28px 24px 32px;
+  }
+
+  .pinned-note {
+    max-width: 100%;
+  }
+
+  .wall-sparse {
+    min-height: 30vh;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="wall">
+
+  <!-- ==========================
+       HERO — CARVED NOBA
+  ========================== -->
+  <section class="wall-hero">
+    <span class="carved-noba">NOBA</span>
+    <span class="carved-year">Year II &nbsp;·&nbsp; Eagle Sky Camp &nbsp;·&nbsp; Ozarks</span>
+  </section>
+
+  <!-- Year label on wall -->
+  <div class="wall-year-label">No Boys Allowed — Second Annual</div>
+
+  <!-- ==========================
+       FIRST PINNED NOTE — WHAT NOBA IS
+  ========================== -->
+  <div class="section-first-note">
+    <div class="pinned-note first-note">
+      <span class="note-label">What This Is</span>
+      <div class="note-heading">No Boys Allowed is not a slogan.</div>
+      <div class="note-body">
+        <p>It's a standard.</p>
+        <p>This is the second year we've gathered at Eagle Sky Camp in the Ozarks. Older men. Younger men. A weekend in the woods built around one question: what do you actually believe, and are you living it?</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================
+       BURNED STRIP — TAGLINE
+  ========================== -->
+  <div class="burned-strip wall-section-full">
+    <div class="burned-text">Clear Sight &nbsp;·&nbsp; Bold Action</div>
+  </div>
+
+  <!-- ==========================
+       OVERLAPPING NOTES — SETTING + PRINCIPLES
+  ========================== -->
+  <div class="overlap-cluster">
+    <div class="pinned-note note-overlap-a">
+      <span class="note-label">The Setting</span>
+      <div class="note-heading">Eagle Sky Camp</div>
+      <div class="note-body">
+        <p>Eagle Sky Camp sits above the treeline in the Missouri Ozarks. No signal. No distraction. Elevated ground.</p>
+        <p>You arrive carrying whatever you've been avoiding.</p>
+      </div>
+    </div>
+
+    <div class="pinned-note note-overlap-b">
+      <span class="note-label">Who Is Passing What Down</span>
+      <div class="note-heading">Not Inspiration.<br>The Truth.</div>
+      <div class="note-body">
+        <p>The older men in this room have buried businesses and rebuilt them. They've raised children and made mistakes doing it.</p>
+        <p>They're not here to inspire you. They're here to tell you the truth.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="iron-band"></div>
+
+  <!-- ==========================
+       SPARSE — CARVED SENTENCE
+  ========================== -->
+  <div class="wall-sparse">
+    <p class="carved-sentence">"Days are structured. Mornings are early. There's physical work. There are sessions. There's fire at night. Nothing is wasted."</p>
+  </div>
+
+  <div class="iron-band"></div>
+
+  <!-- ==========================
+       THREE NOTES — YEAR I, WHO SHOULD COME, WHAT HAPPENS
+  ========================== -->
+  <div class="three-note-cluster">
+    <div class="three-note-inner">
+
+      <div class="pinned-note note-three-a">
+        <span class="note-label">Year I — Field Record</span>
+        <div class="note-heading">Fourteen Men</div>
+        <div class="note-body">
+          <p>Last year, fourteen men showed up. Most of them didn't know each other.</p>
+          <p>By Sunday afternoon, that had changed.</p>
+        </div>
+      </div>
+
+      <div class="pinned-note note-three-b">
+        <span class="note-label">Daily Structure</span>
+        <div class="note-heading">Nothing Is Wasted</div>
+        <div class="note-body">
+          <p>Days are structured. Mornings are early. There's physical work. There are sessions.</p>
+          <p>There's fire at night.</p>
+        </div>
+      </div>
+
+      <div class="pinned-note note-three-c">
+        <span class="note-label">Who Should Come</span>
+        <div class="note-heading">18 – 35</div>
+        <div class="note-body">
+          <p>If you're 18–35 and feel the gap between who you are and who you know you should be —</p>
+          <p>this is the weekend.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="iron-band"></div>
+
+  <!-- ==========================
+       REGISTRATION NOTE
+  ========================== -->
+  <div class="register-wall" id="register">
+    <div class="pinned-note register-note red-tack">
+      <span class="register-note-label">Registration — NOBA II</span>
+      <div class="register-heading">NOBA II is forming.</div>
+      <p class="register-body-text">Space is limited intentionally. If you're in, say so.</p>
+      <a href="#register" class="register-btn">Register for NOBA II</a>
+      <div class="note-stamp">Year II · Ozarks</div>
+    </div>
+  </div>
+
+  <!-- ==========================
+       FOOTER CARVED INTO WALL
+  ========================== -->
+  <div style="text-align: center; padding: 32px 24px 48px;">
+    <div class="wall-year-label">Eagle Sky Camp &nbsp;·&nbsp; Missouri Ozarks &nbsp;·&nbsp; NOBA II</div>
+  </div>
+
+</div><!-- /.wall -->
+
+</body>
+</html>

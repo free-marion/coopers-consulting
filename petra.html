@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PETRA — Entrepreneur Mastermind Group</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Cinzel+Decorative:wght@400&family=Lora:ital,wght@0,400;1,400&family=UnifrakturMaguntia&display=swap" rel="stylesheet"/>
+<style>
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── BACKGROUND: logo + stone-blue texture blended ── */
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  position: relative;
+  overflow: hidden;
+
+  /* logo fills screen */
+  background-image: url('images/logo-petra.jpeg');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-color: #2a3540;
+}
+
+/* stone-blue gradient from first build — tints the logo image */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  pointer-events: none;
+  background:
+    /* first-build stone-blue gradient at ~65% opacity — washes the logo in blue-grey stone */
+    linear-gradient(160deg,
+      rgba(90,110,132,0.68) 0%,
+      rgba(62,76,92,0.65)  35%,
+      rgba(42,53,64,0.70)  70%,
+      rgba(28,37,48,0.78)  100%
+    ),
+    /* sedimentary striations from first build */
+    repeating-linear-gradient(
+      180deg,
+      transparent 0px, transparent 28px,
+      rgba(255,255,255,0.016) 28px, rgba(255,255,255,0.016) 30px,
+      transparent 30px, transparent 58px,
+      rgba(0,0,0,0.055) 58px, rgba(0,0,0,0.055) 60px
+    ),
+    /* coarse grain */
+    url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.62' numOctaves='4' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='400' height='400' filter='url(%23n)' opacity='0.14'/></svg>");
+}
+
+/* vignette */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 65% 65% at 50% 50%, transparent 25%, rgba(12,18,26,0.78) 100%),
+    linear-gradient(to bottom, rgba(10,14,20,0.45) 0%, transparent 20%, transparent 78%, rgba(10,14,20,0.55) 100%);
+}
+
+/* ── STAGE ─────────────────────────────────────────── */
+.stage {
+  position: relative; z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 460px;
+}
+
+/* ── PETRA TITLE — carved stone treatment ───────────── */
+/*
+  Using Cinzel Decorative 400 (lighter weight = finer serifs = more carved feel).
+  The gradient + background-clip trick gives a stone-surface shimmer.
+  Drop-shadow filter fakes an engraved depth without a stroke.
+  Letter-spacing pulled slightly tighter than default — unusual for this font.
+*/
+.title-block {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.title-main {
+  font-family: 'Cinzel Decorative', serif;
+  font-weight: 400;
+  font-size: clamp(3rem, 11vw, 5.5rem);
+  letter-spacing: 0.16em;
+
+  /* stone-shimmer gradient baked into the letterforms */
+  background: linear-gradient(
+    168deg,
+    #dce8f4 0%,
+    #b4c6da 22%,
+    #8a9eb6 48%,
+    #6a7e94 64%,
+    #a8bcd0 82%,
+    #ccd8e8 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  /* engrave depth: dark shadow below, faint light catch above */
+  filter:
+    drop-shadow(0 3px 4px rgba(0,0,0,0.7))
+    drop-shadow(0 -1px 0 rgba(255,255,255,0.06))
+    drop-shadow(1px 0 0 rgba(0,0,0,0.3));
+
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.title-rule {
+  width: 52px; height: 1px;
+  background: linear-gradient(to right, transparent, rgba(200,216,232,0.38), transparent);
+  margin: 0.85rem auto;
+}
+
+.title-sub {
+  font-family: 'Cinzel', serif;
+  font-weight: 400;
+  font-size: clamp(0.52rem, 1.9vw, 0.7rem);
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: rgba(210,225,240,0.92);
+  text-shadow: 0 1px 6px rgba(0,0,0,0.8), 0 0 20px rgba(0,0,0,0.6);
+}
+
+/* ── LOGIN BOX ──────────────────────────────────────── */
+.login-box {
+  width: 100%;
+  background: rgba(12,18,26,0.8);
+  border: 1px solid rgba(180,200,224,0.1);
+  border-top: 1px solid rgba(210,228,248,0.16);
+  box-shadow:
+    0 0 0 1px rgba(0,0,0,0.45),
+    0 8px 24px rgba(0,0,0,0.5),
+    0 28px 64px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.045);
+  padding: clamp(1.75rem, 5.5vw, 2.75rem) clamp(1.5rem, 5.5vw, 2.75rem);
+  backdrop-filter: blur(18px);
+  position: relative;
+}
+/* corner accent marks — suggest chiseled corners */
+.login-box::before,
+.login-box::after {
+  content: '';
+  position: absolute;
+  width: 13px; height: 13px;
+  border-color: rgba(180,204,228,0.18);
+  border-style: solid;
+}
+.login-box::before { top: 0; left: 0; border-width: 1px 0 0 1px; }
+.login-box::after  { bottom: 0; right: 0; border-width: 0 1px 1px 0; }
+
+.login-eyebrow {
+  font-family: 'Cinzel', serif;
+  font-weight: 400;
+  font-size: 0.58rem;
+  letter-spacing: 0.38em;
+  text-transform: uppercase;
+  color: rgba(160,182,202,0.38);
+  text-align: center;
+  margin-bottom: 1.85rem;
+}
+
+/* ── FORM ───────────────────────────────────────────── */
+.form-field {
+  display: flex; flex-direction: column; gap: 0.5rem;
+  margin-bottom: 1.65rem;
+}
+.form-label {
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  font-size: 0.55rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgba(178,196,214,0.46);
+}
+.form-input {
+  background: rgba(255,255,255,0.035);
+  border: none;
+  border-bottom: 1px solid rgba(185,205,225,0.26);
+  padding: 0.85rem 0.75rem;
+  color: #c8d6e4;
+  font-family: 'Lora', serif;
+  font-size: 0.92rem;
+  letter-spacing: 0.08em;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+  width: 100%;
+}
+.form-input::placeholder { color: rgba(180,200,220,0.18); }
+.form-input:focus {
+  background: rgba(255,255,255,0.058);
+  border-bottom-color: rgba(200,220,240,0.52);
+}
+
+/* ── SUBMIT ─────────────────────────────────────────── */
+.submit-btn {
+  width: 100%;
+  padding: 0.85rem 2rem;
+  background: rgba(38,54,70,0.75);
+  border: 1px solid rgba(180,204,228,0.2);
+  color: rgba(200,218,236,0.85);
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  font-size: 0.66rem;
+  letter-spacing: 0.38em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  position: relative;
+}
+.submit-btn::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.04), transparent);
+  pointer-events: none;
+}
+.submit-btn:hover {
+  background: rgba(52,72,94,0.88);
+  border-color: rgba(200,220,242,0.38);
+  color: #dceaf6;
+}
+.submit-btn:active { background: rgba(24,36,50,0.95); }
+
+/* ── FOOTER ─────────────────────────────────────────── */
+.login-footer {
+  margin-top: 1.4rem;
+  text-align: center;
+  font-family: 'Cinzel', serif;
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: rgba(160,180,200,0.28);
+}
+.login-footer a {
+  color: rgba(180,200,220,0.4);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.login-footer a:hover { color: rgba(200,218,236,0.65); }
+
+/* ── MJ STAMP WORDMARK ───────────────────────────────── */
+.mj-wordmark {
+  margin-top: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  text-decoration: none;
+  opacity: 0.82;
+  transition: opacity 0.2s;
+}
+.mj-wordmark:hover { opacity: 1; }
+.mj-wordmark svg { flex-shrink: 0; }
+.mj-label {
+  font-family: 'Cinzel', serif;
+  font-weight: 400;
+  font-size: 0.54rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(200,218,234,0.9);
+}
+
+</style>
+</head>
+<body>
+
+<div class="stage">
+
+  <div class="title-block">
+    <div class="title-main">PETRA</div>
+    <div class="title-rule"></div>
+    <div class="title-sub">Entrepreneur Mastermind Group</div>
+  </div>
+
+  <div class="login-box">
+    <div class="login-eyebrow">Members Only</div>
+    <form action="#" method="POST">
+      <div class="form-field">
+        <label class="form-label" for="password">Access Code</label>
+        <input
+          class="form-input"
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Enter your access code"
+          autocomplete="current-password"
+          required
+        />
+      </div>
+      <button type="submit" class="submit-btn">Enter</button>
+    </form>
+    <div class="login-footer">
+      Need access?&nbsp; <a href="index.html">Contact Cooper's Consulting</a>
+    </div>
+  </div>
+
+  <a href="https://magusjane.com" class="mj-wordmark">
+    <img src="images/mj-stamp.png" alt="Magus Jane" width="28" height="28" style="object-fit:contain;"/>
+    <span class="mj-label">Magus Jane Solutions</span>
+  </a>
+
+</div>
+
+</body>
+</html>

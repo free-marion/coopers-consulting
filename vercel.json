@@ -1,0 +1,9 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/noba",  "destination": "/noba.html" },
+    { "source": "/petra", "destination": "/petra.html" },
+    { "source": "/forum", "destination": "/forum.html" }
+  ]
+}

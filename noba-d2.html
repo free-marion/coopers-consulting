@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOBA II — Darkroom Archive</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Bebas+Neue&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #0a0908;
+  color: #c8b898;
+  font-family: 'Courier Prime', 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.65;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ==========================
+   OPENING — FULL VIEWPORT
+========================== */
+.opening {
+  height: 100vh;
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: #0a0908;
+  overflow: hidden;
+}
+
+.opening-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(64px, 16vw, 8rem);
+  color: #c8820a;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+/* Subtle vignette */
+.opening::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(ellipse at center, transparent 30%, #0a0908 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Slight film grain texture */
+.opening::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* ==========================
+   GREASE PENCIL RULE
+========================== */
+.grease-rule-section {
+  padding: 0 5vw;
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+
+.grease-rule {
+  width: 60%;
+  height: 2px;
+  background: #8a1a0a;
+  transform: rotate(-0.4deg);
+  margin: 0 auto 32px;
+  position: relative;
+}
+
+.grease-rule::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 5%;
+  width: 40%;
+  height: 1px;
+  background: rgba(138,26,10,0.4);
+}
+
+.location-line {
+  text-align: center;
+  font-family: 'Courier Prime', monospace;
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  color: #787068;
+  padding-top: 8px;
+}
+
+/* ==========================
+   SHARED SECTION WRAPPER
+========================== */
+.section {
+  padding: 0 5vw;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.section-wide {
+  padding: 0 5vw;
+  max-width: 100%;
+}
+
+/* ==========================
+   PHOTO CLUSTER
+========================== */
+.photo-cluster {
+  padding: 60px 5vw;
+  max-width: 960px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 0;
+  position: relative;
+  align-items: start;
+}
+
+.photo-box {
+  background: #1a1810;
+  position: relative;
+}
+
+.photo-box-a {
+  width: 100%;
+  padding-bottom: 75%;
+  transform: rotate(-3deg);
+  z-index: 3;
+  grid-column: 1;
+  grid-row: 1;
+  margin-top: 20px;
+  margin-right: -16px;
+}
+
+.photo-box-b {
+  width: 100%;
+  padding-bottom: 80%;
+  transform: rotate(2deg);
+  z-index: 4;
+  grid-column: 2;
+  grid-row: 1;
+  margin-top: 0;
+}
+
+.photo-box-c {
+  width: 85%;
+  padding-bottom: 65%;
+  transform: rotate(-1.5deg);
+  z-index: 2;
+  grid-column: 3;
+  grid-row: 1;
+  margin-top: 30px;
+  clip-path: polygon(
+    0% 1.5%, 5% 0%, 10% 2%, 20% 0%, 30% 1%, 40% 0%, 50% 1.5%,
+    60% 0%, 70% 1%, 80% 0%, 90% 1.5%, 100% 0%,
+    100% 100%, 80% 99%, 60% 100%, 40% 99%, 20% 100%, 0% 99%
+  );
+}
+
+.photo-caption {
+  font-size: 10px;
+  color: #787068;
+  margin-top: 8px;
+  letter-spacing: 0.05em;
+  font-style: italic;
+  display: block;
+  padding: 0 4px;
+}
+
+.cluster-text {
+  grid-column: 2 / 4;
+  grid-row: 2;
+  padding: 28px 0 0 16px;
+  font-size: 13px;
+  color: #c8b898;
+  line-height: 1.72;
+}
+
+/* ==========================
+   SPARSE TEXT PASSAGE
+========================== */
+.sparse-passage {
+  padding: 80px 5vw;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.sparse-line {
+  font-size: 13px;
+  color: #c8b898;
+  line-height: 1.6;
+  display: block;
+  margin-bottom: 3rem;
+}
+
+.sparse-line:last-child {
+  margin-bottom: 0;
+}
+
+.sparse-line em {
+  color: #e8d8a8;
+  font-style: normal;
+}
+
+/* ==========================
+   PRINCIPLES SECTION
+========================== */
+.principles-section {
+  padding: 60px 5vw;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.section-label {
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: #787068;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 32px;
+}
+
+.section-label::after {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 1px;
+  background: #787068;
+  margin-top: 8px;
+}
+
+.principles-item {
+  font-size: 14px;
+  color: #c8b898;
+  line-height: 1.72;
+  padding: 16px 0 16px 24px;
+  border-bottom: 1px solid rgba(120,112,104,0.2);
+  position: relative;
+}
+
+.principles-item::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: #8a1a0a;
+  font-weight: bold;
+}
+
+.principles-item:last-child {
+  border-bottom: none;
+}
+
+/* Amber highlight for key phrases */
+.amber {
+  color: #c8820a;
+}
+
+.cream {
+  color: #e8d8a8;
+}
+
+.silver {
+  color: #787068;
+}
+
+/* ==========================
+   CONTACT SHEET NOTE
+========================== */
+.contact-sheet-section {
+  padding: 60px 5vw;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.contact-note {
+  background: transparent;
+  border: none;
+  padding: 20px 24px;
+  position: relative;
+  font-size: 11px;
+  color: #787068;
+  letter-spacing: 0.04em;
+  line-height: 1.8;
+}
+
+.contact-note::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: rgba(120,112,104,0.3);
+}
+
+.contact-note::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: rgba(120,112,104,0.3);
+}
+
+.contact-meta {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 24px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(120,112,104,0.2);
+  justify-content: start;
+}
+
+.contact-meta span {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+}
+
+.contact-meta .meta-label {
+  color: #8a1a0a;
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.contact-body {
+  font-size: 12px;
+  color: #c8b898;
+  line-height: 1.7;
+  font-style: italic;
+}
+
+/* ==========================
+   DEAD SPACE DIVIDERS
+========================== */
+.dead-space {
+  height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.dead-space-line {
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  color: rgba(120,112,104,0.35);
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.dead-space-small {
+  height: 10vh;
+  min-height: 60px;
+}
+
+/* ==========================
+   SINGLE SENTENCES
+========================== */
+.lone-sentence {
+  padding: 48px 5vw;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.lone-sentence p {
+  font-size: 14px;
+  color: #c8b898;
+  line-height: 1.7;
+}
+
+/* ==========================
+   REGISTRATION — MINIMAL
+========================== */
+.register-section {
+  padding: 80px 5vw 120px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.register-forming {
+  font-size: 16px;
+  color: #e8d8a8;
+  letter-spacing: 0.04em;
+  display: block;
+  margin-bottom: 48px;
+  line-height: 1.6;
+}
+
+.register-forming strong {
+  color: #c8820a;
+  font-weight: 700;
+}
+
+.register-line-break {
+  height: 1px;
+  background: rgba(120,112,104,0.25);
+  width: 120px;
+  margin: 0 0 48px;
+}
+
+.register-anchor-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.register-link {
+  font-family: 'Courier Prime', monospace;
+  font-size: 18px;
+  color: #e8d8a8;
+  text-decoration: none;
+  border-bottom: 2px solid #8a1a0a;
+  display: inline-block;
+  padding-bottom: 4px;
+  letter-spacing: 0.05em;
+  transition: color 0.2s ease, border-color 0.2s ease;
+  width: fit-content;
+}
+
+.register-link:hover {
+  color: #c8820a;
+  border-bottom-color: #c8820a;
+}
+
+.register-limit {
+  font-size: 11px;
+  color: #787068;
+  letter-spacing: 0.08em;
+  display: block;
+  padding-top: 4px;
+}
+
+/* Grease pencil circle as CSS decoration */
+.grease-circle {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border: 1px solid #8a1a0a;
+  border-radius: 50%;
+  vertical-align: middle;
+  margin-right: 8px;
+  position: relative;
+  top: -1px;
+}
+
+/* Amber accent line */
+.amber-line {
+  width: 80px;
+  height: 1px;
+  background: #c8820a;
+  margin: 32px 0;
+  opacity: 0.5;
+}
+
+/* Grease pencil underline on text */
+.grease-underline {
+  position: relative;
+  display: inline;
+}
+
+.grease-underline::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 100%;
+  height: 1.5px;
+  background: #8a1a0a;
+  transform: rotate(-0.3deg);
+}
+
+/* Small red circle mark */
+.red-mark {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border: 1.5px solid #8a1a0a;
+  border-radius: 50%;
+  margin-right: 6px;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+}
+
+/* Section number labels */
+.arch-num {
+  font-size: 10px;
+  color: #8a1a0a;
+  letter-spacing: 0.2em;
+  margin-bottom: 12px;
+  display: block;
+}
+
+/* Wide caption bar */
+.caption-bar {
+  padding: 16px 5vw;
+  border-top: 1px solid rgba(120,112,104,0.15);
+  border-bottom: 1px solid rgba(120,112,104,0.15);
+  background: #111009;
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.caption-bar span {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: #787068;
+  text-transform: uppercase;
+}
+
+.caption-bar .amber-text {
+  color: #c8820a;
+}
+
+/* ================================
+   RESPONSIVE
+================================ */
+@media (max-width: 640px) {
+  .opening-title {
+    font-size: clamp(48px, 20vw, 72px);
+  }
+
+  .photo-cluster {
+    grid-template-columns: 1fr 1fr;
+    padding: 40px 5vw;
+  }
+
+  .photo-box-a {
+    grid-column: 1;
+    margin-right: 0;
+  }
+
+  .photo-box-b {
+    grid-column: 2;
+  }
+
+  .photo-box-c {
+    grid-column: 1 / 3;
+    width: 75%;
+    margin-top: 20px;
+  }
+
+  .cluster-text {
+    grid-column: 1 / 3;
+    padding-left: 0;
+  }
+
+  .contact-meta {
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .dead-space {
+    height: 30vh;
+  }
+
+  .grease-rule {
+    width: 80%;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ==========================
+     OPENING — FULL VIEWPORT
+========================== -->
+<section class="opening" id="top">
+  <span class="opening-title">NOBA</span>
+</section>
+
+<!-- ==========================
+     GREASE PENCIL RULE + LOCATION
+========================== -->
+<div class="grease-rule-section">
+  <div class="grease-rule"></div>
+  <p class="location-line">Year II. &nbsp; Eagle Sky Camp. &nbsp; Ozarks.</p>
+</div>
+
+<!-- ==========================
+     CAPTION BAR
+========================== -->
+<div class="caption-bar">
+  <span class="amber-text">No Boys Allowed</span>
+  <span>Second Annual</span>
+  <span>Eagle Sky Camp · Missouri Ozarks</span>
+  <span class="amber-text">Clear Sight. Bold Action.</span>
+</div>
+
+<!-- ==========================
+     PHOTO CLUSTER + SETTING TEXT
+========================== -->
+<div class="photo-cluster">
+  <div>
+    <div class="photo-box photo-box-a"></div>
+    <span class="photo-caption">fig. 01 — ridgeline approach. dawn.</span>
+  </div>
+  <div>
+    <div class="photo-box photo-box-b"></div>
+    <span class="photo-caption">fig. 02 — main hall, yr. II setup.</span>
+  </div>
+  <div>
+    <div class="photo-box photo-box-c"></div>
+    <span class="photo-caption">fig. 03 — evening fire, unlit.</span>
+  </div>
+  <div class="cluster-text">
+    <span class="arch-num">002 — SETTING</span>
+    <p>Eagle Sky Camp sits above the treeline in the Missouri Ozarks. <span class="cream">No signal. No distraction. Elevated ground.</span> You arrive carrying whatever you've been avoiding.</p>
+  </div>
+</div>
+
+<!-- ==========================
+     SPARSE PASSAGE
+========================== -->
+<div class="sparse-passage">
+  <span class="sparse-line"><em>No Boys Allowed is not a slogan.</em></span>
+  <span class="sparse-line">It's a standard.</span>
+  <span class="sparse-line">This is the second year we've gathered at Eagle Sky Camp in the Ozarks.</span>
+  <span class="sparse-line">Older men. Younger men. A weekend in the woods built around one question: <em>what do you actually believe, and are you living it?</em></span>
+</div>
+
+<div class="amber-line" style="margin: 0 5vw;"></div>
+
+<!-- ==========================
+     PRINCIPLES SECTION
+========================== -->
+<div class="principles-section">
+  <span class="section-label">003 — principles passed down</span>
+
+  <div class="principles-item">
+    The older men in this room have buried businesses and rebuilt them.
+  </div>
+  <div class="principles-item">
+    They've raised children and made mistakes doing it.
+  </div>
+  <div class="principles-item">
+    <span class="cream">They're not here to inspire you.</span>
+  </div>
+  <div class="principles-item">
+    <span class="amber">They're here to tell you the truth.</span>
+  </div>
+</div>
+
+<!-- ==========================
+     DEAD SPACE — MINIMAL TEXT
+========================== -->
+<div class="dead-space">
+  <div class="dead-space-line">
+    <span class="grease-circle"></span>
+    days are structured
+  </div>
+</div>
+
+<!-- ==========================
+     WHAT HAPPENS — LONE SENTENCE
+========================== -->
+<div class="lone-sentence">
+  <span class="arch-num">005 — structure</span>
+  <p>Days are structured. Mornings are early. There's physical work. There are sessions. There's <span class="amber">fire at night</span>. Nothing is wasted.</p>
+</div>
+
+<!-- ==========================
+     WHO SHOULD COME
+========================== -->
+<div class="lone-sentence" style="padding-top: 24px;">
+  <span class="arch-num">006 — eligibility</span>
+  <p>If you're 18–35 and feel <span class="grease-underline">the gap between who you are and who you know you should be</span> — this is the weekend.</p>
+</div>
+
+<!-- ==========================
+     CONTACT SHEET NOTE — YEAR I
+========================== -->
+<div class="contact-sheet-section">
+  <span class="section-label">004 — year I field record</span>
+  <div class="contact-note">
+    <div class="contact-meta">
+      <div>
+        <span class="meta-label">Date</span>
+        <span>Year I</span>
+      </div>
+      <div>
+        <span class="meta-label">Location</span>
+        <span>Eagle Sky, MO</span>
+      </div>
+      <div>
+        <span class="meta-label">Roll</span>
+        <span>NOBA-001</span>
+      </div>
+    </div>
+    <p class="contact-body">
+      Last year, fourteen men showed up. Most of them didn't know each other.<br>
+      By Sunday afternoon, that had changed.
+    </p>
+  </div>
+</div>
+
+<!-- ==========================
+     DEAD SPACE SMALL
+========================== -->
+<div class="dead-space" style="height: 30vh;">
+  <div class="dead-space-line" style="font-size: 10px; opacity: 0.4;">
+    <span class="red-mark"></span>
+    space is limited intentionally
+  </div>
+</div>
+
+<!-- ==========================
+     REGISTRATION
+========================== -->
+<div class="register-section" id="register">
+  <span class="arch-num">007 — registration</span>
+  <span class="register-forming">
+    <strong>NOBA II</strong> is forming. Space is limited intentionally. If you're in, say so.
+  </span>
+  <div class="register-line-break"></div>
+  <div class="register-anchor-wrap">
+    <a href="#register" class="register-link">I'm in.</a>
+    <span class="register-limit">— space is limited</span>
+  </div>
+</div>
+
+<!-- ==========================
+     FOOTER
+========================== -->
+<div class="caption-bar" style="margin-top: 40px;">
+  <span>NOBA II</span>
+  <span class="amber-text">Eagle Sky Camp · Ozarks</span>
+  <span>No Boys Allowed</span>
+  <span>Clear Sight. Bold Action.</span>
+</div>
+
+</body>
+</html>

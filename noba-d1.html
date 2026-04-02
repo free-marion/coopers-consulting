@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOBA II — Field Document</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Bebas+Neue&family=Caveat:wght@400;600&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #c8b99a;
+  color: #1e1508;
+  font-family: 'Special Elite', serif;
+  font-size: 15px;
+  line-height: 1.7;
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Paper grain via SVG filter */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.5;
+}
+
+/* Ruled lines background */
+.page-ruled {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 27px,
+    rgba(30,20,8,0.12) 27px,
+    rgba(30,20,8,0.12) 28px
+  );
+  background-attachment: fixed;
+}
+
+/* Main layout wrapper */
+.document {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+  position: relative;
+}
+
+/* Margin column — left 22% of document */
+.doc-inner {
+  display: grid;
+  grid-template-columns: 22% 78%;
+  gap: 0;
+  position: relative;
+}
+
+.margin-col {
+  padding-right: 16px;
+  padding-top: 4px;
+  position: relative;
+}
+
+.body-col {
+  padding-left: 24px;
+  border-left: 1px solid rgba(30,20,8,0.2);
+  position: relative;
+}
+
+/* Margin annotations — Caveat */
+.margin-note {
+  font-family: 'Caveat', cursive;
+  font-size: 13px;
+  color: #3d2a10;
+  line-height: 1.4;
+  display: block;
+  margin-bottom: 32px;
+  position: relative;
+}
+
+.margin-note.rotated-cw {
+  transform: rotate(2deg);
+  transform-origin: left center;
+}
+
+.margin-note.rotated-ccw {
+  transform: rotate(-1.5deg);
+  transform-origin: left center;
+}
+
+.margin-arrow {
+  font-family: 'Caveat', cursive;
+  font-size: 16px;
+  color: #3d2a10;
+  display: inline-block;
+}
+
+/* Section spacing */
+.section {
+  margin-bottom: 56px;
+}
+
+/* Stamp — large header mark */
+.stamp-header {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(72px, 14vw, 120px);
+  color: #3d4a18;
+  letter-spacing: 0.12em;
+  opacity: 0.18;
+  transform: rotate(-3deg);
+  transform-origin: left center;
+  line-height: 0.9;
+  margin-bottom: -10px;
+  display: block;
+  user-select: none;
+  position: relative;
+  z-index: 0;
+}
+
+.stamp-header-box {
+  border: 4px solid #3d4a18;
+  display: inline-block;
+  padding: 8px 20px 4px;
+  opacity: 0.18;
+  transform: rotate(-3deg);
+  transform-origin: left top;
+  margin-bottom: 16px;
+}
+
+.stamp-year {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(14px, 3vw, 22px);
+  letter-spacing: 0.3em;
+  color: #3d4a18;
+  opacity: 0.5;
+  transform: rotate(-3deg) translateY(-10px);
+  transform-origin: left center;
+  display: block;
+  margin-bottom: 40px;
+}
+
+/* Top header area */
+.doc-header {
+  grid-column: 1 / -1;
+  margin-bottom: 48px;
+  position: relative;
+  padding-bottom: 16px;
+  border-bottom: 2px solid rgba(30,20,8,0.15);
+}
+
+.header-stamp-wrap {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.date-stamp {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.3em;
+  color: #3d2a10;
+  opacity: 0.7;
+  display: block;
+  margin-top: 4px;
+}
+
+.confidential-stamp {
+  position: absolute;
+  top: 10px;
+  right: 0;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  color: #7a1a0a;
+  border: 2px solid #7a1a0a;
+  padding: 4px 10px 2px;
+  transform: rotate(4deg);
+  opacity: 0.55;
+  white-space: nowrap;
+}
+
+/* Tagline block */
+.tagline-block {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(22px, 5vw, 38px);
+  letter-spacing: 0.18em;
+  color: #3d2a10;
+  margin-top: 12px;
+  display: block;
+}
+
+/* Body text blocks */
+.body-text {
+  font-family: 'Special Elite', serif;
+  font-size: 14.5px;
+  line-height: 1.78;
+  color: #1e1508;
+  margin-bottom: 20px;
+}
+
+.body-text.indented {
+  margin-left: 28px;
+  border-left: 2px solid rgba(30,20,8,0.2);
+  padding-left: 16px;
+}
+
+/* Section headings as field labels */
+.field-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.35em;
+  color: #3d2a10;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 8px;
+  opacity: 0.7;
+}
+
+.field-label::before {
+  content: '■ ';
+  font-size: 7px;
+  vertical-align: middle;
+}
+
+/* Photo fragment placeholder */
+.photo-fragment-wrap {
+  position: relative;
+  margin: 0 0 32px;
+}
+
+.photo-fragment {
+  background: #b0a08a;
+  width: 100%;
+  max-width: 340px;
+  height: 200px;
+  clip-path: polygon(
+    0% 2%, 3% 0%, 6% 1.5%, 10% 0%, 14% 2%, 18% 0.5%,
+    22% 1.8%, 26% 0%, 30% 1.2%, 35% 0%, 40% 1.5%,
+    45% 0%, 50% 1%, 55% 0%, 60% 1.8%, 65% 0.5%,
+    70% 1.2%, 75% 0%, 80% 1.5%, 85% 0%, 90% 1%, 95% 0%, 100% 1.5%,
+    100% 98%, 97% 100%, 93% 98.5%, 89% 100%, 84% 98%, 79% 100%,
+    74% 99%, 69% 100%, 64% 98.5%, 58% 100%, 52% 99%, 47% 100%,
+    41% 98%, 36% 100%, 30% 99%, 25% 100%, 19% 98.5%, 14% 100%,
+    9% 99%, 4% 100%, 0% 98.5%
+  );
+  position: relative;
+  transform: rotate(-1.5deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.photo-fragment-inner {
+  font-family: 'Special Elite', serif;
+  font-size: 11px;
+  color: rgba(30,20,8,0.35);
+  text-align: center;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 16px;
+  line-height: 1.6;
+}
+
+.photo-caption {
+  font-family: 'Special Elite', serif;
+  font-size: 11px;
+  color: #3d2a10;
+  margin-top: 10px;
+  padding-left: 8px;
+  opacity: 0.7;
+  transform: rotate(-0.5deg);
+  transform-origin: left center;
+  display: block;
+}
+
+/* Dense overlap section */
+.dense-section {
+  position: relative;
+  padding: 12px 0 12px;
+}
+
+.overlap-block-a {
+  position: relative;
+  z-index: 2;
+  background: rgba(200,185,154,0.8);
+  padding: 12px 16px;
+  transform: rotate(-0.8deg);
+  margin-bottom: -24px;
+  border-top: 1px solid rgba(30,20,8,0.15);
+}
+
+.overlap-block-b {
+  position: relative;
+  z-index: 1;
+  padding: 12px 16px 12px 40px;
+  transform: rotate(0.5deg);
+  background: rgba(195,178,145,0.7);
+  border-bottom: 1px solid rgba(30,20,8,0.15);
+}
+
+/* Stamp circle — approval */
+.stamp-circle {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 130px;
+  height: 130px;
+  border: 3px solid #7a1a0a;
+  border-radius: 50%;
+  transform: rotate(-12deg);
+  opacity: 0.45;
+  position: relative;
+  margin: 20px auto;
+}
+
+.stamp-circle-text {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  color: #7a1a0a;
+  text-align: center;
+  line-height: 1.3;
+}
+
+.stamp-circle-inner {
+  width: 110px;
+  height: 110px;
+  border: 1px solid #7a1a0a;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Letter-style block */
+.letter-block {
+  border: none;
+  padding: 16px 24px;
+  transform: rotate(0.7deg);
+  position: relative;
+  background: transparent;
+  margin: 0 0 32px;
+}
+
+.letter-block::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 16px; right: 16px;
+  height: 1px;
+  background: rgba(30,20,8,0.2);
+}
+
+.letter-block::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 16px; right: 16px;
+  height: 1px;
+  background: rgba(30,20,8,0.2);
+}
+
+.letter-intro {
+  font-family: 'Caveat', cursive;
+  font-size: 15px;
+  color: #3d2a10;
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* Olive stamp mark */
+.stamp-ozarks {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(28px, 6vw, 52px);
+  color: #3d4a18;
+  letter-spacing: 0.2em;
+  border: 3px solid #3d4a18;
+  display: inline-block;
+  padding: 6px 18px 2px;
+  transform: rotate(2.5deg);
+  opacity: 0.3;
+  margin: 16px 0;
+}
+
+/* Margin side stamp */
+.margin-stamp {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  color: #3d2a10;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  opacity: 0.4;
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%) rotate(180deg);
+  white-space: nowrap;
+}
+
+/* Registration tear-off */
+.register-section {
+  grid-column: 1 / -1;
+  margin-top: 64px;
+  padding-top: 40px;
+  border-top: 2px dashed rgba(30,20,8,0.35);
+  position: relative;
+}
+
+.register-section::before {
+  content: '✂  ';
+  font-size: 13px;
+  position: absolute;
+  top: -12px;
+  left: 0;
+  background: #c8b99a;
+  padding: 0 8px;
+  color: rgba(30,20,8,0.45);
+  font-family: 'Special Elite', serif;
+}
+
+.register-header {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(18px, 4vw, 28px);
+  letter-spacing: 0.3em;
+  color: #3d2a10;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.register-text {
+  font-family: 'Special Elite', serif;
+  font-size: 14px;
+  line-height: 1.7;
+  margin-bottom: 28px;
+  max-width: 540px;
+}
+
+.register-fields {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.field-line {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field-line label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: #3d2a10;
+  opacity: 0.6;
+}
+
+.field-line .underline-field {
+  width: 180px;
+  height: 1px;
+  background: rgba(30,20,8,0.4);
+  display: block;
+}
+
+.register-btn {
+  display: inline-block;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 0.3em;
+  color: #7a1a0a;
+  text-decoration: none;
+  border: 2px solid #7a1a0a;
+  padding: 10px 28px 8px;
+  transform: rotate(-1.5deg);
+  transition: all 0.2s ease;
+  position: relative;
+  margin-top: 16px;
+}
+
+.register-btn::before {
+  content: '';
+  position: absolute;
+  top: 3px; left: 3px; right: -3px; bottom: -3px;
+  border: 1px solid rgba(122,26,10,0.3);
+  pointer-events: none;
+}
+
+.register-btn:hover {
+  background: #7a1a0a;
+  color: #c8b99a;
+  transform: rotate(-1deg) scale(1.02);
+}
+
+/* Ozarks vertical text in margin */
+.margin-vertical {
+  font-family: 'Caveat', cursive;
+  font-size: 12px;
+  color: #3d2a10;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  opacity: 0.5;
+  transform: rotate(180deg);
+  height: 120px;
+  display: inline-block;
+  margin-top: 8px;
+}
+
+/* Divider lines */
+.ruled-divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(30,20,8,0.15);
+  margin: 32px 0;
+}
+
+/* Principles list */
+.principles-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.principles-list li {
+  font-family: 'Special Elite', serif;
+  font-size: 14px;
+  color: #1e1508;
+  line-height: 1.7;
+  padding: 8px 0 8px 24px;
+  position: relative;
+  border-bottom: 1px solid rgba(30,20,8,0.1);
+}
+
+.principles-list li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: #3d2a10;
+  opacity: 0.6;
+}
+
+/* Inline stamp marks within text */
+.inline-stamp {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: #7a1a0a;
+  border: 1.5px solid #7a1a0a;
+  padding: 1px 6px 0;
+  display: inline-block;
+  transform: rotate(-1deg);
+  opacity: 0.7;
+  vertical-align: middle;
+  margin: 0 4px;
+}
+
+/* Footer area */
+.doc-footer {
+  grid-column: 1 / -1;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(30,20,8,0.15);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.footer-note {
+  font-family: 'Special Elite', serif;
+  font-size: 11px;
+  color: rgba(30,20,8,0.4);
+}
+
+.footer-stamp {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: rgba(30,20,8,0.3);
+}
+
+/* ================================
+   RESPONSIVE — 600px
+================================ */
+@media (max-width: 640px) {
+  .doc-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .body-col {
+    border-left: none;
+    padding-left: 0;
+    border-top: 1px solid rgba(30,20,8,0.15);
+    padding-top: 16px;
+  }
+
+  .margin-col {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-right: 0;
+    padding-bottom: 16px;
+  }
+
+  .margin-note {
+    margin-bottom: 0;
+    padding-right: 16px;
+  }
+
+  .margin-stamp {
+    display: none;
+  }
+
+  .doc-header {
+    grid-column: 1;
+  }
+
+  .register-section {
+    grid-column: 1;
+  }
+
+  .doc-footer {
+    grid-column: 1;
+  }
+
+  .stamp-header {
+    font-size: 56px;
+  }
+
+  .photo-fragment {
+    max-width: 100%;
+  }
+
+  .overlap-block-a,
+  .overlap-block-b {
+    transform: none;
+    margin-bottom: 12px;
+  }
+
+  .register-fields {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .register-btn {
+    transform: none;
+  }
+
+  .confidential-stamp {
+    position: static;
+    display: inline-block;
+    margin-top: 12px;
+    transform: rotate(0deg);
+  }
+}
+</style>
+</head>
+<body class="page-ruled">
+
+<div class="document">
+  <div class="doc-inner">
+
+    <!-- ================================
+         HEADER
+    ================================ -->
+    <div class="doc-header">
+      <div class="header-stamp-wrap">
+        <div class="stamp-header-box">
+          <span class="stamp-header">N O B A</span>
+        </div>
+        <span class="stamp-year">YEAR II · EAGLE SKY CAMP · OZARK MOUNTAINS · MISSOURI</span>
+        <div class="confidential-stamp">CONFIDENTIAL TO ATTENDEES</div>
+      </div>
+      <span class="tagline-block">Clear Sight. Bold Action.</span>
+      <span class="date-stamp">SECOND ANNUAL — NO BOYS ALLOWED</span>
+    </div>
+
+    <!-- ================================
+         SECTION 1: WHAT NOBA IS
+    ================================ -->
+    <div class="margin-col">
+      <span class="margin-note rotated-ccw">what this<br>is about →</span>
+      <span class="margin-note rotated-cw" style="margin-top: 40px;">yr 2<br>same woods</span>
+    </div>
+    <div class="body-col section">
+      <span class="field-label">Document 001 — Purpose & Standard</span>
+      <p class="body-text">No Boys Allowed is not a slogan. It's a standard. This is the second year we've gathered at Eagle Sky Camp in the Ozarks. Older men. Younger men. A weekend in the woods built around one question: what do you actually believe, and are you living it?</p>
+      <div class="ruled-divider"></div>
+    </div>
+
+    <!-- ================================
+         SECTION 2: THE SETTING
+    ================================ -->
+    <div class="margin-col">
+      <span class="margin-note rotated-cw">ozarks<br>↓ above<br>treeline</span>
+      <div style="margin-top: 48px;">
+        <span class="margin-vertical">EAGLE SKY CAMP</span>
+      </div>
+    </div>
+    <div class="body-col section">
+      <span class="field-label">Document 002 — Location & Conditions</span>
+      <div class="photo-fragment-wrap">
+        <div class="photo-fragment">
+          <div class="photo-fragment-inner">[ Eagle Sky Camp<br>above treeline<br>Ozarks, MO ]</div>
+        </div>
+        <span class="photo-caption">↑ fig. 1 — approach from the ridge. no signal past the gate.</span>
+      </div>
+      <p class="body-text">Eagle Sky Camp sits above the treeline in the Missouri Ozarks. No signal. No distraction. Elevated ground. You arrive carrying whatever you've been avoiding.</p>
+    </div>
+
+    <!-- ================================
+         SECTION 3: PRINCIPLES — DENSE
+    ================================ -->
+    <div class="margin-col" style="position: relative;">
+      <span class="margin-note rotated-ccw">ask<br>yourself →</span>
+      <span class="margin-note rotated-cw" style="margin-top: 60px; font-size: 12px;">these men<br>have been<br>tested</span>
+      <span class="margin-note rotated-ccw" style="margin-top: 40px; color: #7a1a0a; font-weight: 600;">truth ≠<br>inspiration</span>
+    </div>
+    <div class="body-col section dense-section">
+      <span class="field-label">Document 003 — Who Is Passing What Down</span>
+      <div class="overlap-block-a">
+        <p class="body-text" style="margin-bottom: 0;">The older men in this room have buried businesses and rebuilt them. They've raised children and made mistakes doing it.</p>
+      </div>
+      <div class="overlap-block-b">
+        <p class="body-text" style="margin-bottom: 0;">They're not here to inspire you. They're here to tell you the truth.</p>
+      </div>
+      <div style="margin-top: 32px; display: flex; align-items: center; gap: 24px; flex-wrap: wrap;">
+        <div class="stamp-circle">
+          <div class="stamp-circle-inner"></div>
+          <div class="stamp-circle-text">CLEAR SIGHT<br>· · ·<br>BOLD ACTION</div>
+        </div>
+        <span class="stamp-ozarks">OZARKS</span>
+      </div>
+    </div>
+
+    <!-- ================================
+         SECTION 4: YEAR I REFLECTION
+    ================================ -->
+    <div class="margin-col">
+      <span class="margin-note rotated-cw">year one.<br>fourteen<br>men →</span>
+      <span class="margin-note rotated-ccw" style="margin-top: 64px; font-size: 12px;">this is<br>why we<br>come back</span>
+    </div>
+    <div class="body-col section">
+      <span class="field-label">Document 004 — Year I Field Notes</span>
+      <div class="letter-block">
+        <span class="letter-intro">From the record —</span>
+        <p class="body-text indented">Last year, fourteen men showed up. Most of them didn't know each other. By Sunday afternoon, that had changed.</p>
+      </div>
+      <div class="ruled-divider"></div>
+    </div>
+
+    <!-- ================================
+         SECTION 5: WHAT HAPPENS
+    ================================ -->
+    <div class="margin-col">
+      <span class="margin-note rotated-cw">structure<br>matters →</span>
+    </div>
+    <div class="body-col section">
+      <span class="field-label">Document 005 — Daily Operations</span>
+      <p class="body-text">Days are structured. Mornings are early. There's physical work. There are sessions. There's fire at night. Nothing is wasted.</p>
+    </div>
+
+    <!-- ================================
+         SECTION 6: WHO SHOULD COME
+    ================================ -->
+    <div class="margin-col">
+      <span class="margin-note rotated-ccw">18–35<br>know the<br>gap ↓</span>
+    </div>
+    <div class="body-col section">
+      <span class="field-label">Document 006 — Eligibility</span>
+      <p class="body-text">If you're 18–35 and feel the gap between who you are and who you know you should be — this is the weekend.</p>
+      <div class="ruled-divider"></div>
+    </div>
+
+    <!-- ================================
+         REGISTRATION TEAR-OFF
+    ================================ -->
+    <div class="register-section">
+      <span class="register-header">NOBA II — Register Your Intent</span>
+      <p class="register-text">NOBA II is forming. Space is limited intentionally. If you're in, say so.</p>
+      <div class="register-fields">
+        <div class="field-line">
+          <label>Name</label>
+          <span class="underline-field"></span>
+        </div>
+        <div class="field-line">
+          <label>Age</label>
+          <span class="underline-field" style="width: 80px;"></span>
+        </div>
+        <div class="field-line">
+          <label>Contact</label>
+          <span class="underline-field"></span>
+        </div>
+      </div>
+      <br>
+      <a href="#register" class="register-btn">I'm In — Register for NOBA II</a>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="doc-footer">
+      <span class="footer-note">Eagle Sky Camp · Ozark Mountains · Missouri · Second Annual</span>
+      <span class="footer-stamp">NOBA II · CLEAR SIGHT · BOLD ACTION · YEAR TWO</span>
+    </div>
+
+  </div><!-- /.doc-inner -->
+</div><!-- /.document -->
+
+</body>
+</html>

@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>NOBA Retreat — Eagle Sky</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Caveat:wght@400;600;700&family=Oswald:wght@400;600;700&family=Bebas+Neue&display=swap" rel="stylesheet"/>
+<style>
+
+/* ── WOOD SURFACE ─────────────────────────────────── */
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 28px 12px 40px;
+  background-color: #1c0f06;
+  background-image:
+    repeating-linear-gradient(
+      92deg,
+      transparent 0px, transparent 22px,
+      rgba(255,160,40,0.022) 22px, rgba(255,160,40,0.022) 24px,
+      transparent 24px, transparent 46px,
+      rgba(0,0,0,0.14) 46px, rgba(0,0,0,0.14) 48px
+    ),
+    repeating-linear-gradient(
+      180deg,
+      transparent 0px, transparent 90px,
+      rgba(255,130,20,0.012) 90px, rgba(255,130,20,0.012) 92px
+    );
+  font-family: 'Special Elite', cursive;
+}
+
+/* ── NOTEBOOK PAGE ────────────────────────────────── */
+.page {
+  position: relative;
+  width: min(560px, 94vw);
+  background-color: #cfc3a0;
+  background-image:
+    radial-gradient(ellipse 90px 70px at 11% 91%,  rgba(90,55,10,0.22)  0%, transparent 70%),
+    radial-gradient(ellipse 55px 40px at 88%  6%,  rgba(110,70,10,0.13)  0%, transparent 70%),
+    radial-gradient(ellipse 40px 30px at 50% 50%,  rgba(90,55,10,0.04)  0%, transparent 70%),
+    linear-gradient(to right,  rgba(0,0,0,0.07) 0%, transparent 8%, transparent 92%, rgba(0,0,0,0.05) 100%),
+    linear-gradient(to bottom, rgba(0,0,0,0.04) 0%, transparent 6%, transparent 94%, rgba(0,0,0,0.09) 100%);
+  box-shadow:
+    0 2px 6px rgba(0,0,0,0.35),
+    0 10px 30px rgba(0,0,0,0.55),
+    0 24px 70px rgba(0,0,0,0.35);
+  padding: 24px 26px 24px 56px;
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+/* ── BINDER RINGS ─────────────────────────────────── */
+.rings {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 52px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 50px 0;
+  background: linear-gradient(to right, rgba(0,0,0,0.06), transparent);
+}
+.ring {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 35%, #aaa 0%, #555 40%, #1e1e1e 100%);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.7), inset 0 1px 2px rgba(255,255,255,0.12);
+  position: relative;
+}
+.ring::after {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 38%, #444, #0e0e0e);
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.9);
+}
+
+/* ── HEADER ───────────────────────────────────────── */
+.header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 3px;
+}
+.noba-word {
+  font-family: 'Bebas Neue', 'Oswald', sans-serif;
+  font-size: clamp(30px, 8vw, 46px);
+  letter-spacing: 0.04em;
+  color: #100800;
+  line-height: 1;
+}
+.retreat-word {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 400;
+  font-size: clamp(22px, 6vw, 34px);
+  letter-spacing: 0.1em;
+  color: #100800;
+  line-height: 1;
+}
+.location-date {
+  margin-left: auto;
+  font-family: 'Special Elite', cursive;
+  font-size: clamp(8px, 2vw, 11px);
+  letter-spacing: 0.14em;
+  color: #1e1206;
+  white-space: nowrap;
+}
+.header-rule {
+  height: 2px;
+  background: #1a0e06;
+  margin-bottom: 12px;
+}
+
+/* ── INTRO ROW ────────────────────────────────────── */
+.intro-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 14px;
+  align-items: start;
+}
+
+/* ── LINED NOTEBOOK PAPER ─────────────────────────── */
+.lined-box {
+  background: #f0e8cf;
+  background-image:
+    repeating-linear-gradient(
+      transparent 0px, transparent 21px,
+      rgba(80,110,200,0.18) 21px, rgba(80,110,200,0.18) 22px
+    ),
+    linear-gradient(to right, transparent 0px, transparent 18px, rgba(200,60,60,0.35) 18px, rgba(200,60,60,0.35) 19px, transparent 19px);
+  border: 1px solid rgba(0,0,0,0.1);
+  padding: 5px 8px 5px 24px;
+  box-shadow: 1px 1px 4px rgba(0,0,0,0.15);
+  position: relative;
+}
+/* torn top edge on first lined box */
+.lined-box.torn::before {
+  content: '';
+  position: absolute;
+  top: -7px; left: 0; right: 0; height: 9px;
+  background: #f0e8cf;
+  clip-path: polygon(
+    0% 100%, 2% 10%, 5% 80%, 8% 5%, 11% 75%, 15% 20%,
+    18% 90%, 22% 10%, 26% 70%, 30% 25%, 34% 80%, 38% 15%,
+    42% 75%, 46% 5%,  50% 70%, 54% 20%, 58% 85%, 62% 10%,
+    66% 72%, 70% 22%, 74% 82%, 78% 12%, 82% 68%, 86% 18%,
+    90% 78%, 94% 8%,  97% 60%, 100% 100%
+  );
+}
+.lined-box p {
+  font-family: 'Special Elite', cursive;
+  font-size: clamp(8px, 1.9vw, 10.5px);
+  letter-spacing: 0.06em;
+  color: #100800;
+  line-height: 22px;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+/* ── CLEAR SIGHT ──────────────────────────────────── */
+.clear-sight {
+  padding-top: 4px;
+}
+.clear-sight h2 {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  font-size: clamp(16px, 4.2vw, 25px);
+  line-height: 1.1;
+  color: #100800;
+  letter-spacing: 0.01em;
+  margin-bottom: 10px;
+  text-align: right;
+}
+.handwritten {
+  font-family: 'Caveat', cursive;
+  font-size: clamp(14px, 3.6vw, 21px);
+  color: #1a1008;
+  line-height: 1.3;
+  text-align: right;
+  display: block;
+}
+
+/* ── SECTION LABEL ────────────────────────────────── */
+.section-label {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  font-size: clamp(14px, 3.5vw, 20px);
+  letter-spacing: 0.08em;
+  color: #100800;
+  padding-bottom: 3px;
+  border-bottom: 2.5px solid #100800;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+/* ── LESSONS ROW ──────────────────────────────────── */
+.lessons-row {
+  display: grid;
+  grid-template-columns: 1fr 1.05fr;
+  gap: 14px;
+  margin-bottom: 12px;
+  align-items: start;
+}
+.left-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ── CONFIDENTIAL STAMP ───────────────────────────── */
+.stamp-confidential {
+  display: inline-block;
+  align-self: flex-start;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 600;
+  font-size: clamp(9px, 2.2vw, 12px);
+  letter-spacing: 0.22em;
+  color: #8a1a14;
+  border: 2px solid #8a1a14;
+  padding: 3px 10px 2px;
+  transform: rotate(-5deg) translateX(6px);
+  opacity: 0.82;
+  background: rgba(255,255,255,0.08);
+}
+
+/* ── PHOTO LABEL (RED) ────────────────────────────── */
+.red-label {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 600;
+  font-size: clamp(8px, 2vw, 11px);
+  letter-spacing: 0.18em;
+  color: #8a1a14;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+/* ── PHOTO PLACEHOLDERS ───────────────────────────── */
+.photo-wrap {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+.photo-wrap::before { /* tape strip */
+  content: '';
+  position: absolute;
+  top: -7px; left: 50%;
+  transform: translateX(-50%) rotate(-1deg);
+  width: 38px; height: 14px;
+  background: rgba(220,200,140,0.48);
+  border-left: 1px solid rgba(190,170,110,0.35);
+  border-right: 1px solid rgba(190,170,110,0.35);
+  z-index: 1;
+}
+.photo-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  background-color: #2c1e0c;
+  background-image:
+    linear-gradient(135deg, rgba(255,220,150,0.06) 0%, transparent 50%),
+    linear-gradient(225deg, rgba(255,180,80,0.04) 0%, transparent 50%);
+  box-shadow: 2px 3px 10px rgba(0,0,0,0.5);
+}
+.photo-wisdom {
+  aspect-ratio: 5/4;
+  transform: rotate(1.5deg);
+}
+.photo-landscape {
+  aspect-ratio: 5/3.5;
+  transform: rotate(-1.2deg);
+}
+
+/* Eagle Sky caption on landscape photo */
+.photo-caption-box {
+  position: absolute;
+  bottom: 10px; left: 10px;
+  background: rgba(207,195,160,0.9);
+  border: 1px solid rgba(0,0,0,0.25);
+  padding: 4px 9px;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  font-size: clamp(7px, 1.8vw, 10px);
+  letter-spacing: 0.14em;
+  color: #100800;
+  line-height: 1.5;
+}
+.photo-caption-box .sub {
+  font-weight: 400;
+  font-size: 0.85em;
+  letter-spacing: 0.1em;
+  display: block;
+}
+
+.caption-handwritten {
+  font-family: 'Caveat', cursive;
+  font-size: clamp(10px, 2.6vw, 15px);
+  color: #1a1008;
+  display: block;
+  margin-top: 5px;
+}
+
+/* ── BOTTOM ROW ───────────────────────────────────── */
+.bottom-row {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 14px;
+  margin-bottom: 14px;
+  align-items: start;
+}
+
+/* ── STRIP PHOTOS ─────────────────────────────────── */
+.strip-photos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  margin-top: 5px;
+}
+.strip-photo {
+  aspect-ratio: 2/3;
+  background-color: #2c1e0c;
+  background-image: linear-gradient(160deg, rgba(255,200,100,0.05) 0%, transparent 50%);
+  box-shadow: 1px 2px 5px rgba(0,0,0,0.45);
+}
+
+/* ── CTA SECTION ──────────────────────────────────── */
+.cta-section {
+  text-align: center;
+  margin-bottom: 10px;
+}
+.ready-text {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  font-size: clamp(12px, 3vw, 17px);
+  letter-spacing: 0.14em;
+  color: #100800;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  margin-bottom: 8px;
+}
+.register-btn {
+  display: inline-block;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  font-size: clamp(12px, 3vw, 17px);
+  letter-spacing: 0.18em;
+  color: #8a1a14;
+  border: 2.5px solid #8a1a14;
+  padding: 5px 22px 4px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.register-btn:hover {
+  background: rgba(138,26,20,0.08);
+}
+
+/* ── SIGN HERE ────────────────────────────────────── */
+.sign-here {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 6px;
+}
+.sign-line { flex: 1; height: 1px; background: #2a1a08; }
+.sign-here-text {
+  font-family: 'Special Elite', cursive;
+  font-size: clamp(7px, 1.8vw, 9px);
+  letter-spacing: 0.22em;
+  color: #2a1a08;
+}
+
+/* ── PEN ──────────────────────────────────────────── */
+.pen {
+  position: absolute;
+  bottom: 18px; right: 18px;
+  width: clamp(60px, 16vw, 95px);
+  height: 9px;
+  transform: rotate(-32deg);
+  transform-origin: right center;
+  background: linear-gradient(90deg,
+    #1a1a1a 0%, #3a3a3a 15%,
+    #505050 25%, #404040 40%,
+    #2a2a2a 55%, #1e1e1e 70%,
+    #888 85%, #aaa 90%, #666 95%, #333 100%
+  );
+  border-radius: 1px 4px 4px 1px;
+  box-shadow: 1px 2px 5px rgba(0,0,0,0.6);
+  z-index: 10;
+}
+.pen::before { /* nib */
+  content: '';
+  position: absolute;
+  left: -7px; top: 50%;
+  transform: translateY(-50%);
+  border-right: 9px solid #2a2a2a;
+  border-top: 4.5px solid transparent;
+  border-bottom: 4.5px solid transparent;
+}
+.pen::after { /* clip detail */
+  content: '';
+  position: absolute;
+  top: -3px; right: 16px;
+  width: 2px; height: 15px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 1px;
+}
+
+/* ── RESPONSIVE ───────────────────────────────────── */
+@media (max-width: 400px) {
+  .location-date { display: none; }
+  .clear-sight h2 { font-size: 15px; }
+  body { padding: 14px 6px 30px; }
+}
+
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Binder rings -->
+  <div class="rings">
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+  </div>
+
+  <!-- Header -->
+  <div class="header">
+    <span class="noba-word">NOBA</span>
+    <span class="retreat-word">RETREAT</span>
+    <span class="location-date">EAGLE SKY – OZARKS / APRIL 10–12</span>
+  </div>
+  <div class="header-rule"></div>
+
+  <!-- Intro row -->
+  <div class="intro-row">
+    <div class="lined-box torn">
+      <p>This isn't a vacation.</p>
+      <p>It's a passing of principles.</p>
+      <p>&nbsp;</p>
+      <p>Men who've been through the fire.</p>
+      <p>Lessons you won't find in any book.</p>
+    </div>
+    <div class="clear-sight">
+      <h2>CLEAR SIGHT—<br>BOLD ACTION.</h2>
+      <span class="handwritten">No Boys Allowed.<br>Earn your place.</span>
+    </div>
+  </div>
+
+  <!-- Field Lessons -->
+  <div class="section-label">FIELD LESSONS</div>
+  <div class="lessons-row">
+
+    <div class="left-col">
+      <div class="lined-box">
+        <p>See the challenge as it is.</p>
+        <p>&nbsp;</p>
+        <p>Take responsibility.</p>
+        <p>&nbsp;</p>
+        <p>Lead with courage.</p>
+      </div>
+      <div class="stamp-confidential">CONFIDENTIAL</div>
+    </div>
+
+    <div>
+      <div class="red-label">WISDOM HANDED DOWN</div>
+      <div class="photo-wrap">
+        <img class="photo-img photo-wisdom" src="images/noba-session.jpg" alt="NOBA session" style="object-fit:cover;"/>
+      </div>
+      <span class="caption-handwritten">Respect. Strength. Sacrifice.</span>
+    </div>
+
+  </div>
+
+  <!-- Bottom row: location + last year -->
+  <div class="bottom-row">
+
+    <div class="photo-wrap" style="transform: rotate(-1deg); display:block;">
+      <div class="photo-img photo-landscape">
+        <div class="photo-caption-box">
+          EAGLE SKY CAMP
+          <span class="sub">THE OZARKS</span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="red-label">LAST YEAR —</div>
+      <div class="strip-photos">
+        <div class="strip-photo"></div>
+        <div class="strip-photo"></div>
+        <div class="strip-photo"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <div class="ready-text">READY TO STEP UP?</div>
+    <a href="#" class="register-btn">REGISTER NOW ☑</a>
+  </div>
+
+  <!-- Sign here -->
+  <div class="sign-here">
+    <div class="sign-line"></div>
+    <span class="sign-here-text">SIGN HERE</span>
+    <div class="sign-line"></div>
+  </div>
+
+  <!-- Pen -->
+  <div class="pen"></div>
+
+</div>
+
+</body>
+</html>

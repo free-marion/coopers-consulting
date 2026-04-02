@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Focus Forum 2026 — St. Louis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Cormorant+SC:wght@300;400;600&family=Oswald:wght@200;300;400;500;600;700&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet"/>
+<style>
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --bg:        #0a0806;
+  --bg-mid:    #0f0d0a;
+  --bg-warm:   #131108;
+  --orange:    #c4621a;
+  --orange-hi: #e07830;
+  --gold:      #c8a040;
+  --cream:     #d4c8a8;
+  --dim:       #6a6050;
+  --rule:      rgba(196,98,26,0.2);
+}
+
+body {
+  background: var(--bg);
+  color: var(--cream);
+  font-family: 'Lora', Georgia, serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ── HERO ───────────────────────────────────────────────── */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.hero-reticle {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+}
+
+.hero-logo {
+  position: relative; z-index: 2;
+  width: clamp(100px, 18vw, 160px);
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+.hero-logo img { width: 100%; display: block; }
+
+.hero-kicker {
+  position: relative; z-index: 2;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 300;
+  font-size: clamp(0.85rem, 1.8vw, 1.1rem);
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 1.5rem;
+}
+
+.hero-title {
+  position: relative; z-index: 2;
+  /* Cormorant Garamond italic — matches the ornate script character of the FF logo */
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 600;
+  font-size: clamp(4.5rem, 13vw, 11rem);
+  line-height: 0.9;
+  letter-spacing: 0.04em;
+  text-align: center;
+  color: var(--cream);
+  margin-bottom: 0.15em;
+}
+.hero-title .year {
+  display: block;
+  font-family: 'Cormorant SC', 'Cormorant Garamond', serif;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 0.3em;
+  letter-spacing: 0.55em;
+  color: var(--orange);
+  text-indent: 0.55em;
+  margin-top: 0.4em;
+}
+
+.hero-tagline {
+  position: relative; z-index: 2;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(1.1rem, 2.8vw, 1.9rem);
+  color: rgba(212,200,168,0.6);
+  letter-spacing: 0.08em;
+  margin-top: 1.5rem;
+}
+.hero-tagline span { color: var(--orange); font-style: normal; }
+
+.hero-strip {
+  position: absolute; z-index: 2;
+  bottom: 0; left: 0; right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  padding: 1.1rem 2rem;
+  border-top: 1px solid var(--rule);
+  font-family: 'Oswald', sans-serif;
+  font-weight: 300;
+  font-size: clamp(0.72rem, 1.2vw, 0.85rem);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.hero-strip strong { color: rgba(196,98,26,0.7); font-weight: 400; }
+
+/* ── DIVIDER ─────────────────────────────────────────────── */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0 clamp(1.5rem, 6vw, 6rem);
+  margin: 0;
+}
+.divider-line { flex: 1; height: 1px; background: var(--rule); }
+.divider-mark {
+  width: 6px; height: 6px;
+  border: 1px solid var(--orange);
+  transform: rotate(45deg);
+  opacity: 0.5;
+}
+
+/* ── INTRO SECTION ───────────────────────────────────────── */
+.intro {
+  padding: clamp(4rem, 8vw, 8rem) clamp(1.5rem, 6vw, 6rem);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(3rem, 6vw, 8rem);
+  align-items: start;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.intro-heading {
+  position: sticky;
+  top: 4rem;
+}
+.intro-heading h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(2.6rem, 5vw, 4.5rem);
+  line-height: 1.05;
+  color: var(--cream);
+}
+.intro-heading h2 em {
+  font-style: normal;
+  color: var(--orange);
+  display: block;
+}
+.intro-heading-rule {
+  width: 40px; height: 2px;
+  background: var(--orange);
+  margin-top: 1.5rem;
+}
+
+.intro-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+.intro-body p {
+  font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+  line-height: 1.9;
+  color: rgba(212,200,168,0.78);
+}
+.intro-body p strong {
+  color: var(--cream);
+  font-weight: 400;
+}
+
+/* ── PULL QUOTE ─────────────────────────────────────────── */
+.pull-quote {
+  padding: clamp(4rem, 7vw, 7rem) clamp(1.5rem, 6vw, 6rem);
+  background: var(--bg-warm);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  position: relative;
+  overflow: hidden;
+}
+.pull-quote::before {
+  content: '\201C';
+  position: absolute;
+  top: -0.15em; left: clamp(1rem, 4vw, 4rem);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(12rem, 24vw, 22rem);
+  line-height: 1;
+  color: rgba(196,98,26,0.06);
+  pointer-events: none;
+  font-weight: 600;
+}
+.pull-quote blockquote {
+  max-width: 920px;
+  margin: 0 auto;
+  position: relative; z-index: 1;
+}
+.pull-quote blockquote p {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(1.5rem, 3.5vw, 2.8rem);
+  line-height: 1.4;
+  color: var(--cream);
+}
+.pull-quote blockquote p strong {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--orange);
+}
+
+/* ── DETAILS SECTION ─────────────────────────────────────── */
+.details {
+  padding: clamp(4rem, 8vw, 8rem) clamp(1.5rem, 6vw, 6rem);
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: clamp(3rem, 6vw, 8rem);
+  align-items: start;
+}
+.details-label {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 300;
+  font-size: 0.82rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--orange);
+  padding-top: 0.3rem;
+  position: sticky;
+  top: 4rem;
+}
+.details-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+.details-copy p {
+  font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+  line-height: 1.9;
+  color: rgba(212,200,168,0.78);
+}
+
+.cost-callout {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  margin-top: 0.5rem;
+}
+.cost-amount {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  font-size: clamp(3rem, 6vw, 5rem);
+  color: var(--orange);
+  line-height: 1;
+}
+.cost-label {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 200;
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+/* ── RESERVE SECTION ─────────────────────────────────────── */
+.reserve {
+  background: var(--bg-mid);
+  border-top: 1px solid var(--rule);
+}
+
+.reserve-header {
+  padding: clamp(3rem, 5vw, 5rem) clamp(1.5rem, 6vw, 6rem) clamp(2rem, 3vw, 3rem);
+  display: flex;
+  align-items: baseline;
+  gap: 2rem;
+  border-bottom: 1px solid var(--rule);
+}
+.reserve-header h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  color: var(--cream);
+}
+.reserve-header p {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 300;
+  font-size: 0.82rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--orange);
+}
+
+.reserve-panels {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr;
+}
+
+.panel {
+  padding: clamp(2.5rem, 4vw, 4rem) clamp(2rem, 3.5vw, 3.5rem);
+  border-right: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.panel:last-child { border-right: none; }
+
+.panel-num {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 300;
+  font-size: 0.78rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--orange);
+  opacity: 0.85;
+}
+.panel-title {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 600;
+  font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cream);
+}
+
+/* ── FORM ────────────────────────────────────────────────── */
+.form-fields { display: flex; flex-direction: column; gap: 1rem; }
+
+.form-field { display: flex; flex-direction: column; gap: 0.4rem; }
+
+.form-field label {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 300;
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.form-field input, .form-field select {
+  background: rgba(255,255,255,0.03);
+  border: none;
+  border-bottom: 1px solid rgba(196,98,26,0.25);
+  padding: 0.7rem 0;
+  color: var(--cream);
+  font-family: 'Lora', serif;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+  -webkit-appearance: none;
+}
+.form-field input::placeholder { color: rgba(212,200,168,0.2); }
+.form-field input:focus,
+.form-field select:focus { border-bottom-color: var(--orange); }
+.form-field select option { background: #1a1610; }
+
+.form-submit {
+  margin-top: 0.5rem;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 500;
+  font-size: 0.7rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #0a0806;
+  background: var(--orange);
+  border: none;
+  padding: 0.85rem 2rem;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.2s;
+}
+.form-submit:hover { background: var(--orange-hi); }
+
+/* ── PAY + HOTEL PANELS ──────────────────────────────────── */
+.pay-amount {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  font-size: clamp(3.5rem, 6vw, 5.5rem);
+  color: var(--orange);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.pay-sub {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 300;
+  font-size: 0.8rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-top: -0.5rem;
+}
+.panel-desc {
+  font-size: 0.88rem;
+  line-height: 1.75;
+  color: var(--dim);
+  flex: 1;
+}
+.panel-btn {
+  display: block;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 500;
+  font-size: 0.68rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--orange);
+  border: 1px solid rgba(196,98,26,0.4);
+  padding: 0.85rem 1.5rem;
+  text-decoration: none;
+  text-align: center;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  margin-top: auto;
+}
+.panel-btn:hover {
+  background: rgba(196,98,26,0.1);
+  border-color: var(--orange);
+  color: var(--orange-hi);
+}
+
+.hotel-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  color: var(--cream);
+  line-height: 1.3;
+}
+
+/* ── FOOTER ──────────────────────────────────────────────── */
+footer {
+  padding: 2.5rem clamp(1.5rem, 6vw, 6rem);
+  border-top: 1px solid var(--rule);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.footer-brand {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 300;
+  font-size: 0.78rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.footer-contact {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 300;
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
+  color: var(--dim);
+  text-align: center;
+}
+.footer-contact a {
+  color: var(--orange);
+  text-decoration: none;
+}
+.footer-copy {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 300;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  color: rgba(106,96,80,0.55);
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .intro { grid-template-columns: 1fr; }
+  .intro-heading { position: static; }
+  .details { grid-template-columns: 1fr; }
+  .details-label { position: static; }
+  .reserve-panels { grid-template-columns: 1fr; }
+  .panel { border-right: none; border-bottom: 1px solid var(--rule); }
+  .panel:last-child { border-bottom: none; }
+  .reserve-header { flex-direction: column; gap: 0.5rem; }
+  .hero-strip { display: none; }
+  footer { flex-direction: column; text-align: center; }
+}
+
+@media (max-width: 600px) {
+  .pull-quote blockquote p { font-size: 1.3rem; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ── HERO ── -->
+<section class="hero">
+
+  <!-- Crosshair reticle SVG — full bleed -->
+  <svg class="hero-reticle" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <g stroke="rgba(196,98,26,0.18)" fill="none" stroke-width="0.6">
+      <circle cx="500" cy="500" r="380"/>
+      <circle cx="500" cy="500" r="240"/>
+      <circle cx="500" cy="500" r="110"/>
+      <circle cx="500" cy="500" r="28" stroke-width="1"/>
+      <!-- cross lines with center gap -->
+      <line x1="500" y1="0"   x2="500" y2="472"/>
+      <line x1="500" y1="528" x2="500" y2="1000"/>
+      <line x1="0"   y1="500" x2="472" y2="500"/>
+      <line x1="528" y1="500" x2="1000" y2="500"/>
+      <!-- tick marks — vertical -->
+      <line x1="492" y1="260" x2="508" y2="260" stroke-width="1"/>
+      <line x1="492" y1="740" x2="508" y2="740" stroke-width="1"/>
+      <line x1="488" y1="120" x2="512" y2="120" stroke-width="1"/>
+      <line x1="488" y1="880" x2="512" y2="880" stroke-width="1"/>
+      <!-- tick marks — horizontal -->
+      <line x1="260" y1="492" x2="260" y2="508" stroke-width="1"/>
+      <line x1="740" y1="492" x2="740" y2="508" stroke-width="1"/>
+      <line x1="120" y1="488" x2="120" y2="512" stroke-width="1"/>
+      <line x1="880" y1="488" x2="880" y2="512" stroke-width="1"/>
+      <!-- diagonal marks at 45deg on outer ring -->
+      <line x1="731" y1="269" x2="741" y2="259" stroke-width="0.7"/>
+      <line x1="259" y1="269" x2="269" y2="259" stroke-width="0.7"/>
+      <line x1="731" y1="731" x2="741" y2="741" stroke-width="0.7"/>
+      <line x1="259" y1="731" x2="269" y2="741" stroke-width="0.7"/>
+    </g>
+    <!-- center dot -->
+    <circle cx="500" cy="500" r="3" fill="rgba(196,98,26,0.45)" stroke="none"/>
+  </svg>
+
+  <div class="hero-logo">
+    <img src="images/logo-forum.png" alt="Focus Forum"/>
+  </div>
+
+  <div class="hero-kicker">June 18 &ndash; 19</div>
+
+  <h1 class="hero-title">
+    Focus<br>Forum
+    <span class="year">2026</span>
+  </h1>
+
+  <p class="hero-tagline">
+    Learn <span>&mdash;</span> Test <span>&mdash;</span> Implement
+  </p>
+
+  <div class="hero-strip">
+    <span><strong>Two Days</strong> &nbsp;·&nbsp; St. Louis, MO</span>
+    <span><strong>June 2026</strong> &nbsp;·&nbsp; Hyatt Regency</span>
+    <span>Cost of Attendance &nbsp;<strong>$400</strong></span>
+  </div>
+
+</section>
+
+<div class="divider" style="padding-top:0; padding-bottom:0;">
+  <div class="divider-line"></div>
+  <div class="divider-mark"></div>
+  <div class="divider-line"></div>
+</div>
+
+<!-- ── WHAT IS IT ── -->
+<section class="intro">
+
+  <div class="intro-heading">
+    <h2>What is the<br><em>Focus Forum?</em></h2>
+    <div class="intro-heading-rule"></div>
+  </div>
+
+  <div class="intro-body">
+    <p>Focus Forum is a two day event built for owners and leaders who carry the responsibility of growing organizations. If you possess the will to grow, but are struggling with the way, <strong>this conference is for you.</strong></p>
+
+    <p>This is not a large scale, anonymous event. The Focus Forum began as a small group of business owners who gathered to learn the principles of the Entrepreneurial Operating System and discuss organizational issues amongst peers. This grew into our first gathering in St Louis Missouri in the summer of 2025. The 2 day conference was so successful that we immediately began planning for our second, which you are cordially invited to.</p>
+  </div>
+
+</section>
+
+<!-- ── PULL QUOTE ── -->
+<div class="pull-quote">
+  <blockquote>
+    <p>We do not aim to shallowly inspire, nor hide from uncomfortable truths. Sessions are practical, and the discussions are candid. <strong>Be prepared to set ego to the side.</strong></p>
+  </blockquote>
+</div>
+
+<!-- ── DETAILS ── -->
+<section class="details">
+
+  <div class="details-label">The Conference</div>
+
+  <div class="details-copy">
+    <p>Connect with people who share your struggles, and receive inspiration from unexpected corners of the room.</p>
+
+    <p>Hosted in St. Louis and sponsored by Cooper's Consulting, Focus Forum reflects the same principles that drive our other ventures: clarity of vision, disciplined execution, and personal responsibility. Every element of the conference is built to respect your time and deliver substance.</p>
+
+    <p>We look forward to seeing you in June.</p>
+
+    <div class="cost-callout">
+      <div class="cost-amount">$400</div>
+      <div class="cost-label">Cost of<br>Attendance</div>
+    </div>
+  </div>
+
+</section>
+
+<div class="divider">
+  <div class="divider-line"></div>
+  <div class="divider-mark"></div>
+  <div class="divider-line"></div>
+</div>
+
+<!-- ── RESERVE ── -->
+<section class="reserve">
+
+  <div class="reserve-header">
+    <h2>Reserve Your Seat</h2>
+    <p>June 2026 &nbsp;·&nbsp; St. Louis, MO &nbsp;·&nbsp; Limited Seating</p>
+  </div>
+
+  <div class="reserve-panels">
+
+    <!-- Panel 1: Register -->
+    <div class="panel">
+      <div class="panel-num">01 &nbsp;/&nbsp; Register</div>
+      <div class="panel-title">Claim Your Spot</div>
+
+      <form class="form-fields" action="#" method="POST">
+        <div class="form-field">
+          <label for="reg-name">Full Name</label>
+          <input type="text" id="reg-name" name="name" placeholder="Your name" required/>
+        </div>
+        <div class="form-field">
+          <label for="reg-email">Email</label>
+          <input type="email" id="reg-email" name="email" placeholder="your@email.com" required/>
+        </div>
+        <div class="form-field">
+          <label for="reg-company">Company</label>
+          <input type="text" id="reg-company" name="company" placeholder="Organization"/>
+        </div>
+        <div class="form-field">
+          <label for="reg-phone">Phone</label>
+          <input type="tel" id="reg-phone" name="phone" placeholder="(xxx) xxx-xxxx"/>
+        </div>
+        <div class="form-field">
+          <label for="reg-seats">Number of Seats</label>
+          <select id="reg-seats" name="seats">
+            <option value="1">1 seat</option>
+            <option value="2">2 seats</option>
+            <option value="3">3 seats</option>
+            <option value="4">4 seats</option>
+          </select>
+        </div>
+        <button type="submit" class="form-submit">Reserve My Seat &rarr;</button>
+      </form>
+    </div>
+
+    <!-- Panel 2: Pay -->
+    <div class="panel">
+      <div class="panel-num">02 &nbsp;/&nbsp; Pay</div>
+      <div class="panel-title">Secure Payment</div>
+      <div class="pay-amount">$400</div>
+      <div class="pay-sub">Per person</div>
+      <p class="panel-desc">Payment is processed securely online. Complete your registration first, then use the link below to pay and confirm your reservation.</p>
+      <a href="#" class="panel-btn">Pay Online &rarr;</a>
+    </div>
+
+    <!-- Panel 3: Hotel -->
+    <div class="panel">
+      <div class="panel-num">03 &nbsp;/&nbsp; Stay</div>
+      <div class="panel-title">Book Your Room</div>
+      <div class="hotel-name">Hyatt Regency<br>St. Louis at The Arch</div>
+      <p class="panel-desc">We have a room block reserved at the Hyatt Regency at the Arch for Focus Forum attendees. Book early — the block is limited and the rate won't last.</p>
+      <a href="#" class="panel-btn">Book Hotel Room &rarr;</a>
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-brand">Cooper's Consulting &nbsp;·&nbsp; Focus Forum 2026</div>
+  <div class="footer-contact">
+    1157 Madison Ave, Fredericktown, MO 63645
+    &nbsp;&nbsp;<a href="tel:5737604007">573.760.4007</a>
+  </div>
+  <div class="footer-copy">&copy; 2026 Cooper's Consulting</div>
+</footer>
+
+</body>
+</html>
