@@ -5,34 +5,50 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cooper's Consulting</title>
   <link rel="canonical" href="https://coopersconsulting.com/">
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@400;700&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+
+  <!-- Three.js r168 via CDN importmap -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three":          "https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js",
+      "three/addons/":  "https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/"
+    }
+  }
+  </script>
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
       --dark-outline: #2C2416;
-      --brand-orange: #C4713B;
+      --brand-orange: #B8471E;
       --brand-green:  #3C5A2B;
       --cream:        #F2EBDA;
       --white:        #FFFFFF;
-      --orange-hover: #a85c2a;
+      --orange-hover: #9c3c18;
       --green-light:  rgba(60,90,43,0.09);
       --rule:         rgba(44,36,22,0.12);
       --muted:        rgba(44,36,22,0.50);
     }
 
-    html { scroll-behavior: smooth; font-size: 16px; }
+    html { scroll-behavior: smooth; font-size: 16px; background: #010c03; }
     body {
-      background: var(--white); color: var(--dark-outline);
-      font-family: 'Lora', serif; line-height: 1.6;
+      background: transparent; color: var(--dark-outline);
+      font-family: 'EB Garamond', serif; line-height: 1.68;
+      font-variation-settings: 'wght' 410;
+      font-feature-settings: 'onum' 1, 'kern' 1;
       -webkit-font-smoothing: antialiased; overflow-x: hidden;
     }
-    h1,h2,h3,h4 { font-family: 'Space Grotesk', sans-serif; line-height: 1.15; font-weight: 700; }
+    h1,h2,h3,h4 {
+      font-family: 'Cinzel', serif; line-height: 1.12;
+      font-weight: 600; letter-spacing: 0.04em;
+    }
 
     .skip-link {
       position: absolute; top: -120px; left: 16px;
       background: var(--brand-green); color: var(--white);
-      padding: 8px 16px; font-family: 'Space Grotesk', sans-serif;
+      padding: 8px 16px; font-family: 'Cinzel', serif;
       font-size: .875rem; text-decoration: none; z-index: 9999;
       transition: top .2s ease-out;
     }
@@ -47,23 +63,23 @@
       transition: background .35s ease-out, border-color .35s ease-out;
       border-bottom: 1px solid transparent;
     }
-    nav.scrolled { background: var(--cream); border-bottom-color: var(--rule); }
-
+    nav.scrolled { background: var(--brand-orange); border-bottom-color: rgba(0,0,0,0.18); }
     .nav-mark { display: flex; align-items: center; gap: 11px; text-decoration: none; }
     .nav-hex  { width: 28px; height: 32px; flex-shrink: 0; }
     .nav-wordmark {
-      font-family: 'Space Grotesk', sans-serif; font-size: .9375rem; font-weight: 500;
+      font-family: 'Cinzel', serif; font-size: .9375rem;
+      font-variation-settings: 'wght' 400; letter-spacing: 0.06em;
       color: var(--cream); letter-spacing: .02em; transition: color .35s ease-out;
     }
-    nav.scrolled .nav-wordmark { color: var(--dark-outline); }
+    nav.scrolled .nav-wordmark { color: var(--cream); }
     .nav-links { list-style: none; display: flex; gap: 2.25rem; }
     .nav-links a {
-      font-family: 'Space Grotesk', sans-serif; font-size: .8125rem; font-weight: 500;
+      font-family: 'Cinzel', serif; font-size: .8125rem; font-weight: 500;
       letter-spacing: .07em; text-transform: uppercase;
       color: rgba(242,235,218,.85); text-decoration: none;
       position: relative; transition: color .2s ease-out;
     }
-    nav.scrolled .nav-links a { color: var(--dark-outline); }
+    nav.scrolled .nav-links a { color: var(--cream); }
     .nav-links a::after {
       content: ''; position: absolute; bottom: -5px; left: 0; right: 0;
       height: 2px; background: var(--brand-green);
@@ -78,7 +94,7 @@
     }
     .nav-overlay.open { display: flex; }
     .nav-overlay a {
-      font-family: 'Space Grotesk', sans-serif; font-size: 1.625rem; font-weight: 700;
+      font-family: 'Cinzel', serif; font-size: 1.625rem; font-weight: 700;
       color: var(--dark-outline); text-decoration: none; transition: color .2s ease-out;
     }
     .nav-overlay a:hover { color: var(--brand-orange); }
@@ -88,20 +104,42 @@
       font-size: 1.25rem; color: var(--dark-outline); padding: 8px;
     }
 
+    /* ── HEX BACKGROUND CANVAS ── */
+    #hex-canvas-wrap {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    }
+
     /* ── HERO ── */
-    .hero { position: relative; height: 100vh; min-height: 500px; overflow: hidden; background: #030a03; }
-    #hex-canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+    .hero {
+      position: relative; height: 100vh; min-height: 500px;
+      overflow: hidden; background: transparent;
+    }
+    /* Three.js canvas injected here by JS, position:absolute inset:0 */
+
     .hero-logo-wrap {
       position: absolute; top: 50%; left: 50%;
       transform: translate(-50%,-50%);
       will-change: transform, opacity; opacity: 0; z-index: 2;
+      display: flex; flex-direction: column; align-items: center; gap: 2rem;
     }
     .hero-mark {
       display: block; width: clamp(150px, 28vw, 260px);
       filter:
-        drop-shadow(0 0 28px rgba(255,150,50,.65))
-        drop-shadow(0 0 70px rgba(200,100,30,.35))
-        drop-shadow(0 2px 10px rgba(0,0,0,.9));
+        drop-shadow(0 0 22px rgba(184,71,30,.70))
+        drop-shadow(0 0 60px rgba(122,46,16,.40))
+        drop-shadow(0 2px 10px rgba(0,0,0,.95));
+    }
+    .hero-tagline {
+      font-family: 'Cinzel', serif; font-weight: 400;
+      font-size: clamp(.75rem, 1.4vw, 1rem);
+      letter-spacing: .14em; text-transform: uppercase;
+      color: rgba(242,235,218,.72);
+      text-align: center; line-height: 1.7;
+      max-width: clamp(220px, 38vw, 480px);
+    }
+    .hero-tagline em {
+      font-style: normal; color: rgba(242,235,218,.45);
+      display: block; font-size: .88em; letter-spacing: .18em; margin-top: .25em;
     }
 
     /* ── DUALITY RULE ── */
@@ -109,21 +147,21 @@
 
     /* ── CTA BAND ── */
     .cta-band {
-      background: var(--cream);
+      background: rgba(242, 235, 218, 0.88);
       display: grid; grid-template-columns: 1fr 1px 1fr;
       border-bottom: 2px solid var(--dark-outline);
     }
     .cta-cell { padding: 3.5rem 5vw; display: flex; flex-direction: column; gap: .75rem; }
     .cta-sep  { background: var(--rule); }
     .cta-label {
-      font-family: 'Space Grotesk', sans-serif; font-size: .6875rem; font-weight: 400;
+      font-family: 'Cinzel', serif; font-size: .6875rem; font-weight: 400;
       letter-spacing: .09em; text-transform: uppercase; color: var(--muted);
     }
 
     /* ── BUTTONS ── */
     .btn {
       display: inline-block; text-decoration: none;
-      font-family: 'Space Grotesk', sans-serif; font-size: .875rem; font-weight: 500;
+      font-family: 'Cinzel', serif; font-size: .875rem; font-weight: 500;
       letter-spacing: .07em; text-transform: uppercase;
       padding: .875rem 1.75rem; border: 2px solid transparent; border-radius: 2px; cursor: pointer;
       transition: background .25s ease-out, color .25s ease-out, border-color .25s ease-out;
@@ -136,52 +174,69 @@
 
     /* ── SECTION LABEL ── */
     .section-label {
-      font-family: 'Space Grotesk', sans-serif; font-size: .6875rem; font-weight: 500;
+      font-family: 'Cinzel', serif; font-size: .6875rem; font-weight: 500;
       letter-spacing: .12em; text-transform: uppercase; color: var(--brand-orange);
       display: flex; align-items: center; gap: .75rem;
     }
     .section-label::after { content: ''; flex: 1; max-width: 48px; height: 1px; background: var(--brand-orange); opacity: .45; }
 
     /* ── PROGRAMS ── */
-    .programs { background: var(--white); padding: 5rem 0 0; }
+    .programs { background: rgba(255, 255, 255, 0.86); padding: 5rem 0 0; }
     .programs-header { padding: 0 5vw 2.75rem; display: flex; flex-direction: column; gap: .75rem; }
     h2.programs-title { font-size: clamp(1.75rem,2.6vw,2.5rem); color: var(--dark-outline); }
     .programs-grid { display: grid; grid-template-columns: repeat(3,1fr); border-top: 2px solid var(--dark-outline); }
     .prog {
       display: flex; flex-direction: column; gap: 1.375rem;
       padding: 2.5rem 2.25rem 2.25rem;
-      text-decoration: none; color: var(--dark-outline); background: var(--cream);
+      text-decoration: none; color: var(--dark-outline); background: rgba(242, 235, 218, 0.88);
       position: relative; overflow: hidden;
       border: 2px solid transparent; border-top: none;
       transition: background .25s ease-out, box-shadow .25s ease-out, border-color .25s ease-out;
     }
-    .prog + .prog { border-left: 1px solid var(--rule); }
+    .prog+.prog { border-left: 1px solid var(--rule); }
     .prog::after {
       content: ''; position: absolute; top: 0; right: 0; width: 0; height: 0; border-style: solid;
       border-width: 0 20px 20px 0; border-color: transparent var(--dark-outline) transparent transparent;
       transition: border-color .25s ease-out;
     }
-    .prog:hover { background: var(--white); box-shadow: 0 6px 28px rgba(44,36,22,.09); border-color: var(--brand-orange); z-index: 1; }
+    .prog:hover { background: rgba(255,255,255,0.94); box-shadow: 0 6px 28px rgba(44,36,22,.09); border-color: var(--brand-orange); z-index: 1; }
     .prog:hover::after { border-color: transparent var(--brand-orange) transparent transparent; }
-    .prog-logo-zone { height: 44px; display: flex; align-items: center; }
-    .prog-logo { max-height: 100%; max-width: 128px; object-fit: contain; object-position: left; }
-    .prog-logo-mark { font-family: 'Space Grotesk', sans-serif; font-size: .6875rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); opacity: .55; display: none; }
-    .prog-name { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; }
-    .prog-meta { font-family: 'Space Grotesk', sans-serif; font-size: .6875rem; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
+    .prog-logo-zone { width: 72px; height: 72px; overflow: hidden; border-radius: 2px; flex-shrink: 0; }
+    .prog-logo { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
+    .prog-logo-mark { font-family: 'Cinzel', serif; font-size: .6875rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); opacity: .55; display: none; }
+    .prog-name { font-family: 'Cinzel', serif; font-size: 1.5rem; font-weight: 700; }
+    .prog-meta { font-family: 'Cinzel', serif; font-size: .6875rem; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
     .prog-desc { font-size: .9375rem; font-style: italic; color: var(--muted); line-height: 1.65; flex: 1; }
-    .prog-cta { font-family: 'Space Grotesk', sans-serif; font-size: .75rem; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--brand-green); display: flex; align-items: center; gap: .45rem; transition: gap .2s ease-out; }
+    .prog-cta {
+      font-family: 'Cinzel', serif; font-size: .75rem; font-weight: 500;
+      letter-spacing: .08em; text-transform: uppercase; color: var(--brand-green);
+      display: flex; align-items: center; gap: .45rem; transition: gap .2s ease-out;
+    }
     .prog:hover .prog-cta { gap: .85rem; }
 
-    /* ── HONEYCOMB STRIP ── */
-    .honeycomb-strip {
-      height: 44px; background: var(--cream);
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='104' height='90'%3E%3Cpolygon points='26,0 52,15 52,45 26,60 0,45 0,15' fill='none' stroke='%232C2416' stroke-width='1' stroke-opacity='0.1'/%3E%3Cpolygon points='78,45 104,60 104,90 78,105 52,90 52,60' fill='none' stroke='%232C2416' stroke-width='1' stroke-opacity='0.1'/%3E%3C/svg%3E");
-      background-size: 104px 90px; background-position: center;
-      border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+    /* ── DATA CALLOUT STRIP ── */
+    .data-strip {
+      background: rgba(10, 10, 8, 0.92);
+      padding: 3rem 5vw;
+      display: flex; align-items: center; justify-content: center;
+      border-top: 2px solid var(--dark-outline);
+      border-bottom: 2px solid var(--dark-outline);
+    }
+    .data-strip-text {
+      font-family: 'Cinzel', serif; font-weight: 600;
+      font-size: clamp(1.5rem, 3.2vw, 2.75rem);
+      letter-spacing: .06em; color: var(--cream);
+      text-align: center;
+    }
+    .data-strip-text .data-accent {
+      color: var(--brand-orange); font-style: italic; font-weight: 700;
     }
 
+    /* ── STRIP DIVIDER ── */
+    .honeycomb-strip { display: none; }
+
     /* ── ABOUT ── */
-    .about { background: var(--cream); display: grid; grid-template-columns: 1fr 1px 1.4fr; border-top: 2px solid var(--dark-outline); border-bottom: 2px solid var(--dark-outline); }
+    .about { background: rgba(242, 235, 218, 0.88); display: grid; grid-template-columns: 1fr 1px 1.4fr; border-top: 2px solid var(--dark-outline); border-bottom: 2px solid var(--dark-outline); }
     .about-left { padding: 5rem 4rem 5rem 5vw; display: flex; flex-direction: column; gap: 1.875rem; }
     h2.about-name { font-size: clamp(2rem,3vw,3rem); color: var(--dark-outline); line-height: 1.08; }
     .about-name .name-o   { color: var(--brand-orange); }
@@ -189,26 +244,26 @@
     .about-rule { width: 30px; height: 2px; background: var(--brand-orange); }
     blockquote.pullquote { padding-left: 1.25rem; border-left: 3px solid var(--brand-orange); }
     .pullquote p { font-size: 1rem; font-style: italic; color: var(--dark-outline); line-height: 1.65; }
-    .pullquote cite { display: block; margin-top: .75rem; font-family: 'Space Grotesk', sans-serif; font-style: normal; font-size: .6875rem; letter-spacing: .1em; text-transform: uppercase; color: var(--brand-orange); }
+    .pullquote cite { display: block; margin-top: .75rem; font-family: 'Cinzel', serif; font-style: normal; font-size: .6875rem; letter-spacing: .1em; text-transform: uppercase; color: var(--brand-orange); }
     .about-vdivider { background: var(--rule); }
     .about-right { padding: 5rem 5vw 5rem 4rem; display: flex; flex-direction: column; gap: 2.375rem; }
     .fact { display: flex; flex-direction: column; gap: .45rem; }
-    .fact-label { font-family: 'Space Grotesk', sans-serif; font-size: .6875rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--brand-green); }
+    .fact-label { font-family: 'Cinzel', serif; font-size: .6875rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--brand-green); }
     .fact-body  { font-size: .9375rem; font-style: italic; color: var(--muted); line-height: 1.65; }
 
     /* ── CONTACT ── */
-    .contact { background: var(--white); display: grid; grid-template-columns: 1fr 1.5fr; border-bottom: 2px solid var(--dark-outline); }
+    .contact { background: rgba(255, 255, 255, 0.86); display: grid; grid-template-columns: 1fr 1.5fr; border-bottom: 2px solid var(--dark-outline); }
     .contact-left { padding: 5rem 4rem 5rem 5vw; display: flex; flex-direction: column; gap: 1.75rem; border-right: 1px solid var(--rule); }
     h2.contact-heading { font-size: clamp(1.75rem,2.8vw,2.75rem); color: var(--dark-outline); }
-    .contact-heading .h-accent { color: var(--brand-orange); }
+    .h-accent { color: var(--brand-orange); }
     .contact-body { font-size: .9375rem; font-style: italic; color: var(--muted); line-height: 1.65; }
     form.contact-form { padding: 5rem 5vw 5rem 4rem; display: flex; flex-direction: column; gap: 1.5rem; }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
     .form-field { display: flex; flex-direction: column; gap: .4rem; }
-    .form-label { font-family: 'Space Grotesk', sans-serif; font-size: .6875rem; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+    .form-label { font-family: 'Cinzel', serif; font-size: .6875rem; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
     .form-input,.form-textarea {
       background: transparent; border: none; border-bottom: 2px solid var(--rule);
-      padding: .6rem 0; color: var(--dark-outline); font-family: 'Lora', serif; font-size: 1rem; outline: none;
+      padding: .6rem 0; color: var(--dark-outline); font-family: 'EB Garamond', serif; font-size: 1rem; outline: none;
       transition: border-color .22s ease-out;
     }
     .form-input:focus,.form-textarea:focus { border-bottom-color: var(--brand-orange); }
@@ -217,24 +272,28 @@
 
     /* ── FOOTER ── */
     footer {
-      background: var(--dark-outline); color: var(--cream);
-      padding: 3.5rem 5vw; display: grid; grid-template-columns: 1.2fr 1fr 1fr;
-      align-items: start; gap: 2.5rem; position: relative; overflow: hidden;
+      background: rgba(184, 71, 30, 0.96); color: var(--cream);
+      position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 2rem 5vw;
     }
-    footer::before {
-      content: ''; position: absolute; inset: 0; pointer-events: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='104' height='90'%3E%3Cpolygon points='26,0 52,15 52,45 26,60 0,45 0,15' fill='none' stroke='%233C5A2B' stroke-width='1.2' stroke-opacity='0.22'/%3E%3Cpolygon points='78,45 104,60 104,90 78,105 52,90 52,60' fill='none' stroke='%233C5A2B' stroke-width='1.2' stroke-opacity='0.22'/%3E%3C/svg%3E");
-      background-size: 104px 90px;
+    .footer-stamp {
+      display: flex; flex-direction: column; align-items: center; gap: .5rem;
+    }
+    .footer-stamp--right { align-items: center; }
+    .footer-mj-name {
+      font-family: 'Cinzel', serif; font-size: .75rem; font-weight: 600;
+      letter-spacing: .1em; color: #fff; text-transform: uppercase;
     }
     .footer-brand  { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 1rem; }
     .footer-logo-row { display: flex; align-items: center; gap: 10px; }
-    .footer-wordmark { font-family: 'Space Grotesk', sans-serif; font-size: .9375rem; font-weight: 500; color: var(--cream); letter-spacing: .02em; }
-    .footer-copy   { font-family: 'Space Grotesk', sans-serif; font-size: .6875rem; letter-spacing: .05em; color: rgba(242,235,218,.4); }
+    .footer-wordmark { font-family: 'Cinzel', serif; font-size: .9375rem; font-weight: 500; color: #fff; letter-spacing: .02em; }
+    .footer-copy   { font-family: 'Cinzel', serif; font-size: .6875rem; letter-spacing: .05em; color: rgba(44,28,8,.65); }
     .footer-nav    { list-style: none; position: relative; z-index: 1; display: flex; flex-direction: column; gap: .625rem; }
-    .footer-nav a  { font-family: 'Space Grotesk', sans-serif; font-size: .8125rem; font-weight: 400; letter-spacing: .06em; text-transform: uppercase; color: rgba(242,235,218,.55); text-decoration: none; transition: color .2s ease-out; }
-    .footer-nav a:hover { color: var(--cream); }
+    .footer-nav a  { font-family: 'Cinzel', serif; font-size: .8125rem; font-weight: 400; letter-spacing: .06em; text-transform: uppercase; color: rgba(255,240,210,.85); text-decoration: none; transition: color .2s ease-out; }
+    .footer-nav a:hover { color: #fff; }
     .footer-contact { position: relative; z-index: 1; }
-    .footer-contact p { font-size: .9375rem; color: rgba(242,235,218,.55); line-height: 1.65; }
+    .footer-contact p { font-size: .9375rem; color: rgba(255,240,210,.80); line-height: 1.65; }
 
     /* ── REVEAL ── */
     .reveal { opacity: 0; transform: translateY(10px); transition: opacity .4s ease-out, transform .4s ease-out; }
@@ -271,32 +330,38 @@
       .contact-left { padding: 3.5rem 1.25rem 2rem; border-right: none; border-bottom: 1px solid var(--rule); }
       form.contact-form { padding: 2rem 1.25rem 3.5rem; }
       .form-row  { grid-template-columns: 1fr; }
-      footer { grid-template-columns: 1fr; padding: 3rem 1.25rem; gap: 2rem; }
+      footer { padding: 1.5rem 1.25rem; }
       .footer-nav { flex-direction: row; flex-wrap: wrap; gap: .75rem 1.5rem; }
     }
   </style>
 </head>
 <body>
 
+<div id="hex-canvas-wrap" aria-hidden="true"></div>
 <a href="#main" class="skip-link">Skip to content</a>
 
-<!-- NAV -->
+<!-- ── NAV ── -->
 <nav id="nav" aria-label="Main navigation">
   <a href="/" class="nav-mark" aria-label="Cooper's Consulting — home">
-    <!-- Full 5-layer logo — orange band uses gradient for brilliance -->
     <svg class="nav-hex" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <defs>
-        <radialGradient id="og-nav" cx="50%" cy="38%" r="62%" gradientUnits="objectBoundingBox">
-          <stop offset="0%"   stop-color="#FFB060"/>
-          <stop offset="50%"  stop-color="#E07828"/>
-          <stop offset="100%" stop-color="#B85A18"/>
+        <radialGradient id="og-nav" cx="50%" cy="42%" r="58%" gradientUnits="objectBoundingBox">
+          <stop offset="0%"   stop-color="#CC5428"/>
+          <stop offset="100%" stop-color="#7A2E10"/>
         </radialGradient>
+        <filter id="c-engrave-nav" x="-12%" y="-12%" width="124%" height="124%" color-interpolation-filters="sRGB">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="bmap"/>
+          <feDiffuseLighting in="bmap" lighting-color="#8a6040" surfaceScale="-7" diffuseConstant="1.9" result="lit">
+            <feDistantLight azimuth="135" elevation="38"/>
+          </feDiffuseLighting>
+          <feComposite in="lit" in2="SourceAlpha" operator="in" result="litMask"/>
+          <feBlend in="SourceGraphic" in2="litMask" mode="hard-light" result="blended"/>
+          <feComposite in="blended" in2="SourceAlpha" operator="in"/>
+        </filter>
       </defs>
-      <polygon points="200,10 364.54,105 364.54,295 200,390 35.46,295 35.46,105"   fill="#2C2416"/>
-      <polygon points="200,18 357.61,109 357.61,291 200,382 42.39,291 42.39,109"   fill="url(#og-nav)"/>
-      <polygon points="200,44 335.1,122 335.1,278 200,356 64.9,278 64.9,122"       fill="#2C2416"/>
-      <polygon points="200,52 328.17,126 328.17,274 200,348 71.83,274 71.83,126"   fill="#F2EBDA"/>
-      <path d="M302.19,141 L200,82 L97.81,141 L97.81,259 L200,318 L302.19,259 L302.19,239 L267.55,239 L200,278 L132.45,239 L132.45,161 L200,122 L267.55,161 L302.19,161 Z" fill="#3C5A2B"/>
+      <polygon points="200,10 364.54,105 364.54,295 200,390 35.46,295 35.46,105" fill="#0a0a0a"/>
+      <polygon points="200,18 357.61,109 357.61,291 200,382 42.39,291 42.39,109"  fill="url(#og-nav)"/>
+      <path d="M302.19,141 L200,82 L97.81,141 L97.81,259 L200,318 L302.19,259 L302.19,239 L267.55,239 L200,278 L132.45,239 L132.45,161 L200,122 L267.55,161 L302.19,161 Z" fill="#235023" filter="url(#c-engrave-nav)"/>
     </svg>
     <span class="nav-wordmark">Cooper's Consulting</span>
   </a>
@@ -328,27 +393,44 @@
   <a href="petra.html">PETRA</a>
 </div>
 
-<main id="main">
+<main id="main" style="position:relative;z-index:1">
 
-<!-- HERO -->
-<section class="hero" aria-label="Cooper's Consulting">
-  <canvas id="hex-canvas" aria-hidden="true"></canvas>
+<!-- ══════════════════════════════════════════════════════════ HERO -->
+<section class="hero" id="hero-section" aria-label="Cooper's Consulting">
+  <!-- Three.js canvas injected by module script -->
 
   <div class="hero-logo-wrap" id="parallax-logo">
     <svg class="hero-mark" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-label="Cooper's Consulting logo">
       <defs>
-        <radialGradient id="og-hero" cx="50%" cy="38%" r="62%" gradientUnits="objectBoundingBox">
-          <stop offset="0%"   stop-color="#FFC070"/>
-          <stop offset="40%"  stop-color="#E87E2C"/>
-          <stop offset="100%" stop-color="#B85A18"/>
+        <radialGradient id="fill-hero" cx="50%" cy="42%" r="58%" gradientUnits="objectBoundingBox">
+          <stop offset="0%"   stop-color="#CC5428"/>
+          <stop offset="100%" stop-color="#7A2E10"/>
         </radialGradient>
+        <!-- Engraved C: treats the shape edge-blur as a height map,
+             negative surfaceScale inverts to concave (pressed in).
+             Light from upper-left (azimuth 135°) makes upper-left wall
+             dark and lower-right wall bright — classic engraving read. -->
+        <filter id="c-engrave" x="-12%" y="-12%" width="124%" height="124%" color-interpolation-filters="sRGB">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="bmap"/>
+          <feDiffuseLighting in="bmap" lighting-color="#8a6040" surfaceScale="-7" diffuseConstant="1.9" result="lit">
+            <feDistantLight azimuth="135" elevation="38"/>
+          </feDiffuseLighting>
+          <feComposite in="lit" in2="SourceAlpha" operator="in" result="litMask"/>
+          <feBlend in="SourceGraphic" in2="litMask" mode="hard-light" result="blended"/>
+          <feComposite in="blended" in2="SourceAlpha" operator="in"/>
+        </filter>
       </defs>
-      <polygon points="200,10 364.54,105 364.54,295 200,390 35.46,295 35.46,105"   fill="#2C2416"/>
-      <polygon points="200,18 357.61,109 357.61,291 200,382 42.39,291 42.39,109"   fill="url(#og-hero)"/>
-      <polygon points="200,44 335.1,122 335.1,278 200,356 64.9,278 64.9,122"       fill="#2C2416"/>
-      <polygon points="200,52 328.17,126 328.17,274 200,348 71.83,274 71.83,126"   fill="#F2EBDA"/>
-      <path d="M302.19,141 L200,82 L97.81,141 L97.81,259 L200,318 L302.19,259 L302.19,239 L267.55,239 L200,278 L132.45,239 L132.45,161 L200,122 L267.55,161 L302.19,161 Z" fill="#3C5A2B"/>
+      <!-- Outer black border -->
+      <polygon points="200,10 364.54,105 364.54,295 200,390 35.46,295 35.46,105" fill="#0a0a0a"/>
+      <!-- Orange fill with depth -->
+      <polygon points="200,18 357.61,109 357.61,291 200,382 42.39,291 42.39,109"  fill="url(#fill-hero)"/>
+      <!-- Engraved dark green C -->
+      <path d="M302.19,141 L200,82 L97.81,141 L97.81,259 L200,318 L302.19,259 L302.19,239 L267.55,239 L200,278 L132.45,239 L132.45,161 L200,122 L267.55,161 L302.19,161 Z"
+            fill="#235023" filter="url(#c-engrave)"/>
     </svg>
+    <p class="hero-tagline">
+      A <span class="h-accent">vision</span> for your future<em>and the tools to build it.</em>
+    </p>
   </div>
 </section>
 
@@ -357,13 +439,13 @@
 <!-- CTA BAND -->
 <div class="cta-band">
   <div class="cta-cell reveal">
-    <p class="cta-label">Men's Retreat · Fredericktown, MO</p>
-    <a href="noba.html" class="btn btn-primary">Apply for NOBA 2027</a>
+    <p class="cta-label">EOS Conference · St. Louis, MO · June 18–19</p>
+    <a href="forum.html" class="btn btn-primary">Register for Focus Forum 2026</a>
   </div>
   <div class="cta-sep" aria-hidden="true"></div>
   <div class="cta-cell reveal">
-    <p class="cta-label">Conference · St. Louis, MO · June 18–19</p>
-    <a href="forum.html" class="btn btn-secondary">Register for Focus Forum 2026</a>
+    <p class="cta-label">Men's Retreat · Piedmont, MO</p>
+    <a href="noba.html" class="btn btn-secondary">Apply for NOBA 2027</a>
   </div>
 </div>
 
@@ -371,7 +453,7 @@
 <section class="programs" aria-labelledby="programs-title">
   <div class="programs-header">
     <span class="section-label" aria-hidden="true">Programs</span>
-    <h2 class="programs-title" id="programs-title">[Section heading placeholder]</h2>
+    <h2 class="programs-title" id="programs-title">Time and attention are your most valuable resources.<br>We can help buy yours back.</h2>
   </div>
   <div class="programs-grid">
     <a href="noba.html" class="prog reveal" aria-label="NOBA — Men's Retreat, Fredericktown MO">
@@ -380,8 +462,8 @@
         <span class="prog-logo-mark">NOBA</span>
       </div>
       <p class="prog-name">NOBA</p>
-      <p class="prog-meta">Men's Retreat &nbsp;·&nbsp; Fredericktown, MO</p>
-      <p class="prog-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquip ex ea commodo consequat duis aute.</p>
+      <p class="prog-meta">Men's Retreat &nbsp;·&nbsp; Piedmont, MO</p>
+      <p class="prog-desc">Join us for a weekend at the beautiful Eagle Sky camp of the Ozarks to form connections with likeminded men, set goals that will measurably improve your life, and learn from those who have gone before.</p>
       <span class="prog-cta" aria-hidden="true">Learn more →</span>
     </a>
     <a href="forum.html" class="prog reveal" aria-label="Focus Forum — Conference, St. Louis MO">
@@ -390,8 +472,8 @@
         <span class="prog-logo-mark">Focus Forum</span>
       </div>
       <p class="prog-name">Focus Forum</p>
-      <p class="prog-meta">Conference &nbsp;·&nbsp; St. Louis, MO</p>
-      <p class="prog-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquip ex ea commodo consequat duis aute.</p>
+      <p class="prog-meta">EOS Conference &nbsp;·&nbsp; St. Louis, MO</p>
+      <p class="prog-desc">Focus Forum is a two day event built for owners and leaders who carry the responsibility of growing organizations. If you possess the will to grow, but are struggling with the way, this conference is for you.</p>
       <span class="prog-cta" aria-hidden="true">Learn more →</span>
     </a>
     <a href="petra.html" class="prog reveal" aria-label="PETRA — Peer Group, Fredericktown MO">
@@ -400,23 +482,25 @@
         <span class="prog-logo-mark">PETRA</span>
       </div>
       <p class="prog-name">PETRA</p>
-      <p class="prog-meta">Peer Group &nbsp;·&nbsp; Fredericktown, MO</p>
-      <p class="prog-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquip ex ea commodo consequat duis aute.</p>
+      <p class="prog-meta">Entrepreneur Peer Group &nbsp;·&nbsp; Fredericktown, MO</p>
+      <p class="prog-desc">Do you own a small business in Southeast Missouri? Are you interested in meeting with other business owners to learn from each other's problems and solutions? Apply to be a member of PETRA, and start building on the Rock.</p>
       <span class="prog-cta" aria-hidden="true">Learn more →</span>
     </a>
   </div>
 </section>
 
-<div class="honeycomb-strip" aria-hidden="true"></div>
+<div class="data-strip reveal">
+  <p class="data-strip-text">Where does your <span class="data-accent">data</span> GO?</p>
+</div>
 
 <!-- ABOUT -->
 <section class="about" id="about" aria-labelledby="about-heading">
   <div class="about-left">
     <span class="section-label">About</span>
-    <h2 class="about-name" id="about-heading">Dale<br><span class="name-o">Cooper</span><span class="name-sub">& Joel Cooper</span></h2>
+    <h2 class="about-name" id="about-heading">Dale <span class="name-o">Cooper</span><span class="name-sub">& his son, Joel</span></h2>
     <div class="about-rule" aria-hidden="true"></div>
     <blockquote class="pullquote reveal">
-      <p>"[Quote pending approval]"</p>
+      <p>"High stakes conversations are part of business and life. Struggling to find purpose? Vision is grown, and we can't help ourselves."</p>
       <cite>— Dale Cooper</cite>
     </blockquote>
   </div>
@@ -432,7 +516,7 @@
 <section class="contact" id="contact" aria-labelledby="contact-heading">
   <div class="contact-left">
     <span class="section-label">Contact</span>
-    <h2 class="contact-heading" id="contact-heading">[Heading<br>pending <span class="h-accent">approval</span>]</h2>
+    <h2 class="contact-heading" id="contact-heading">Spinning your wheels on your long-term goals?<br>We can help you find <span class="h-accent">traction.</span></h2>
     <p class="contact-body">Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt.</p>
   </div>
   <form class="contact-form reveal" action="#" method="POST">
@@ -448,229 +532,337 @@
 </main>
 
 <!-- FOOTER -->
-<footer>
-  <div class="footer-brand">
-    <div class="footer-logo-row">
-      <svg width="26" height="30" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <defs>
-          <radialGradient id="og-ft" cx="50%" cy="38%" r="62%" gradientUnits="objectBoundingBox">
-            <stop offset="0%"   stop-color="#FFB060"/>
-            <stop offset="50%"  stop-color="#E07828"/>
-            <stop offset="100%" stop-color="#B85A18"/>
-          </radialGradient>
-        </defs>
-        <polygon points="200,10 364.54,105 364.54,295 200,390 35.46,295 35.46,105"   fill="#2C2416"/>
-        <polygon points="200,18 357.61,109 357.61,291 200,382 42.39,291 42.39,109"   fill="url(#og-ft)"/>
-        <polygon points="200,44 335.1,122 335.1,278 200,356 64.9,278 64.9,122"       fill="#2C2416"/>
-        <polygon points="200,52 328.17,126 328.17,274 200,348 71.83,274 71.83,126"   fill="#F2EBDA" opacity=".9"/>
-        <path d="M302.19,141 L200,82 L97.81,141 L97.81,259 L200,318 L302.19,259 L302.19,239 L267.55,239 L200,278 L132.45,239 L132.45,161 L200,122 L267.55,161 L302.19,161 Z" fill="#3C5A2B"/>
-      </svg>
-      <span class="footer-wordmark">Cooper's Consulting</span>
-    </div>
-    <p class="footer-copy">© 2026 Cooper's Consulting</p>
+<footer style="position:relative;z-index:1">
+  <!-- Cooper's Consulting — left -->
+  <div class="footer-stamp">
+    <svg width="48" height="55" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <radialGradient id="og-ft" cx="50%" cy="42%" r="58%" gradientUnits="objectBoundingBox">
+          <stop offset="0%"   stop-color="#CC5428"/>
+          <stop offset="100%" stop-color="#7A2E10"/>
+        </radialGradient>
+        <filter id="c-engrave-ft" x="-12%" y="-12%" width="124%" height="124%" color-interpolation-filters="sRGB">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="bmap"/>
+          <feDiffuseLighting in="bmap" lighting-color="#8a6040" surfaceScale="-7" diffuseConstant="1.9" result="lit">
+            <feDistantLight azimuth="135" elevation="38"/>
+          </feDiffuseLighting>
+          <feComposite in="lit" in2="SourceAlpha" operator="in" result="litMask"/>
+          <feBlend in="SourceGraphic" in2="litMask" mode="hard-light" result="blended"/>
+          <feComposite in="blended" in2="SourceAlpha" operator="in"/>
+        </filter>
+      </defs>
+      <polygon points="200,10 364.54,105 364.54,295 200,390 35.46,295 35.46,105" fill="#0a0a0a"/>
+      <polygon points="200,18 357.61,109 357.61,291 200,382 42.39,291 42.39,109"  fill="url(#og-ft)"/>
+      <path d="M302.19,141 L200,82 L97.81,141 L97.81,259 L200,318 L302.19,259 L302.19,239 L267.55,239 L200,278 L132.45,239 L132.45,161 L200,122 L267.55,161 L302.19,161 Z" fill="#235023" filter="url(#c-engrave-ft)"/>
+    </svg>
+    <span class="footer-wordmark">Cooper's Consulting</span>
   </div>
-  <ul class="footer-nav" role="list">
-    <li><a href="noba.html">NOBA</a></li>
-    <li><a href="forum.html">Focus Forum</a></li>
-    <li><a href="petra.html">PETRA</a></li>
-    <li><a href="#about">About</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-  <div class="footer-contact"><p>Fredericktown, Missouri</p></div>
+
+  <!-- Magus Jane — right -->
+  <div class="footer-stamp footer-stamp--right">
+    <a href="https://www.magusjane.com" target="_blank" rel="noopener noreferrer" aria-label="Magus Jane">
+      <svg viewBox="0 0 120 120" width="48" height="48" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="60,6 108,33 108,87 60,114 12,87 12,33" fill="#AA0000"/>
+        <text x="60" y="60" text-anchor="middle" dominant-baseline="central"
+              font-family="Cinzel Decorative, serif" font-weight="700" font-size="52" fill="#0a0a0a">J</text>
+      </svg>
+    </a>
+    <span class="footer-mj-name">Magus Jane</span>
+  </div>
 </footer>
 
+<!-- ════════════════════════════════════════ THREE.JS HERO MODULE -->
+<script type="module">
+import * as THREE               from 'three';
+import { EffectComposer }       from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass }           from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass }      from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass }           from 'three/addons/postprocessing/OutputPass.js';
+
+// ── Elements ────────────────────────────────────────────────────────────────
+const heroEl = document.getElementById('hero-section');
+const logoEl = document.getElementById('parallax-logo');
+
+let W = window.innerWidth;
+let H = window.innerHeight;
+
+// ── Renderer ─────────────────────────────────────────────────────────────────
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(W, H);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.1;
+Object.assign(renderer.domElement.style, {
+  width: '100%', height: '100%', display: 'block',
+});
+const hexWrap = document.getElementById('hex-canvas-wrap');
+hexWrap.appendChild(renderer.domElement);
+
+// ── Scene & Camera ───────────────────────────────────────────────────────────
+const scene  = new THREE.Scene();
+scene.background = new THREE.Color(0x010801);
+
+const camera = new THREE.PerspectiveCamera(45, W / H, 0.1, 2000);
+camera.position.z = 220;
+
+// ── Hex tile geometry (flat-top, extruded) ───────────────────────────────────
+// Flat-top hex: vertex i at angle i*60°, starting at 0° (rightmost)
+const HEX_R  = 9.5;          // circumradius in world units
+const GAP    = 1.25;          // midpoint gap — balanced crack width
+const TILE_R = HEX_R - GAP;  // drawn radius — ensures clean uniform gaps
+
+const shape = new THREE.Shape();
+for (let i = 0; i < 6; i++) {
+  const a = (Math.PI / 3) * i + Math.PI / 2;  // pointy-top: first vertex at 90°
+  const x = TILE_R * Math.cos(a);
+  const y = TILE_R * Math.sin(a);
+  i === 0 ? shape.moveTo(x, y) : shape.lineTo(x, y);
+}
+shape.closePath();
+
+const DEPTH  = 1.8;   // extrusion depth — gives tiles physical thickness
+const BEVEL  = 0.32;  // bevel catches the light on tile edges
+
+const tileGeo = new THREE.ExtrudeGeometry(shape, {
+  depth: DEPTH,
+  bevelEnabled:    true,
+  bevelThickness:  BEVEL,
+  bevelSize:       BEVEL * 0.75,
+  bevelSegments:   3,
+});
+// Translate so the top face sits at Z = 0, back face behind
+tileGeo.translate(0, 0, -(DEPTH + BEVEL));
+
+// ── Tile material ─────────────────────────────────────────────────────────────
+const tileMat = new THREE.MeshStandardMaterial({
+  color:             new THREE.Color(0x001008),
+  emissive:          new THREE.Color(0x002c10),  // just a hair lighter
+  emissiveIntensity: 1.0,
+  metalness: 0.15,
+  roughness: 0.88,
+});
+
+// ── Grid — InstancedMesh (one draw call for all tiles) ───────────────────────
+const COLS  = 52;
+const ROWS  = 34;
+const COUNT = COLS * ROWS;
+const COL_W = HEX_R * Math.sqrt(3);   // flat-top: horiz centre-to-centre spacing
+const ROW_H = HEX_R * 1.5;            // vert   centre-to-centre spacing
+
+const tileMesh = new THREE.InstancedMesh(tileGeo, tileMat, COUNT);
+tileMesh.frustumCulled = false; // we manage visibility
+
+const dummy   = new THREE.Object3D();
+const gridW   = COLS * COL_W;
+const gridH   = ROWS * ROW_H;
+let   idx     = 0;
+for (let row = 0; row < ROWS; row++) {
+  for (let col = 0; col < COLS; col++) {
+    const x = -gridW / 2 + col * COL_W + (row % 2 !== 0 ? COL_W * 0.5 : 0);
+    const y = -gridH / 2 + row * ROW_H;
+    dummy.position.set(x, y, 0);
+    dummy.rotation.set(0, 0, 0);
+    dummy.scale.setScalar(1);
+    dummy.updateMatrix();
+    tileMesh.setMatrixAt(idx++, dummy.matrix);
+  }
+}
+tileMesh.instanceMatrix.needsUpdate = true;
+scene.add(tileMesh);
+
+// ── Emissive glow plane — orange radial gradient behind the tile grid ─────────
+// This is what "bleeds through" the gaps. Shader-driven so the hot-spot moves.
+const glowGeo = new THREE.PlaneGeometry(gridW + 120, gridH + 120);
+const glowMat = new THREE.ShaderMaterial({
+  uniforms: {
+    uLightPos:  { value: new THREE.Vector2(0, 0) },
+    uIntensity: { value: 0.0 },
+    uRadius:    { value: Math.max(gridW, gridH) * 0.38 },
+  },
+  vertexShader: /* glsl */`
+    varying vec2 vWorld;
+    void main() {
+      vec4 wp = modelMatrix * vec4(position, 1.0);
+      vWorld   = wp.xy;
+      gl_Position = projectionMatrix * viewMatrix * wp;
+    }
+  `,
+  fragmentShader: /* glsl */`
+    uniform vec2  uLightPos;
+    uniform float uIntensity;
+    uniform float uRadius;
+    varying vec2  vWorld;
+
+    void main() {
+      float d = length(vWorld - uLightPos);
+      float raw = 1.0 - clamp(d / uRadius, 0.0, 1.0);
+      float t = pow(raw, 2.2);  // sharp falloff — bright at cursor, near-black at edges
+
+      // Dark amber ember — near-black away from cursor, deep amber at centre
+      vec3 c0 = vec3(0.004, 0.000, 0.000);  // near-black
+      vec3 c1 = vec3(0.060, 0.008, 0.001);  // very dark brown
+      vec3 c2 = vec3(0.160, 0.042, 0.004);  // dark burnt orange
+      vec3 c3 = vec3(0.260, 0.095, 0.008);  // deep amber at cursor centre
+
+      float t2 = t * t;
+      float t3 = t2 * t;
+      vec3 col;
+      if (t < 0.25)       col = mix(c0, c1, t / 0.25);
+      else if (t < 0.55)  col = mix(c1, c2, (t - 0.25) / 0.30);
+      else                col = mix(c2, c3, (t - 0.55) / 0.45);
+
+      // Tight hotspot at cursor
+      float hot = pow(max(0.0, 1.0 - d / (uRadius * 0.10)), 3.0);
+      col += vec3(0.14, 0.050, 0.004) * hot;
+
+      gl_FragColor = vec4(col * uIntensity, 1.0);
+    }
+  `,
+  side: THREE.FrontSide,
+  depthWrite: false,
+});
+const glowPlane = new THREE.Mesh(glowGeo, glowMat);
+glowPlane.position.z = -(DEPTH + BEVEL + 0.8); // just behind tile faces
+scene.add(glowPlane);
+
+// ── Lights (for tile surface & bevel shading) ────────────────────────────────
+// Faint ambient so tiles aren't pitch-black on back face
+scene.add(new THREE.AmbientLight(0x0a2e10, 1.8));
+
+// Main orange point light — illuminates bevel edges near the hot-spot
+// This works WITH the glow plane: gaps show glow plane, bevel edges catch light
+const pointLight = new THREE.PointLight(0xFF9040, 0, 900);
+pointLight.position.set(0, 0, 80);
+scene.add(pointLight);
+
+// Deep green fill — reinforces tile colour across the grid
+const fillLight = new THREE.PointLight(0x0a3010, 2.8, 800);
+fillLight.position.set(-130, 90, 100);
+scene.add(fillLight);
+
+// ── Post-processing ───────────────────────────────────────────────────────────
+// UnrealBloomPass makes the glow-plane emission bleed/bloom through tile gaps
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+
+const bloomPass = new UnrealBloomPass(
+  new THREE.Vector2(W, H),
+  0.60,   // strength — restrained glow
+  0.45,   // radius
+  0.28    // threshold
+);
+composer.addPass(bloomPass);
+composer.addPass(new OutputPass()); // tone-map → sRGB
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let pageScrollY  = 0;
+let mouseX = null, mouseY = null;
+let startTime = null;
+let lxSmooth = 0, lySmooth = 0;
+let camX = 0, camY = 0; // smoothed camera offset for background parallax
+
+// Map screen pixel (sx, sy) → world XY at Z=0
+function screenToWorld(sx, sy) {
+  const halfH = Math.tan((45 / 2) * (Math.PI / 180)) * camera.position.z;
+  const halfW = halfH * (W / H);
+  return {
+    x:  ((sx / W) - 0.5) * 2 * halfW,
+    y: -((sy / H) - 0.5) * 2 * halfH,
+  };
+}
+
+// ── Input ─────────────────────────────────────────────────────────────────────
+window.addEventListener('scroll',  () => { pageScrollY = window.scrollY; }, { passive: true });
+window.addEventListener('mousemove', e => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+}, { passive: true });
+
+// ── Resize ─────────────────────────────────────────────────────────────────────
+function onResize() {
+  W = window.innerWidth;
+  H = window.innerHeight;
+  camera.aspect = W / H;
+  camera.updateProjectionMatrix();
+  renderer.setSize(W, H);
+  composer.setSize(W, H);
+  bloomPass.resolution.set(W, H);
+}
+window.addEventListener('resize', onResize, { passive: true });
+
+// ── Animate ────────────────────────────────────────────────────────────────────
+function animate(ts) {
+  requestAnimationFrame(animate);
+  if (!startTime) startTime = ts;
+  const elapsed = ts - startTime;
+
+  // Boot progress (0 → 1 over 2.4 s, ease-out cubic)
+  const rawBoot = Math.min(1, elapsed / 2400);
+  const boot    = 1 - Math.pow(1 - rawBoot, 3);
+
+  // ── Light source target in world space ──────────────────────────────────────
+  // Canvas is fixed — glow tracks cursor directly across the full page
+  let tgt = mouseX !== null
+    ? screenToWorld(mouseX, mouseY)
+    : screenToWorld(W * 0.5, H * 0.5);
+
+  // Keep a reference for the logo parallax below
+  const parallaxY = Math.min(pageScrollY, H) * 0.45;
+
+  // Idle drift: sinusoidal wander so it never fully stops
+  const driftScale = Math.min(1, boot);
+  tgt.x += Math.sin(ts * 0.00024) * 14 * driftScale;
+  tgt.y += Math.cos(ts * 0.00019) * 9  * driftScale;
+
+  // Smooth chase (lerp): light lags slightly → feels physical
+  lxSmooth += (tgt.x - lxSmooth) * 0.055;
+  lySmooth += (tgt.y - lySmooth) * 0.055;
+
+  // Post-boot breathe pulse (±3.5%)
+  const breathe = boot >= 1 ? 1 + 0.035 * Math.sin(ts * 0.0017) : 1;
+  const intensity = boot * breathe;
+
+  // ── Update glow plane uniforms ──────────────────────────────────────────────
+  glowMat.uniforms.uLightPos.value.set(lxSmooth, lySmooth);
+  glowMat.uniforms.uIntensity.value = intensity;
+
+  // ── Update point light (bevel highlights on tiles) ─────────────────────────
+  pointLight.position.set(lxSmooth, lySmooth, 80);
+  pointLight.intensity = 2.0 * intensity;
+
+  // ── Background parallax — camera drifts with mouse, logo stays locked ───────
+  const nx = mouseX !== null ? (mouseX / W - 0.5) : 0;
+  const ny = mouseY !== null ? (mouseY / H - 0.5) : 0;
+  camX += (nx * 6 - camX) * 0.04;   // subtle drift ±6 world units
+  camY += (-ny * 4 - camY) * 0.04;
+  camera.position.x = camX;
+  camera.position.y = camY;
+
+  // ── Logo entry animation — stationary, no movement ──────────────────────────
+  if (rawBoot < 0.38) {
+    logoEl.style.opacity   = '0';
+    logoEl.style.transform = `translate(-50%, calc(-50% + ${parallaxY}px)) scale(1.10)`;
+  } else {
+    const t    = Math.min(1, (rawBoot - 0.38) / 0.62);
+    const ease = 1 - Math.pow(1 - t, 3);
+    logoEl.style.opacity   = ease.toFixed(4);
+    logoEl.style.transform = `translate(-50%, calc(-50% + ${parallaxY}px)) scale(${(1.10 - 0.10 * ease).toFixed(4)})`;
+  }
+
+  composer.render();
+}
+
+requestAnimationFrame(animate);
+</script>
+
+<!-- ════════════════════════════════════════ SITE SCRIPTS (non-module) -->
 <script>
-// ─────────────────────────────────────────────────────────────────────────────
-//  HEX CANVAS HERO
-//
-//  Stack (back → front):
-//  1. Near-black background
-//  2. Orange radial gradient  ← the "light source"
-//  3. Dark flat-top hex tiles ← clean solid fills, no glow rings
-//     Gaps between tiles reveal (2) — those gaps ARE the glow lines
-//  4. Parallax logo on top
-//
-//  Tile render = ONE fill call per tile. No per-tile gradients.
-//  Directional shading baked into tile colour via global position factor.
-//  No shadowBlur. No overlapping shapes. Clean lines everywhere.
-// ─────────────────────────────────────────────────────────────────────────────
-(function () {
-  const canvas = document.getElementById('hex-canvas');
-  const ctx    = canvas.getContext('2d');
-  const logoEl = document.getElementById('parallax-logo');
-  const heroEl = document.querySelector('.hero');
-  const DPR    = Math.min(window.devicePixelRatio || 1, 2);
-
-  let W, H;
-  let scrollY  = 0;
-  let mouseX   = null;
-  let mouseY   = null;
-  let startTime = null;
-
-  // ── Resize ───────────────────────────────────────────────────────────────
-  function resize() {
-    W = heroEl.offsetWidth;
-    H = heroEl.offsetHeight;
-    canvas.width  = W * DPR;
-    canvas.height = H * DPR;
-    canvas.style.width  = W + 'px';
-    canvas.style.height = H + 'px';
-    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-  }
-  resize();
-  window.addEventListener('resize', resize, { passive: true });
-
-  // ── Input ────────────────────────────────────────────────────────────────
-  window.addEventListener('scroll', () => { scrollY = window.scrollY; }, { passive: true });
-  heroEl.addEventListener('mousemove', e => {
-    const r = heroEl.getBoundingClientRect();
-    mouseX = e.clientX - r.left;
-    mouseY = e.clientY - r.top;
-  }, { passive: true });
-  heroEl.addEventListener('mouseleave', () => { mouseX = null; mouseY = null; });
-
-  // ── Flat-top hex path ─────────────────────────────────────────────────────
-  // Flat-top: first vertex at angle 0° (rightmost point)
-  function hexPath(cx, cy, r) {
-    ctx.beginPath();
-    for (let i = 0; i < 6; i++) {
-      const a = (Math.PI / 3) * i;
-      i === 0
-        ? ctx.moveTo(cx + r * Math.cos(a), cy + r * Math.sin(a))
-        : ctx.lineTo(cx + r * Math.cos(a), cy + r * Math.sin(a));
-    }
-    ctx.closePath();
-  }
-
-  // ── Render loop ───────────────────────────────────────────────────────────
-  function render(ts) {
-    if (!startTime) startTime = ts;
-    const elapsed = ts - startTime;
-
-    // Boot: 0→1 in 2.4 s, ease-out cubic
-    const rawBoot = Math.min(1, elapsed / 2400);
-    const boot    = 1 - Math.pow(1 - rawBoot, 3);
-
-    // Hex sizing — responsive
-    // colW = horiz spacing between flat-top hex centres in same row = hexR * sqrt(3)
-    // rowH = vert spacing between rows = hexR * 1.5
-    const hexR = Math.max(26, Math.min(52, W / 30));
-    const colW = hexR * Math.sqrt(3);
-    const rowH = hexR * 1.5;
-    // GAP: the void between tiles — half on each side of the shared edge
-    // tileR drawn at hexR - GAP ensures uniform spacing with no overlap
-    const GAP   = Math.max(2.5, hexR * 0.075);
-    const tileR = hexR - GAP;
-
-    // Parallax: logo drifts at 45% scroll speed
-    const parallaxY = Math.min(scrollY, H) * 0.45;
-
-    // Light source base: sits at logo centre in hero-local coordinates
-    let tgtX = W * 0.5;
-    let tgtY = H * 0.5 + parallaxY;
-    if (mouseX !== null) {
-      tgtX += (mouseX - W * 0.5) * 0.18;
-      tgtY += (mouseY - H * 0.5) * 0.12;
-    }
-
-    // Idle drift: gentle sine oscillation (only at full brightness)
-    const drift = boot >= 1 ? 1 : boot;
-    const lx = tgtX + Math.sin(ts * 0.00024) * W  * 0.026 * drift;
-    const ly = tgtY + Math.cos(ts * 0.00019) * H  * 0.018 * drift;
-
-    // Breathe: ±3.5% pulse after fully booted
-    const breathe = boot >= 1 ? 1 + 0.035 * Math.sin(ts * 0.0017) : 1;
-    const gi = boot * breathe; // overall glow intensity
-
-    // ── Draw ────────────────────────────────────────────────────────────────
-
-    // 1. Near-black base
-    ctx.fillStyle = '#030a03';
-    ctx.fillRect(0, 0, W, H);
-
-    // 2. Orange light source — radial gradient expands from centre during boot
-    const glowR = Math.hypot(W, H) * (0.12 + 0.88 * boot);
-    const grd   = ctx.createRadialGradient(lx, ly, 0, lx, ly, glowR);
-    grd.addColorStop(0,    `rgba(255,190, 85, ${Math.min(1, gi * 1.05)})`);
-    grd.addColorStop(0.05, `rgba(250,160, 55, ${gi * 0.96})`);
-    grd.addColorStop(0.16, `rgba(215,115, 32, ${gi * 0.78})`);
-    grd.addColorStop(0.35, `rgba(140, 60, 12, ${gi * 0.46})`);
-    grd.addColorStop(0.60, `rgba( 50, 18,  3, ${gi * 0.18})`);
-    grd.addColorStop(1,    'rgba(0,0,0,0)');
-    ctx.fillStyle = grd;
-    ctx.fillRect(0, 0, W, H);
-
-    // 3. Hex tiles — clean single-fill, no glow rings, no per-tile gradients
-    const maxDist = Math.max(W, H) * 0.70;
-    const cols    = Math.ceil(W / colW) + 4;
-    const rows    = Math.ceil(H / rowH) + 4;
-    // Start offset so grid is centred and tiles bleed to edges
-    const startX  = -colW  * 1.5;
-    const startY  = -rowH  * 1.5;
-
-    for (let row = 0; row < rows; row++) {
-      const cy = startY + row * rowH;
-      // Odd rows offset right by half column width — creates the honeycomb stagger
-      const xOff = (row % 2 !== 0) ? colW * 0.5 : 0;
-
-      for (let col = 0; col < cols; col++) {
-        const cx = startX + col * colW + xOff;
-
-        // Distance from tile centre to light source → glow proximity 0-1
-        const dist = Math.hypot(cx - lx, cy - ly);
-        const prox = Math.max(0, 1 - dist / maxDist);
-
-        // Boot wave: tiles materialise from light-source outward
-        // normDist based on dist from screen centre (boot origin), not light source,
-        // so the wave radiates from initial centre regardless of mouse/scroll
-        const normFromCentre = Math.min(1, Math.hypot(cx - W*0.5, cy - H*0.5) / (Math.max(W,H)*0.6));
-        const tileDelay = normFromCentre * 0.50;
-        const tileBoot  = Math.max(0, Math.min(1, (rawBoot - tileDelay) / 0.50));
-        const curR      = tileR * tileBoot;
-        if (curR < 1) continue;
-
-        // ── Tile colour ──────────────────────────────────────────────────────
-        // Base: very dark forest green
-        // + proximity warming (closer to light → slightly warmer/lighter)
-        // + directional shading (upper-left brighter → gives raised-panel depth)
-        const dir = Math.max(0, Math.min(1, 0.5 + (-cx / W - cy / H) * 0.28));
-        const tR  = Math.round( 8 + prox * 22 + dir * 7);
-        const tG  = Math.round(16 + prox * 32 + dir * 12);
-        const tB  = Math.round( 7 + prox * 16 + dir * 5);
-
-        hexPath(cx, cy, curR);
-        ctx.fillStyle = `rgb(${tR},${tG},${tB})`;
-        ctx.fill();
-      }
-    }
-
-    // ── Logo animation ───────────────────────────────────────────────────────
-    // Stays hidden until boot reaches 40%, then eases in with a slight scale
-    if (rawBoot < 0.40) {
-      logoEl.style.opacity   = '0';
-      logoEl.style.transform = `translate(-50%, calc(-50% + ${parallaxY}px)) scale(1.10)`;
-    } else {
-      const t    = Math.min(1, (rawBoot - 0.40) / 0.60);
-      const ease = 1 - Math.pow(1 - t, 3);
-      logoEl.style.opacity   = ease.toFixed(4);
-      logoEl.style.transform =
-        `translate(-50%, calc(-50% + ${parallaxY}px)) scale(${(1.10 - 0.10 * ease).toFixed(4)})`;
-    }
-
-    requestAnimationFrame(render);
-  }
-
-  requestAnimationFrame(render);
-})();
-
-
 // ── Nav scroll state ──────────────────────────────────────────────────────────
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => {
   nav.classList.toggle('scrolled', window.scrollY > 40);
 }, { passive: true });
 if (window.scrollY > 40) nav.classList.add('scrolled');
-
 
 // ── Mobile menu ───────────────────────────────────────────────────────────────
 const burgerBtn    = document.getElementById('burger-btn');
@@ -686,10 +878,8 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu();
   if (el) el.addEventListener('click', closeMenu);
 });
 
-
 // ── Reveal on scroll ──────────────────────────────────────────────────────────
-const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-if (reduced) {
+if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
 } else {
   const obs = new IntersectionObserver(entries => {
@@ -698,5 +888,6 @@ if (reduced) {
   document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 }
 </script>
+
 </body>
 </html>

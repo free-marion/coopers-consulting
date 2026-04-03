@@ -1,0 +1,31 @@
+<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-label="Cooper's Consulting logo — v1 locked">
+  <!--
+    Cooper's Consulting — Logo v1 (locked 2026-04-03)
+    ──────────────────────────────────────────────────
+    Layers:
+      1. Outer black border hex  R=190
+      2. Orange fill hex         R=182  gradient #CC5428 → #7A2E10
+      3. Engraved mid-green C    fill #235023  feDiffuseLighting engrave filter
+         (lighting-color #8a6040, surfaceScale -7, diffuseConstant 1.9,
+          azimuth 135°, elevation 38°, blur stdDeviation 4)
+  -->
+  <defs>
+    <radialGradient id="fill-v1" cx="50%" cy="42%" r="58%" gradientUnits="objectBoundingBox">
+      <stop offset="0%"   stop-color="#CC5428"/>
+      <stop offset="100%" stop-color="#7A2E10"/>
+    </radialGradient>
+    <filter id="c-engrave-v1" x="-12%" y="-12%" width="124%" height="124%" color-interpolation-filters="sRGB">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="bmap"/>
+      <feDiffuseLighting in="bmap" lighting-color="#8a6040" surfaceScale="-7" diffuseConstant="1.9" result="lit">
+        <feDistantLight azimuth="135" elevation="38"/>
+      </feDiffuseLighting>
+      <feComposite in="lit" in2="SourceAlpha" operator="in" result="litMask"/>
+      <feBlend in="SourceGraphic" in2="litMask" mode="hard-light" result="blended"/>
+      <feComposite in="blended" in2="SourceAlpha" operator="in"/>
+    </filter>
+  </defs>
+  <polygon points="200,10 364.54,105 364.54,295 200,390 35.46,295 35.46,105" fill="#0a0a0a"/>
+  <polygon points="200,18 357.61,109 357.61,291 200,382 42.39,291 42.39,109"  fill="url(#fill-v1)"/>
+  <path d="M302.19,141 L200,82 L97.81,141 L97.81,259 L200,318 L302.19,259 L302.19,239 L267.55,239 L200,278 L132.45,239 L132.45,161 L200,122 L267.55,161 L302.19,161 Z"
+        fill="#235023" filter="url(#c-engrave-v1)"/>
+</svg>
