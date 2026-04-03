@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>NOBA Retreat — Eagle Sky Gallery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=Oswald:wght@400;600;700&family=Special+Elite&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── CABIN WALL ───────────────────────────────────── */
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+}
+body {
+  background:
+    /* dark overlay so frames pop */
+    linear-gradient(rgba(12,8,4,0.52), rgba(12,8,4,0.52)),
+    url('images/noba-wall-bg.jpg') center / cover no-repeat fixed;
+  position: relative;
+  font-family: 'Special Elite', cursive;
+}
+
+/* ── BACK LINK ────────────────────────────────────── */
+.back-link {
+  position: fixed;
+  top: 18px; left: 22px;
+  z-index: 100;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 400;
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  color: rgba(220,205,168,0.7);
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+.back-link:hover { color: rgba(220,205,168,1); }
+.back-link::before {
+  content: '←';
+  font-size: 14px;
+}
+
+/* ── TITLE PLAQUE ─────────────────────────────────── */
+.title-plaque {
+  position: fixed;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 100;
+  pointer-events: none;
+}
+.plaque-inner {
+  display: inline-block;
+  background: linear-gradient(135deg, #2a1e0e 0%, #1a1208 50%, #241a0c 100%);
+  border: 1px solid rgba(200,170,100,0.22);
+  padding: 8px 28px 7px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.6);
+}
+.plaque-title {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.38em;
+  color: rgba(210,185,130,0.88);
+  display: block;
+  text-transform: uppercase;
+}
+.plaque-sub {
+  font-family: 'Special Elite', cursive;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: rgba(180,155,100,0.6);
+  display: block;
+  margin-top: 2px;
+}
+
+/* ── FRAME SYSTEM ─────────────────────────────────── */
+.frame {
+  position: absolute;
+  transform-origin: center;
+  cursor: default;
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+.frame:hover {
+  z-index: 50 !important;
+  filter: brightness(1.06);
+}
+.frame:hover { transform: var(--rot) scale(1.03) !important; }
+
+/* Nail above each frame */
+.frame::before {
+  content: '';
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 32%, #d0d0d0 0%, #888 45%, #444 100%);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.3);
+  z-index: 10;
+}
+
+/* Wire / string from nail — subtle CSS line */
+.frame::after {
+  content: '';
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 10px;
+  background: linear-gradient(to bottom, rgba(160,140,100,0.5), transparent);
+}
+
+/* Wooden frame border */
+.f-wood {
+  padding: 13px;
+  position: relative;
+}
+
+/* Frame wood texture — dark walnut */
+.f-wood.walnut {
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.06) 0%, transparent 40%),
+    linear-gradient(to bottom, #4a3218 0%, #2e1e0c 20%, #3a2812 50%, #261a08 80%, #4a3218 100%);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.07),
+    0 0 0 2px rgba(0,0,0,0.5),
+    0 6px 12px rgba(0,0,0,0.55),
+    0 16px 32px rgba(0,0,0,0.5),
+    0 32px 60px rgba(0,0,0,0.35);
+}
+
+/* Dark ebony / painted black frame */
+.f-wood.ebony {
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 40%),
+    linear-gradient(to bottom, #2a2420 0%, #18140e 25%, #222018 60%, #1a1610 100%);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.05),
+    0 0 0 2px rgba(0,0,0,0.6),
+    0 6px 12px rgba(0,0,0,0.6),
+    0 16px 32px rgba(0,0,0,0.55),
+    0 32px 60px rgba(0,0,0,0.38);
+}
+
+/* Lighter natural wood */
+.f-wood.oak {
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 35%),
+    linear-gradient(to bottom, #8a6030 0%, #5a3e1a 25%, #7a5428 55%, #4a3215 85%, #7a5428 100%);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.09),
+    0 0 0 2px rgba(0,0,0,0.45),
+    0 6px 12px rgba(0,0,0,0.5),
+    0 16px 32px rgba(0,0,0,0.45),
+    0 32px 60px rgba(0,0,0,0.3);
+}
+
+/* Mat / mount board */
+.f-mat {
+  padding: 10px;
+  background: #ebe4d0;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.22), inset 0 0 2px rgba(0,0,0,0.12);
+}
+.f-mat.thin { padding: 6px; }
+.f-mat.dark { background: #1a1610; }
+
+/* Photo inside frame */
+.f-photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: contrast(1.02) saturate(0.95);
+}
+
+/* Placeholder frame (awaiting photo) */
+.f-placeholder {
+  width: 100%; height: 100%;
+  background: #1a1208;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 6px;
+}
+.f-placeholder span {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 400;
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  color: rgba(180,155,100,0.3);
+  text-transform: uppercase;
+}
+
+/* Frame caption label */
+.f-caption {
+  position: absolute;
+  bottom: -26px;
+  left: 0; right: 0;
+  text-align: center;
+}
+.f-caption span {
+  font-family: 'Caveat', cursive;
+  font-size: 13px;
+  color: rgba(215,195,150,0.65);
+  letter-spacing: 0.04em;
+}
+
+/* ══════════════════════════════════════════════════
+   FRAME POSITIONS
+   All positions are viewport-percentage based.
+   --rot is the CSS var used by :hover scale.
+   ══════════════════════════════════════════════════ */
+
+/* 1 — Bus photo (landscape, large, top-left) */
+#f1 {
+  left: 3.5vw; top: 7vh;
+  width: 28vw;
+  --rot: rotate(-1.8deg);
+  transform: rotate(-1.8deg);
+  z-index: 4;
+}
+#f1 .f-photo { aspect-ratio: 3/4; }
+
+/* 2 — Fish photo (portrait, medium, top-center-left) */
+#f2 {
+  left: 33vw; top: 5vh;
+  width: 15vw;
+  --rot: rotate(2deg);
+  transform: rotate(2deg);
+  z-index: 5;
+}
+#f2 .f-photo { aspect-ratio: 3/4; }
+
+/* 3 — Speaker photo (portrait, medium, top-center) */
+#f3 {
+  left: 50vw; top: 4vh;
+  width: 17vw;
+  --rot: rotate(-1deg);
+  transform: rotate(-1deg);
+  z-index: 6;
+}
+#f3 .f-photo { aspect-ratio: 3/4; }
+
+/* 4 — Placeholder landscape (top-right) */
+#f4 {
+  left: 69vw; top: 6vh;
+  width: 24vw;
+  --rot: rotate(2.2deg);
+  transform: rotate(2.2deg);
+  z-index: 3;
+}
+#f4 .f-placeholder { aspect-ratio: 4/3; }
+
+/* 5 — Placeholder portrait (bottom-left) */
+#f5 {
+  left: 2vw; top: 50vh;
+  width: 13vw;
+  --rot: rotate(-3deg);
+  transform: rotate(-3deg);
+  z-index: 4;
+}
+#f5 .f-placeholder { aspect-ratio: 3/4; }
+
+/* 6 — Placeholder landscape (bottom-center) */
+#f6 {
+  left: 17vw; top: 48vh;
+  width: 30vw;
+  --rot: rotate(1.2deg);
+  transform: rotate(1.2deg);
+  z-index: 3;
+}
+#f6 .f-placeholder { aspect-ratio: 4/3; }
+
+/* 7 — Placeholder portrait (bottom-center-right) */
+#f7 {
+  left: 49vw; top: 47vh;
+  width: 13vw;
+  --rot: rotate(-1.8deg);
+  transform: rotate(-1.8deg);
+  z-index: 5;
+}
+#f7 .f-placeholder { aspect-ratio: 3/4; }
+
+/* 8 — Placeholder landscape (bottom-right) */
+#f8 {
+  left: 64vw; top: 50vh;
+  width: 22vw;
+  --rot: rotate(2.8deg);
+  transform: rotate(2.8deg);
+  z-index: 4;
+}
+#f8 .f-placeholder { aspect-ratio: 4/3; }
+
+/* 9 — Placeholder small square (far right, mid) */
+#f9 {
+  left: 88vw; top: 30vh;
+  width: 9vw;
+  --rot: rotate(-2.5deg);
+  transform: rotate(-2.5deg);
+  z-index: 6;
+}
+#f9 .f-placeholder { aspect-ratio: 1/1; }
+
+/* ── MOBILE ───────────────────────────────────────── */
+@media (max-width: 700px) {
+  html, body { overflow-y: auto; height: auto; }
+  .frame {
+    position: relative !important;
+    left: auto !important; top: auto !important;
+    width: 82vw !important;
+    margin: 28px auto 8px;
+    display: block;
+    transform: none !important;
+    --rot: rotate(0deg);
+  }
+  .frame::before { display: none; }
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 0 80px;
+  }
+  .back-link { top: 12px; left: 14px; }
+  .title-plaque { position: static; transform: none; margin-top: 24px; width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<a href="noba-mockup.html" class="back-link">Back to Journal</a>
+<a href="index.html" class="back-link" style="left:auto;right:22px;">Main Site</a>
+
+<!-- ── FRAME 1: Bus photo — landscape ─────────────── -->
+<div class="frame" id="f1">
+  <div class="f-wood walnut">
+    <div class="f-mat">
+      <img class="f-photo" src="images/noba-bus-web.jpg" alt="Heading to Eagle Sky Camp"/>
+    </div>
+  </div>
+  <div class="f-caption"><span>Heading out — Eagle Sky, 2025</span></div>
+</div>
+
+<!-- ── FRAME 2: Fish photo — portrait ─────────────── -->
+<div class="frame" id="f2">
+  <div class="f-wood oak">
+    <div class="f-mat thin">
+      <img class="f-photo" src="images/noba-fish-web.jpg" alt="Eagle Sky fishing"/>
+    </div>
+  </div>
+  <div class="f-caption"><span>Lake of the Ozarks, '25</span></div>
+</div>
+
+<!-- ── FRAME 3: Speaker — portrait ────────────────── -->
+<div class="frame" id="f3">
+  <div class="f-wood ebony">
+    <div class="f-mat dark">
+      <img class="f-photo" src="images/noba-speaker-web.jpg" alt="NOBA speaker"/>
+    </div>
+  </div>
+  <div class="f-caption"><span>Words that land.</span></div>
+</div>
+
+<!-- ── FRAME 4: Placeholder ───────────────────────── -->
+<div class="frame" id="f4">
+  <div class="f-wood walnut">
+    <div class="f-mat">
+      <div class="f-placeholder">
+        <span>2025</span>
+        <span>· · ·</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FRAME 5: Placeholder ───────────────────────── -->
+<div class="frame" id="f5">
+  <div class="f-wood ebony">
+    <div class="f-mat thin">
+      <div class="f-placeholder">
+        <span>Coming</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FRAME 6: Placeholder ───────────────────────── -->
+<div class="frame" id="f6">
+  <div class="f-wood oak">
+    <div class="f-mat">
+      <div class="f-placeholder">
+        <span>Eagle Sky</span>
+        <span>2026</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FRAME 7: Placeholder ───────────────────────── -->
+<div class="frame" id="f7">
+  <div class="f-wood walnut">
+    <div class="f-mat thin">
+      <div class="f-placeholder">
+        <span>2026</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FRAME 8: Placeholder ───────────────────────── -->
+<div class="frame" id="f8">
+  <div class="f-wood ebony">
+    <div class="f-mat">
+      <div class="f-placeholder">
+        <span>Eagle Sky</span>
+        <span>2027</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── FRAME 9: Placeholder small ────────────────── -->
+<div class="frame" id="f9">
+  <div class="f-wood oak">
+    <div class="f-mat thin">
+      <div class="f-placeholder">
+        <span>·</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── TITLE PLAQUE ───────────────────────────────── -->
+<div class="title-plaque">
+  <div class="plaque-inner">
+    <span class="plaque-title">Eagle Sky Camp · The Ozarks</span>
+    <span class="plaque-sub">NOBA Retreat — 2025 · 2026 · 2027</span>
+  </div>
+</div>
+
+</body>
+</html>
