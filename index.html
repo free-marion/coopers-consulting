@@ -145,6 +145,45 @@
     /* ── DUALITY RULE ── */
     .duality-rule { height: 3px; background: linear-gradient(90deg, var(--brand-orange), var(--brand-green)); }
 
+    /* ── WHO ARE WE ── */
+    .who-banner {
+      background: var(--dark-outline);
+      padding: 5rem 5vw;
+      display: grid; grid-template-columns: 1fr 1px 1.6fr;
+      border-bottom: 2px solid var(--dark-outline);
+    }
+    .who-left {
+      display: flex; flex-direction: column; justify-content: center;
+      padding-right: 4rem;
+    }
+    .who-question {
+      font-family: 'Cinzel', serif; font-weight: 600;
+      font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+      color: var(--cream); line-height: 1.05; letter-spacing: .04em;
+    }
+    .who-question .q-accent { color: var(--brand-orange); }
+    .who-sep { width: 1px; background: rgba(242,235,218,.1); }
+    .who-right {
+      padding-left: 4rem;
+      display: flex; flex-direction: column; justify-content: center; gap: 1.25rem;
+    }
+    .who-names {
+      font-family: 'Cinzel', serif; font-size: .7rem; font-weight: 500;
+      letter-spacing: .18em; text-transform: uppercase;
+      color: var(--brand-orange); margin-bottom: .25rem;
+    }
+    .who-copy {
+      font-family: 'EB Garamond', serif; font-size: clamp(1.1rem, 2vw, 1.4rem);
+      font-style: italic; color: rgba(242,235,218,.82); line-height: 1.7;
+      font-variation-settings: 'wght' 400;
+    }
+    @media (max-width: 767px) {
+      .who-banner { grid-template-columns: 1fr; gap: 2rem; padding: 3.5rem 1.25rem; }
+      .who-left { padding-right: 0; }
+      .who-right { padding-left: 0; }
+      .who-sep { display: none; }
+    }
+
     /* ── CTA BAND ── */
     .cta-band {
       background: rgba(242, 235, 218, 0.88);
@@ -435,6 +474,18 @@
 </section>
 
 <div class="duality-rule" aria-hidden="true"></div>
+
+<!-- WHO ARE WE -->
+<div class="who-banner reveal">
+  <div class="who-left">
+    <h2 class="who-question">Who<br>are<br>we<span class="q-accent">?</span></h2>
+  </div>
+  <div class="who-sep" aria-hidden="true"></div>
+  <div class="who-right">
+    <p class="who-names">Dale Cooper &amp; his son, Joel</p>
+    <p class="who-copy">We bring a unique dynamic not often seen in consulting teams.</p>
+  </div>
+</div>
 
 <!-- CTA BAND -->
 <div class="cta-band">
