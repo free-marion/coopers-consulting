@@ -267,6 +267,15 @@ body::after {
   color: rgba(200,218,234,0.9);
 }
 
+
+    .mj-footer {
+      background: #0a0403;
+      display: flex; justify-content: flex-end; align-items: center;
+      padding: .75rem 1.5rem;
+      border-top: 1px solid rgba(92,13,20,0.4);
+    }
+    .mj-footer a { opacity: 0.75; transition: opacity 0.2s; display: block; line-height: 0; }
+    .mj-footer a:hover { opacity: 1; }
 </style>
 </head>
 <body>
@@ -308,5 +317,18 @@ body::after {
 
 </div>
 
+
+<footer class="mj-footer">
+  <a href="https://magusjane.com" target="_blank" rel="noopener" aria-label="Magus Jane">
+    <svg viewBox="0 0 120 138" width="48" height="55" xmlns="http://www.w3.org/2000/svg">
+    <polygon points="60,3 117,36 117,102 60,135 3,102 3,36" fill="#0e0408"/>
+    <polygon points="60,9 112,40 112,98 60,129 8,98 8,40" fill="none" stroke="#5C0D14" stroke-width="2"/>
+    <!-- lowercase j: dot + stem + hook -->
+    <circle cx="60" cy="22" r="4.5" fill="#C41230"/>
+    <line x1="60" y1="31" x2="60" y2="94" stroke="#C41230" stroke-width="5" stroke-linecap="round"/>
+    <path d="M60,94 Q60,114 42,114 Q29,114 29,102" stroke="#C41230" stroke-width="5" stroke-linecap="round" fill="none"/>
+  </svg>
+  </a>
+</footer>
 </body>
 </html>
