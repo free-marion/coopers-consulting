@@ -142,6 +142,15 @@
       font-style: normal; color: rgba(242,235,218,.62);
       display: block; font-size: .9em; letter-spacing: .16em; margin-top: .35em;
     }
+    @media (max-width: 500px) {
+      .hero-tagline {
+        font-size: clamp(.8rem, 4vw, 1rem);
+        letter-spacing: .07em;
+        max-width: 88vw;
+        white-space: nowrap;
+      }
+      .hero-tagline em { white-space: nowrap; }
+    }
 
     /* ── DUALITY RULE ── */
     .duality-rule { height: 3px; background: linear-gradient(90deg, var(--brand-orange), var(--brand-green)); }
@@ -299,13 +308,14 @@
     .form-field { display: flex; flex-direction: column; gap: .4rem; }
     .form-label { font-family: 'Cinzel', serif; font-size: .6875rem; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
     .form-input,.form-textarea {
-      background: transparent; border: none; border-bottom: 2px solid var(--rule);
-      padding: .6rem 0; color: var(--dark-outline); font-family: 'EB Garamond', serif; font-size: 1rem; outline: none;
+      background: transparent; border: none; border-bottom: 2px solid rgba(0,0,0,0.35);
+      padding: .6rem 0; color: #111; font-family: 'EB Garamond', serif; font-size: 1rem; outline: none;
       transition: border-color .22s ease-out;
     }
     .form-input:focus,.form-textarea:focus { border-bottom-color: var(--brand-orange); }
     .form-textarea { resize: vertical; min-height: 120px; }
-    ::placeholder { color: var(--muted); opacity: .45; }
+    ::placeholder { color: #555; opacity: .6; }
+    .form-label { font-family: 'Cinzel', serif; font-size: .6875rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #222; }
 
     /* ── FOOTER ── */
     footer {
@@ -318,10 +328,18 @@
       display: flex; flex-direction: column; align-items: center; gap: .5rem;
     }
     .footer-stamp--right { align-items: center; }
-    .footer-mj-name {
-      font-family: 'Cinzel', serif; font-size: .75rem; font-weight: 600;
-      letter-spacing: .1em; color: #fff; text-transform: uppercase;
+    /* ── MAGUS JANE FIXED STAMP ── */
+    .mj-stamp {
+      position: fixed;
+      bottom: 1.25rem; right: 1.25rem;
+      z-index: 1000;
+      opacity: 0.78;
+      transition: opacity 0.2s, transform 0.2s;
+      text-decoration: none;
+      display: block;
+      line-height: 0;
     }
+    .mj-stamp:hover { opacity: 1; transform: scale(1.07); }
     .footer-brand  { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 1rem; }
     .footer-logo-row { display: flex; align-items: center; gap: 10px; }
     .footer-wordmark { font-family: 'Cinzel', serif; font-size: .9375rem; font-weight: 500; color: #fff; letter-spacing: .02em; }
@@ -561,15 +579,14 @@
 </section>
 
 <div class="data-strip reveal">
-  <p class="data-strip-text">Where does your <span class="data-accent">data</span> GO?</p>
+  <p class="data-strip-text">Spinning your wheels on your long-term goals? We can help you find <span class="data-accent">traction.</span></p>
 </div>
 
 <!-- CONTACT -->
 <section class="contact" id="contact" aria-labelledby="contact-heading">
   <div class="contact-left">
     <span class="section-label">Contact</span>
-    <h2 class="contact-heading" id="contact-heading">Spinning your wheels on your long-term goals?<br>We can help you find <span class="h-accent">traction.</span></h2>
-    <p class="contact-body">Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod tempor incididunt.</p>
+    <h2 class="contact-heading" id="contact-heading">Do you know the issues in your organization?<br><span class="h-accent">Do you want to?</span></h2>
   </div>
   <form class="contact-form reveal" action="#" method="POST">
     <div class="form-row">
@@ -610,16 +627,16 @@
     <span class="footer-wordmark">Cooper's Consulting</span>
   </div>
 
-  <!-- Magus Jane — right -->
+  <!-- Magus Jane — right (hex only, no text) -->
   <div class="footer-stamp footer-stamp--right">
     <a href="https://www.magusjane.com" target="_blank" rel="noopener noreferrer" aria-label="Magus Jane">
-      <svg viewBox="0 0 120 120" width="48" height="48" xmlns="http://www.w3.org/2000/svg">
-        <polygon points="60,6 108,33 108,87 60,114 12,87 12,33" fill="#6E1018"/>
-        <text x="60" y="62" text-anchor="middle" dominant-baseline="central"
-              font-family="Cinzel Decorative, serif" font-weight="700" font-size="54" fill="#120408">J</text>
+      <svg viewBox="0 0 120 138" width="48" height="55" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="60,3 117,36 117,102 60,135 3,102 3,36" fill="#5C0D14"/>
+        <polygon points="60,9 112,40 112,98 60,129 8,98 8,40" fill="none" stroke="rgba(255,200,180,0.12)" stroke-width="1.5"/>
+        <text x="60" y="71" text-anchor="middle" dominant-baseline="central"
+              font-family="UnifrakturMaguntia, serif" font-size="66" fill="#0d0308">J</text>
       </svg>
     </a>
-    <span class="footer-mj-name">Magus Jane</span>
   </div>
 </footer>
 
@@ -907,8 +924,22 @@ function animate(ts) {
 requestAnimationFrame(animate);
 </script>
 
+<!-- ── MAGUS JANE FIXED STAMP ─────────────────────────────────────────────── -->
+<a href="https://magusjane.com" target="_blank" rel="noopener" class="mj-stamp" aria-label="Magus Jane">
+  <svg viewBox="0 0 120 138" width="52" height="60" xmlns="http://www.w3.org/2000/svg">
+    <polygon points="60,3 117,36 117,102 60,135 3,102 3,36" fill="#5C0D14"/>
+    <polygon points="60,9 112,40 112,98 60,129 8,98 8,40" fill="none" stroke="rgba(255,200,180,0.1)" stroke-width="1.5"/>
+    <text x="60" y="71" text-anchor="middle" dominant-baseline="central"
+          font-family="UnifrakturMaguntia, serif" font-size="66" fill="#0d0308">J</text>
+  </svg>
+</a>
+
 <!-- ════════════════════════════════════════ SITE SCRIPTS (non-module) -->
 <script>
+// ── Scroll to top on load — prevent browser scroll restoration ────────────────
+if (history.scrollRestoration) history.scrollRestoration = 'manual';
+window.scrollTo(0, 0);
+
 // ── Nav scroll state ──────────────────────────────────────────────────────────
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => {

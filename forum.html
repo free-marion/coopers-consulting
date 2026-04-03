@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Focus Forum 2026 — St. Louis</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Cormorant+SC:wght@300;400;600&family=Oswald:wght@200;300;400;500;600;700&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Cormorant+SC:wght@300;400;600&family=Oswald:wght@200;300;400;500;600;700&family=Lora:ital,wght@0,400;1,400&family=UnifrakturMaguntia&display=swap" rel="stylesheet"/>
 <style>
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -502,6 +502,10 @@ footer {
   .pull-quote blockquote p { font-size: 1.3rem; }
 }
 
+
+    /* ── MAGUS JANE FIXED STAMP ── */
+    .mj-stamp { position: fixed; bottom: 1.25rem; right: 1.25rem; z-index: 1000; opacity: 0.78; transition: opacity 0.2s, transform 0.2s; text-decoration: none; display: block; line-height: 0; }
+    .mj-stamp:hover { opacity: 1; transform: scale(1.07); }
 </style>
 </head>
 <body>
@@ -697,5 +701,14 @@ footer {
   <div class="footer-copy">&copy; 2026 Cooper's Consulting</div>
 </footer>
 
+
+<!-- ── MAGUS JANE FIXED STAMP ─────────────────────────────────────────────── -->
+<a href="https://magusjane.com" target="_blank" rel="noopener" class="mj-stamp" aria-label="Magus Jane">
+  <svg viewBox="0 0 120 138" width="52" height="60" xmlns="http://www.w3.org/2000/svg">
+    <polygon points="60,3 117,36 117,102 60,135 3,102 3,36" fill="#5C0D14"/>
+    <polygon points="60,9 112,40 112,98 60,129 8,98 8,40" fill="none" stroke="rgba(255,200,180,0.1)" stroke-width="1.5"/>
+    <text x="60" y="71" text-anchor="middle" dominant-baseline="central" font-family="UnifrakturMaguntia, serif" font-size="66" fill="#0d0308">J</text>
+  </svg>
+</a>
 </body>
 </html>
