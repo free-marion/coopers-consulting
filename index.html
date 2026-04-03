@@ -34,11 +34,9 @@
 
     h1, h2, h3, h4 {
       font-family: 'Space Grotesk', sans-serif;
-      line-height: 1.15;
-      font-weight: 700;
+      line-height: 1.15; font-weight: 700;
     }
 
-    /* ── SKIP LINK ── */
     .skip-link {
       position: absolute; top: -120px; left: 16px;
       background: var(--brand-green); color: var(--white);
@@ -47,7 +45,6 @@
       transition: top 0.2s ease-out;
     }
     .skip-link:focus { top: 16px; }
-
     :focus-visible { outline: 2px solid var(--brand-green); outline-offset: 2px; }
 
     /* ── NAV ── */
@@ -56,14 +53,10 @@
       height: 64px;
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 5vw;
-      background: transparent;
+      transition: background 0.35s ease-out, border-color 0.35s ease-out;
       border-bottom: 1px solid transparent;
-      transition: background 0.3s ease-out, border-color 0.3s ease-out;
     }
-    nav.scrolled {
-      background: var(--cream);
-      border-bottom-color: var(--rule);
-    }
+    nav.scrolled { background: var(--cream); border-bottom-color: var(--rule); }
 
     .nav-mark { display: flex; align-items: center; gap: 11px; text-decoration: none; }
     .nav-hex  { width: 28px; height: 32px; flex-shrink: 0; }
@@ -71,7 +64,7 @@
       font-family: 'Space Grotesk', sans-serif;
       font-size: 0.9375rem; font-weight: 500;
       color: var(--cream); letter-spacing: 0.02em;
-      transition: color 0.3s ease-out;
+      transition: color 0.35s ease-out;
     }
     nav.scrolled .nav-wordmark { color: var(--dark-outline); }
 
@@ -81,24 +74,19 @@
       font-size: 0.8125rem; font-weight: 500;
       letter-spacing: 0.07em; text-transform: uppercase;
       color: rgba(242,235,218,0.85); text-decoration: none;
-      position: relative;
-      transition: color 0.2s ease-out;
+      position: relative; transition: color 0.2s ease-out;
     }
     nav.scrolled .nav-links a { color: var(--dark-outline); }
     .nav-links a::after {
-      content: '';
-      position: absolute; bottom: -5px; left: 0; right: 0;
+      content: ''; position: absolute; bottom: -5px; left: 0; right: 0;
       height: 2px; background: var(--brand-green);
       transform: scaleX(0); transform-origin: left;
       transition: transform 0.2s ease-out;
     }
     .nav-links a:hover::after { transform: scaleX(1); }
 
-    .nav-burger {
-      display: none; background: none; border: none; cursor: pointer; padding: 8px;
-    }
+    .nav-burger { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
 
-    /* ── MOBILE OVERLAY ── */
     .nav-overlay {
       display: none; position: fixed; inset: 0; z-index: 190;
       background: var(--cream);
@@ -115,8 +103,7 @@
     .overlay-close {
       position: absolute; top: 18px; right: 20px;
       background: none; border: none; cursor: pointer;
-      font-size: 1.25rem; color: var(--dark-outline);
-      font-family: 'Space Grotesk', sans-serif; padding: 8px;
+      font-size: 1.25rem; color: var(--dark-outline); padding: 8px;
     }
 
     /* ── HERO ── */
@@ -124,59 +111,55 @@
       position: relative;
       height: 100vh; min-height: 500px;
       overflow: hidden;
-      display: flex; align-items: center; justify-content: center;
+      background: #050c05; /* fallback while canvas boots */
     }
 
-    /* Hex grid background — fills hero, scrolls at 100% (natural) */
-    .hero-bg {
+    #hex-canvas {
       position: absolute; inset: 0;
-      width: 100%; height: 100%;
+      display: block; width: 100%; height: 100%;
     }
 
-    /* Logo wrapper — parallax layer (moves at ~45% scroll speed via JS) */
+    /* Logo floats above canvas */
     .hero-logo-wrap {
       position: absolute;
       top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      will-change: transform;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: 0; /* no text — just mark */
+      will-change: transform, opacity;
+      opacity: 0; /* JS controls reveal */
       z-index: 2;
     }
 
     .hero-mark {
-      width: clamp(160px, 32vw, 300px);
-      /* crisp drop-shadow to float it off the bg */
-      filter: drop-shadow(0 8px 40px rgba(0,0,0,0.45));
+      display: block;
+      width: clamp(150px, 28vw, 260px);
+      /* Outer drop-shadow to separate logo from bg on all screens */
+      filter:
+        drop-shadow(0 0 32px rgba(255,160,60,0.55))
+        drop-shadow(0 0 80px rgba(196,113,59,0.30))
+        drop-shadow(0 2px 12px rgba(0,0,0,0.8));
     }
 
-    /* ── DUALITY RULE (orange → green) ── */
+    /* ── DUALITY RULE ── */
     .duality-rule {
       height: 3px;
-      background: linear-gradient(90deg, var(--brand-orange) 0%, var(--brand-green) 100%);
+      background: linear-gradient(90deg, var(--brand-orange), var(--brand-green));
     }
 
-    /* ── CTA BAND (was hero right column) ── */
+    /* ── CTA BAND ── */
     .cta-band {
       background: var(--cream);
-      display: grid;
-      grid-template-columns: 1fr 1px 1fr;
+      display: grid; grid-template-columns: 1fr 1px 1fr;
       border-bottom: 2px solid var(--dark-outline);
     }
-
     .cta-cell {
       padding: 3.5rem 5vw;
       display: flex; flex-direction: column; gap: 0.75rem;
     }
-    .cta-cell + .cta-sep { background: var(--rule); }
-    .cta-cell:last-child { padding-left: 5vw; }
-
+    .cta-sep { background: var(--rule); }
     .cta-label {
       font-family: 'Space Grotesk', sans-serif;
       font-size: 0.6875rem; font-weight: 400;
-      letter-spacing: 0.09em; text-transform: uppercase;
-      color: var(--muted);
+      letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted);
     }
 
     /* ── BUTTONS ── */
@@ -186,28 +169,20 @@
       font-size: 0.875rem; font-weight: 500;
       letter-spacing: 0.07em; text-transform: uppercase;
       padding: 0.875rem 1.75rem;
-      border: 2px solid transparent;
-      border-radius: 2px; cursor: pointer;
+      border: 2px solid transparent; border-radius: 2px; cursor: pointer;
       transition: background 0.25s ease-out, color 0.25s ease-out, border-color 0.25s ease-out;
       align-self: flex-start;
     }
-    .btn-primary {
-      background: var(--brand-orange); color: var(--white);
-      border-color: var(--dark-outline);
-    }
-    .btn-primary:hover { background: var(--orange-hover); }
-    .btn-secondary {
-      background: transparent; color: var(--brand-green);
-      border-color: var(--brand-green);
-    }
+    .btn-primary  { background: var(--brand-orange); color: var(--white); border-color: var(--dark-outline); }
+    .btn-primary:hover  { background: var(--orange-hover); }
+    .btn-secondary { background: transparent; color: var(--brand-green); border-color: var(--brand-green); }
     .btn-secondary:hover { background: var(--green-light); }
 
     /* ── SECTION LABEL ── */
     .section-label {
       font-family: 'Space Grotesk', sans-serif;
       font-size: 0.6875rem; font-weight: 500;
-      letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--brand-orange);
+      letter-spacing: 0.12em; text-transform: uppercase; color: var(--brand-orange);
       display: flex; align-items: center; gap: 0.75rem;
     }
     .section-label::after {
@@ -216,85 +191,55 @@
     }
 
     /* ── PROGRAMS ── */
-    .programs {
-      background: var(--white);
-      padding: 5rem 0 0;
-    }
-    .programs-header {
-      padding: 0 5vw 2.75rem;
-      display: flex; flex-direction: column; gap: 0.75rem;
-    }
-    h2.programs-title {
-      font-size: clamp(1.75rem, 2.6vw, 2.5rem);
-      color: var(--dark-outline);
-    }
+    .programs { background: var(--white); padding: 5rem 0 0; }
+    .programs-header { padding: 0 5vw 2.75rem; display: flex; flex-direction: column; gap: 0.75rem; }
+    h2.programs-title { font-size: clamp(1.75rem, 2.6vw, 2.5rem); color: var(--dark-outline); }
 
     .programs-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      display: grid; grid-template-columns: repeat(3, 1fr);
       border-top: 2px solid var(--dark-outline);
     }
 
     .prog {
       display: flex; flex-direction: column; gap: 1.375rem;
       padding: 2.5rem 2.25rem 2.25rem;
-      border-right: 1px solid var(--rule);
       text-decoration: none; color: var(--dark-outline);
-      background: var(--cream);
-      position: relative; overflow: hidden;
-      transition: background 0.25s ease-out, box-shadow 0.25s ease-out, border-color 0.25s ease-out;
+      background: var(--cream); position: relative; overflow: hidden;
       border: 2px solid transparent; border-top: none;
+      transition: background 0.25s ease-out, box-shadow 0.25s ease-out, border-color 0.25s ease-out;
     }
     .prog + .prog { border-left: 1px solid var(--rule); }
-
-    /* hex corner accent */
     .prog::after {
-      content: '';
-      position: absolute; top: 0; right: 0;
-      width: 0; height: 0;
-      border-style: solid;
+      content: ''; position: absolute; top: 0; right: 0;
+      width: 0; height: 0; border-style: solid;
       border-width: 0 20px 20px 0;
       border-color: transparent var(--dark-outline) transparent transparent;
       transition: border-color 0.25s ease-out;
     }
-    .prog:hover {
-      background: var(--white);
-      box-shadow: 0 6px 28px rgba(44,36,22,0.09);
-      border-color: var(--brand-orange); z-index: 1;
-    }
+    .prog:hover { background: var(--white); box-shadow: 0 6px 28px rgba(44,36,22,0.09); border-color: var(--brand-orange); z-index: 1; }
     .prog:hover::after { border-color: transparent var(--brand-orange) transparent transparent; }
 
     .prog-logo-zone { height: 44px; display: flex; align-items: center; }
     .prog-logo { max-height: 100%; max-width: 128px; object-fit: contain; object-position: left; }
     .prog-logo-mark {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.6875rem; font-weight: 500;
-      letter-spacing: 0.14em; text-transform: uppercase;
-      color: var(--muted); opacity: 0.55; display: none;
+      font-family: 'Space Grotesk', sans-serif; font-size: 0.6875rem; font-weight: 500;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); opacity: 0.55; display: none;
     }
-
     .prog-name { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; }
-    .prog-meta {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.6875rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted);
-    }
+    .prog-meta { font-family: 'Space Grotesk', sans-serif; font-size: 0.6875rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); }
     .prog-desc { font-size: 0.9375rem; font-style: italic; color: var(--muted); line-height: 1.65; flex: 1; }
     .prog-cta {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.75rem; font-weight: 500;
-      letter-spacing: 0.08em; text-transform: uppercase;
-      color: var(--brand-green);
-      display: flex; align-items: center; gap: 0.45rem;
-      transition: gap 0.2s ease-out;
+      font-family: 'Space Grotesk', sans-serif; font-size: 0.75rem; font-weight: 500;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--brand-green);
+      display: flex; align-items: center; gap: 0.45rem; transition: gap 0.2s ease-out;
     }
     .prog:hover .prog-cta { gap: 0.85rem; }
 
-    /* ── HONEYCOMB STRIP DIVIDER ── */
+    /* ── HONEYCOMB STRIP ── */
     .honeycomb-strip {
       height: 44px; background: var(--cream);
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='104' height='90'%3E%3Cpolygon points='26,0 52,15 52,45 26,60 0,45 0,15' fill='none' stroke='%232C2416' stroke-width='1' stroke-opacity='0.1'/%3E%3Cpolygon points='78,45 104,60 104,90 78,105 52,90 52,60' fill='none' stroke='%232C2416' stroke-width='1' stroke-opacity='0.1'/%3E%3C/svg%3E");
-      background-size: 104px 90px;
-      background-position: center;
+      background-size: 104px 90px; background-position: center;
       border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
     }
 
@@ -302,47 +247,25 @@
     .about {
       background: var(--cream);
       display: grid; grid-template-columns: 1fr 1px 1.4fr;
-      border-top: 2px solid var(--dark-outline);
-      border-bottom: 2px solid var(--dark-outline);
+      border-top: 2px solid var(--dark-outline); border-bottom: 2px solid var(--dark-outline);
     }
-
-    .about-left {
-      padding: 5rem 4rem 5rem 5vw;
-      display: flex; flex-direction: column; gap: 1.875rem;
-    }
-
+    .about-left { padding: 5rem 4rem 5rem 5vw; display: flex; flex-direction: column; gap: 1.875rem; }
     h2.about-name { font-size: clamp(2rem, 3vw, 3rem); color: var(--dark-outline); line-height: 1.08; }
     .about-name .name-o  { color: var(--brand-orange); }
-    .about-name .name-sub {
-      display: block; margin-top: 0.25rem;
-      font-size: 0.45em; color: var(--brand-green); letter-spacing: 0.05em;
-    }
-
+    .about-name .name-sub { display: block; margin-top: 0.25rem; font-size: 0.45em; color: var(--brand-green); letter-spacing: 0.05em; }
     .about-rule { width: 30px; height: 2px; background: var(--brand-orange); }
-
     blockquote.pullquote { padding-left: 1.25rem; border-left: 3px solid var(--brand-orange); }
     .pullquote p { font-size: 1rem; font-style: italic; color: var(--dark-outline); line-height: 1.65; }
     .pullquote cite {
       display: block; margin-top: 0.75rem;
       font-family: 'Space Grotesk', sans-serif; font-style: normal;
-      font-size: 0.6875rem; letter-spacing: 0.1em; text-transform: uppercase;
-      color: var(--brand-orange);
+      font-size: 0.6875rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--brand-orange);
     }
-
     .about-vdivider { background: var(--rule); }
-
-    .about-right {
-      padding: 5rem 5vw 5rem 4rem;
-      display: flex; flex-direction: column; gap: 2.375rem;
-    }
-
+    .about-right { padding: 5rem 5vw 5rem 4rem; display: flex; flex-direction: column; gap: 2.375rem; }
     .fact { display: flex; flex-direction: column; gap: 0.45rem; }
-    .fact-label {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.6875rem; font-weight: 500;
-      letter-spacing: 0.1em; text-transform: uppercase; color: var(--brand-green);
-    }
-    .fact-body { font-size: 0.9375rem; font-style: italic; color: var(--muted); line-height: 1.65; }
+    .fact-label { font-family: 'Space Grotesk', sans-serif; font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--brand-green); }
+    .fact-body  { font-size: 0.9375rem; font-style: italic; color: var(--muted); line-height: 1.65; }
 
     /* ── CONTACT ── */
     .contact {
@@ -350,36 +273,17 @@
       display: grid; grid-template-columns: 1fr 1.5fr;
       border-bottom: 2px solid var(--dark-outline);
     }
-
-    .contact-left {
-      padding: 5rem 4rem 5rem 5vw;
-      display: flex; flex-direction: column; gap: 1.75rem;
-      border-right: 1px solid var(--rule);
-    }
-
+    .contact-left { padding: 5rem 4rem 5rem 5vw; display: flex; flex-direction: column; gap: 1.75rem; border-right: 1px solid var(--rule); }
     h2.contact-heading { font-size: clamp(1.75rem, 2.8vw, 2.75rem); color: var(--dark-outline); }
     .contact-heading .h-accent { color: var(--brand-orange); }
     .contact-body { font-size: 0.9375rem; font-style: italic; color: var(--muted); line-height: 1.65; }
-
-    form.contact-form {
-      padding: 5rem 5vw 5rem 4rem;
-      display: flex; flex-direction: column; gap: 1.5rem;
-    }
-
+    form.contact-form { padding: 5rem 5vw 5rem 4rem; display: flex; flex-direction: column; gap: 1.5rem; }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
     .form-field { display: flex; flex-direction: column; gap: 0.4rem; }
-
-    .form-label {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.6875rem; font-weight: 500;
-      letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
-    }
-
+    .form-label { font-family: 'Space Grotesk', sans-serif; font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
     .form-input, .form-textarea {
-      background: transparent; border: none;
-      border-bottom: 2px solid var(--rule);
-      padding: 0.6rem 0;
-      color: var(--dark-outline);
+      background: transparent; border: none; border-bottom: 2px solid var(--rule);
+      padding: 0.6rem 0; color: var(--dark-outline);
       font-family: 'Lora', serif; font-size: 1rem; outline: none;
       transition: border-color 0.22s ease-out;
     }
@@ -389,90 +293,62 @@
 
     /* ── FOOTER ── */
     footer {
-      background: var(--dark-outline);
-      color: var(--cream);
+      background: var(--dark-outline); color: var(--cream);
       padding: 3.5rem 5vw;
-      display: grid;
-      grid-template-columns: 1.2fr 1fr 1fr;
+      display: grid; grid-template-columns: 1.2fr 1fr 1fr;
       align-items: start; gap: 2.5rem;
       position: relative; overflow: hidden;
     }
     footer::before {
-      content: '';
-      position: absolute; inset: 0; pointer-events: none;
+      content: ''; position: absolute; inset: 0; pointer-events: none;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='104' height='90'%3E%3Cpolygon points='26,0 52,15 52,45 26,60 0,45 0,15' fill='none' stroke='%233C5A2B' stroke-width='1.2' stroke-opacity='0.22'/%3E%3Cpolygon points='78,45 104,60 104,90 78,105 52,90 52,60' fill='none' stroke='%233C5A2B' stroke-width='1.2' stroke-opacity='0.22'/%3E%3C/svg%3E");
       background-size: 104px 90px;
     }
-
     .footer-brand { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 1rem; }
     .footer-logo-row { display: flex; align-items: center; gap: 10px; }
-    .footer-wordmark {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.9375rem; font-weight: 500; color: var(--cream); letter-spacing: 0.02em;
-    }
-    .footer-copy {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.6875rem; letter-spacing: 0.05em; color: rgba(242,235,218,0.4);
-    }
-
-    .footer-nav {
-      list-style: none; position: relative; z-index: 1;
-      display: flex; flex-direction: column; gap: 0.625rem;
-    }
-    .footer-nav a {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.8125rem; font-weight: 400;
-      letter-spacing: 0.06em; text-transform: uppercase;
-      color: rgba(242,235,218,0.55); text-decoration: none;
-      transition: color 0.2s ease-out;
-    }
+    .footer-wordmark { font-family: 'Space Grotesk', sans-serif; font-size: 0.9375rem; font-weight: 500; color: var(--cream); letter-spacing: 0.02em; }
+    .footer-copy { font-family: 'Space Grotesk', sans-serif; font-size: 0.6875rem; letter-spacing: 0.05em; color: rgba(242,235,218,0.4); }
+    .footer-nav { list-style: none; position: relative; z-index: 1; display: flex; flex-direction: column; gap: 0.625rem; }
+    .footer-nav a { font-family: 'Space Grotesk', sans-serif; font-size: 0.8125rem; font-weight: 400; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(242,235,218,0.55); text-decoration: none; transition: color 0.2s ease-out; }
     .footer-nav a:hover { color: var(--cream); }
-
     .footer-contact { position: relative; z-index: 1; }
     .footer-contact p { font-size: 0.9375rem; color: rgba(242,235,218,0.55); line-height: 1.65; }
 
     /* ── REVEAL ── */
     .reveal { opacity: 0; transform: translateY(10px); transition: opacity 0.4s ease-out, transform 0.4s ease-out; }
     .reveal.in { opacity: 1; transform: none; }
-
     @media (prefers-reduced-motion: reduce) {
       .reveal { opacity: 1; transform: none; }
       *, *::before, *::after { transition-duration: 0.01ms !important; }
     }
 
-    /* ── TABLET ── */
+    /* ── RESPONSIVE ── */
     @media (max-width: 1199px) {
       .about-left  { padding: 4rem 3rem 4rem 4vw; }
       .about-right { padding: 4rem 4vw 4rem 3rem; }
     }
-
-    /* ── MOBILE ── */
     @media (max-width: 767px) {
       nav { padding: 0 1.25rem; }
       .nav-links  { display: none; }
       .nav-burger { display: flex; }
-
-      .cta-band { grid-template-columns: 1fr; }
-      .cta-sep  { display: none; }
-      .cta-cell { padding: 2.5rem 1.25rem; border-bottom: 1px solid var(--rule); }
+      .hero-mark  { width: clamp(120px, 55vw, 200px); }
+      .cta-band   { grid-template-columns: 1fr; }
+      .cta-sep    { display: none; }
+      .cta-cell   { padding: 2.5rem 1.25rem; border-bottom: 1px solid var(--rule); }
       .cta-cell:last-child { border-bottom: none; }
-
       .programs-grid { grid-template-columns: 1fr; }
       .prog { border: none; border-bottom: 1px solid var(--rule); }
       .prog + .prog { border-left: none; }
       .prog::after { display: none; }
-      .prog:hover { box-shadow: none; border-color: transparent; }
-
+      .prog:hover  { box-shadow: none; border-color: transparent; }
       .about { grid-template-columns: 1fr; }
       .about-vdivider { display: none; }
       .about-left  { padding: 3.5rem 1.25rem 2rem; }
       .about-right { padding: 0 1.25rem 3.5rem; }
-
       .contact { grid-template-columns: 1fr; }
       .contact-left { padding: 3.5rem 1.25rem 2rem; border-right: none; border-bottom: 1px solid var(--rule); }
       form.contact-form { padding: 2rem 1.25rem 3.5rem; }
-      .form-row { grid-template-columns: 1fr; }
-
+      .form-row  { grid-template-columns: 1fr; }
       footer { grid-template-columns: 1fr; padding: 3rem 1.25rem; gap: 2rem; }
       .footer-nav { flex-direction: row; flex-wrap: wrap; gap: 0.75rem 1.5rem; }
     }
@@ -485,10 +361,12 @@
 <!-- NAV -->
 <nav id="nav" aria-label="Main navigation">
   <a href="/" class="nav-mark" aria-label="Cooper's Consulting — home">
-    <svg class="nav-hex" viewBox="0 0 56 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <polygon points="28,2 54,17 54,47 28,62 2,47 2,17" fill="#C4713B"/>
-      <polygon points="28,10 47,21 47,43 28,54 9,43 9,21" fill="#F2EBDA"/>
-      <path d="M42,23 L28,15 L14,23 L14,41 L28,49 L42,41 L37,38 L28,43 L19,38 L19,26 L28,21 L37,26 Z" fill="#2C2416"/>
+    <svg class="nav-hex" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <polygon points="200,10 364.54,105 364.54,295 200,390 35.46,295 35.46,105" fill="#2C2416"/>
+      <polygon points="200,18 357.61,109 357.61,291 200,382 42.39,291 42.39,109" fill="#C4713B"/>
+      <polygon points="200,44 335.1,122 335.1,278 200,356 64.9,278 64.9,122" fill="#2C2416"/>
+      <polygon points="200,52 328.17,126 328.17,274 200,348 71.83,274 71.83,126" fill="#F2EBDA"/>
+      <path d="M302.19,141 L200,82 L97.81,141 L97.81,259 L200,318 L302.19,259 L302.19,239 L267.55,239 L200,278 L132.45,239 L132.45,161 L200,122 L267.55,161 L302.19,161 Z" fill="#3C5A2B"/>
     </svg>
     <span class="nav-wordmark">Cooper's Consulting</span>
   </a>
@@ -511,7 +389,6 @@
   </button>
 </nav>
 
-<!-- MOBILE OVERLAY -->
 <div class="nav-overlay" id="nav-overlay" role="dialog" aria-modal="true" aria-label="Navigation">
   <button class="overlay-close" id="overlay-close" aria-label="Close menu">✕</button>
   <a href="#about"   id="ov-about">About</a>
@@ -523,35 +400,21 @@
 
 <main id="main">
 
-<!-- HERO — full-screen hex field + parallax logo -->
+<!-- ═══════════════════════════════════════════════════════════ HERO -->
 <section class="hero" aria-label="Cooper's Consulting">
+  <canvas id="hex-canvas" aria-hidden="true"></canvas>
 
-  <!-- Hex background: green fill, orange stroke -->
-  <svg class="hero-bg" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <defs>
-      <!-- R=30, pointy-top hex. Tile: 104×90, two offset hexes tile as honeycomb -->
-      <pattern id="hx" x="0" y="0" width="104" height="90" patternUnits="userSpaceOnUse">
-        <polygon points="26,0 52,15 52,45 26,60 0,45 0,15"
-          fill="#3C5A2B" stroke="#C4713B" stroke-width="1.5"/>
-        <polygon points="78,45 104,60 104,90 78,105 52,90 52,60"
-          fill="#3C5A2B" stroke="#C4713B" stroke-width="1.5"/>
-      </pattern>
-    </defs>
-    <rect width="100%" height="100%" fill="url(#hx)"/>
-  </svg>
-
-  <!-- Logo — parallax (moves at ~45% scroll speed, creating depth) -->
   <div class="hero-logo-wrap" id="parallax-logo">
-    <svg class="hero-mark" viewBox="0 0 56 64" xmlns="http://www.w3.org/2000/svg" aria-label="Cooper's Consulting logo">
-      <polygon points="28,2 54,17 54,47 28,62 2,47 2,17" fill="#C4713B"/>
-      <polygon points="28,10 47,21 47,43 28,54 9,43 9,21" fill="#F2EBDA"/>
-      <path d="M42,23 L28,15 L14,23 L14,41 L28,49 L42,41 L37,38 L28,43 L19,38 L19,26 L28,21 L37,26 Z" fill="#2C2416"/>
+    <svg class="hero-mark" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-label="Cooper's Consulting logo">
+      <polygon points="200,10 364.54,105 364.54,295 200,390 35.46,295 35.46,105" fill="#2C2416"/>
+      <polygon points="200,18 357.61,109 357.61,291 200,382 42.39,291 42.39,109" fill="#C4713B"/>
+      <polygon points="200,44 335.1,122 335.1,278 200,356 64.9,278 64.9,122" fill="#2C2416"/>
+      <polygon points="200,52 328.17,126 328.17,274 200,348 71.83,274 71.83,126" fill="#F2EBDA"/>
+      <path d="M302.19,141 L200,82 L97.81,141 L97.81,259 L200,318 L302.19,259 L302.19,239 L267.55,239 L200,278 L132.45,239 L132.45,161 L200,122 L267.55,161 L302.19,161 Z" fill="#3C5A2B"/>
     </svg>
   </div>
-
 </section>
 
-<!-- orange→green duality rule -->
 <div class="duality-rule" aria-hidden="true"></div>
 
 <!-- CTA BAND -->
@@ -574,12 +437,9 @@
     <h2 class="programs-title" id="programs-title">[Section heading placeholder]</h2>
   </div>
   <div class="programs-grid">
-
     <a href="noba.html" class="prog reveal" aria-label="NOBA — Men's Retreat, Fredericktown MO">
       <div class="prog-logo-zone">
-        <img src="images/logo-noba.png" alt="NOBA" class="prog-logo"
-          onload="this.nextElementSibling.style.display='none'"
-          onerror="this.style.display='none'">
+        <img src="images/logo-noba.png" alt="NOBA" class="prog-logo" onload="this.nextElementSibling.style.display='none'" onerror="this.style.display='none'">
         <span class="prog-logo-mark">NOBA</span>
       </div>
       <p class="prog-name">NOBA</p>
@@ -587,12 +447,9 @@
       <p class="prog-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquip ex ea commodo consequat duis aute.</p>
       <span class="prog-cta" aria-hidden="true">Learn more →</span>
     </a>
-
     <a href="forum.html" class="prog reveal" aria-label="Focus Forum — Conference, St. Louis MO">
       <div class="prog-logo-zone">
-        <img src="images/logo-forum.png" alt="Focus Forum" class="prog-logo"
-          onload="this.nextElementSibling.style.display='none'"
-          onerror="this.style.display='none'">
+        <img src="images/logo-forum.png" alt="Focus Forum" class="prog-logo" onload="this.nextElementSibling.style.display='none'" onerror="this.style.display='none'">
         <span class="prog-logo-mark">Focus Forum</span>
       </div>
       <p class="prog-name">Focus Forum</p>
@@ -600,12 +457,9 @@
       <p class="prog-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquip ex ea commodo consequat duis aute.</p>
       <span class="prog-cta" aria-hidden="true">Learn more →</span>
     </a>
-
     <a href="petra.html" class="prog reveal" aria-label="PETRA — Peer Group, Fredericktown MO">
       <div class="prog-logo-zone">
-        <img src="images/logo-petra.jpeg" alt="PETRA" class="prog-logo" style="border-radius:2px"
-          onload="this.nextElementSibling.style.display='none'"
-          onerror="this.style.display='none'">
+        <img src="images/logo-petra.jpeg" alt="PETRA" class="prog-logo" style="border-radius:2px" onload="this.nextElementSibling.style.display='none'" onerror="this.style.display='none'">
         <span class="prog-logo-mark">PETRA</span>
       </div>
       <p class="prog-name">PETRA</p>
@@ -613,7 +467,6 @@
       <p class="prog-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquip ex ea commodo consequat duis aute.</p>
       <span class="prog-cta" aria-hidden="true">Learn more →</span>
     </a>
-
   </div>
 </section>
 
@@ -682,10 +535,12 @@
 <footer>
   <div class="footer-brand">
     <div class="footer-logo-row">
-      <svg width="26" height="30" viewBox="0 0 56 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <polygon points="28,2 54,17 54,47 28,62 2,47 2,17" fill="#C4713B"/>
-        <polygon points="28,10 47,21 47,43 28,54 9,43 9,21" fill="#F2EBDA" opacity="0.85"/>
-        <path d="M42,23 L28,15 L14,23 L14,41 L28,49 L42,41 L37,38 L28,43 L19,38 L19,26 L28,21 L37,26 Z" fill="#2C2416"/>
+      <svg width="26" height="30" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <polygon points="200,10 364.54,105 364.54,295 200,390 35.46,295 35.46,105" fill="#2C2416"/>
+        <polygon points="200,18 357.61,109 357.61,291 200,382 42.39,291 42.39,109" fill="#C4713B"/>
+        <polygon points="200,44 335.1,122 335.1,278 200,356 64.9,278 64.9,122" fill="#2C2416"/>
+        <polygon points="200,52 328.17,126 328.17,274 200,348 71.83,274 71.83,126" fill="#F2EBDA" opacity="0.9"/>
+        <path d="M302.19,141 L200,82 L97.81,141 L97.81,259 L200,318 L302.19,259 L302.19,239 L267.55,239 L200,278 L132.45,239 L132.45,161 L200,122 L267.55,161 L302.19,161 Z" fill="#3C5A2B"/>
       </svg>
       <span class="footer-wordmark">Cooper's Consulting</span>
     </div>
@@ -703,54 +558,243 @@
   </div>
 </footer>
 
+<!-- ═══════════════════════════════════════════════════════ SCRIPTS -->
 <script>
-  // ── Nav scroll state ──
-  const nav = document.getElementById('nav');
-  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 40);
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
+// ─────────────────────────────────────────────────────────────────
+//  HEX CANVAS HERO
+//  Technique: orange radial gradient behind → dark raised hex tiles
+//  on top with gaps → gaps reveal orange glow.
+//  Glow intensity driven by distance from light source.
+//  Light source tracks logo parallax position + mouse + idle drift.
+// ─────────────────────────────────────────────────────────────────
+(function () {
+  const canvas  = document.getElementById('hex-canvas');
+  const ctx     = canvas.getContext('2d');
+  const logoEl  = document.getElementById('parallax-logo');
+  const heroEl  = document.querySelector('.hero');
+  const DPR     = Math.min(window.devicePixelRatio || 1, 2);
 
-  // ── Parallax logo ──
-  // Logo moves at 45% of scroll speed → appears to float in front of bg
-  const logoWrap = document.getElementById('parallax-logo');
-  const hero     = document.querySelector('.hero');
-  let heroH      = hero.offsetHeight;
-  window.addEventListener('resize', () => { heroH = hero.offsetHeight; }, { passive: true });
+  let W, H;
+  let pageScrollY = 0;
+  let mouseX = null, mouseY = null;
+  let startTime = null;
 
-  window.addEventListener('scroll', () => {
-    const sy = window.scrollY;
-    if (sy <= heroH) {
-      // translate-Y offset: scroll * 0.45, plus keep original -50% centering
-      logoWrap.style.transform = `translate(-50%, calc(-50% + ${sy * 0.45}px))`;
-    }
-  }, { passive: true });
-
-  // ── Mobile menu ──
-  const burgerBtn    = document.getElementById('burger-btn');
-  const navOverlay   = document.getElementById('nav-overlay');
-  const overlayClose = document.getElementById('overlay-close');
-
-  const openMenu  = () => { navOverlay.classList.add('open'); burgerBtn.setAttribute('aria-expanded','true');  document.body.style.overflow = 'hidden'; };
-  const closeMenu = () => { navOverlay.classList.remove('open'); burgerBtn.setAttribute('aria-expanded','false'); document.body.style.overflow = ''; };
-
-  burgerBtn.addEventListener('click', openMenu);
-  overlayClose.addEventListener('click', closeMenu);
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
-  ['ov-about','ov-contact'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener('click', closeMenu);
-  });
-
-  // ── Reveal on scroll ──
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reducedMotion) {
-    document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
-  } else {
-    const obs = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
-    }, { threshold: 0.12 });
-    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+  // ── Resize ──────────────────────────────────────────────────────
+  function resize() {
+    W = heroEl.offsetWidth;
+    H = heroEl.offsetHeight;
+    canvas.width  = W * DPR;
+    canvas.height = H * DPR;
+    canvas.style.width  = W + 'px';
+    canvas.style.height = H + 'px';
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
   }
+  resize();
+  window.addEventListener('resize', () => { resize(); }, { passive: true });
+
+  // ── Input ────────────────────────────────────────────────────────
+  window.addEventListener('scroll', () => { pageScrollY = window.scrollY; }, { passive: true });
+
+  heroEl.addEventListener('mousemove', e => {
+    const r = heroEl.getBoundingClientRect();
+    mouseX = e.clientX - r.left;
+    mouseY = e.clientY - r.top;
+  }, { passive: true });
+  heroEl.addEventListener('mouseleave', () => { mouseX = null; mouseY = null; });
+
+  // ── Flat-top hexagon path helper ─────────────────────────────────
+  function hex(cx, cy, r) {
+    ctx.beginPath();
+    for (let i = 0; i < 6; i++) {
+      const a = (Math.PI / 3) * i;   // flat-top: starts at 0° (right)
+      const x = cx + r * Math.cos(a);
+      const y = cy + r * Math.sin(a);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+  }
+
+  // ── Main render loop ─────────────────────────────────────────────
+  function render(ts) {
+    if (!startTime) startTime = ts;
+    const elapsed = ts - startTime;
+
+    // Boot progress: 0 → 1 over 2.2 s, ease-out cubic
+    const rawBoot = Math.min(1, elapsed / 2200);
+    const boot    = 1 - Math.pow(1 - rawBoot, 3);
+
+    // Hex geometry — responsive
+    const hexR  = Math.max(28, Math.min(54, W / 28));
+    const colW  = hexR * Math.sqrt(3);  // horiz distance, flat-top grid
+    const rowH  = hexR * 1.5;           // vert distance between row centers
+    const GAP   = Math.max(2, hexR * 0.065); // gap width between tiles
+    const tileR = hexR - GAP;
+
+    // Parallax offset: logo moves at 45% of scroll speed
+    const parallaxY = Math.min(pageScrollY, H) * 0.45;
+
+    // Light source target
+    // Base: follows logo center (which is at H/2 + parallaxY in hero coords)
+    let tgtX = W * 0.5;
+    let tgtY = H * 0.5 + parallaxY;
+
+    // Mouse: small additional offset (max ±8% of dimensions)
+    if (mouseX !== null) {
+      tgtX += (mouseX - W * 0.5) * 0.16;
+      tgtY += (mouseY - H * 0.5) * 0.10;
+    }
+
+    // Idle drift: subtle sine wave so it lives even when nothing's happening
+    const driftAmp = boot >= 1 ? 1 : boot; // drift starts only as boot completes
+    const lx = tgtX + Math.sin(ts * 0.00022) * W  * 0.022 * driftAmp;
+    const ly = tgtY + Math.cos(ts * 0.00017) * H  * 0.016 * driftAmp;
+
+    // Post-boot pulse: the glow breathes (±4%)
+    const breathe = boot >= 1 ? 1 + 0.04 * Math.sin(ts * 0.0016) : 1;
+
+    // ── Draw ─────────────────────────────────────────────────────
+
+    // 1. Deep dark background
+    ctx.fillStyle = '#040b04';
+    ctx.fillRect(0, 0, W, H);
+
+    // 2. Orange glow (the light source behind the grid)
+    //    During boot, glow radius expands outward like a power-on sweep
+    const maxGlowR  = Math.hypot(W, H) * 0.9;
+    const glowR     = maxGlowR * (0.15 + 0.85 * boot);  // expands from center
+    const gi        = boot * breathe;                     // intensity
+
+    const grd = ctx.createRadialGradient(lx, ly, 0, lx, ly, glowR);
+    grd.addColorStop(0,     `rgba(255, 185, 80,  ${Math.min(1, 1.05 * gi)})`);
+    grd.addColorStop(0.04,  `rgba(248, 155, 55,  ${0.97 * gi})`);
+    grd.addColorStop(0.12,  `rgba(215, 115, 35,  ${0.80 * gi})`);
+    grd.addColorStop(0.28,  `rgba(150,  65, 15,  ${0.50 * gi})`);
+    grd.addColorStop(0.55,  `rgba( 60,  22,  5,  ${0.22 * gi})`);
+    grd.addColorStop(0.80,  `rgba( 15,   5,  1,  ${0.07 * gi})`);
+    grd.addColorStop(1,     'rgba(0, 0, 0, 0)');
+    ctx.fillStyle = grd;
+    ctx.fillRect(0, 0, W, H);
+
+    // 3. Hex tile grid
+    const maxDist = Math.max(W, H) * 0.72;
+    const cols    = Math.ceil(W / colW) + 4;
+    const rows    = Math.ceil(H / rowH) + 4;
+    const offX    = -colW * 1.5;
+    const offY    = -rowH * 1.5;
+
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < cols; col++) {
+        // Flat-top grid: every other row offset by half column width
+        const cx = offX + col * colW + (row % 2 !== 0 ? colW * 0.5 : 0);
+        const cy = offY + row * rowH;
+
+        // Distance from this tile center to light source
+        const dist = Math.hypot(cx - lx, cy - ly);
+        const prox = Math.max(0, 1 - dist / maxDist); // 1=at light, 0=far
+
+        // Tile materialisation wave:
+        // Centre tiles appear first, edge tiles later during boot
+        const normDist  = Math.min(1, dist / (Math.max(W, H) * 0.6));
+        const tileDelay = normDist * 0.52;
+        const tileBoot  = Math.max(0, Math.min(1, (boot - tileDelay) / 0.48));
+        const curR      = tileR * tileBoot;
+
+        if (curR < 1) continue; // tile not yet visible
+
+        // -- Edge glow ring (slightly larger hex, warm orange) --
+        // This is what "seeps" through — the gap between tiles.
+        // The tile will cover this except at its edges.
+        if (prox * boot > 0.025) {
+          const glowEdge   = prox * boot * tileBoot;
+          const glowExpand = GAP * Math.min(1.4, glowEdge * 2.8);
+          hex(cx, cy, Math.min(curR + glowExpand, hexR));
+          // Colour shifts: cool-orange near center → deep amber at edges
+          const rCh = Math.round(190 + prox * 65);
+          const gCh = Math.round( 80 + prox * 60);
+          const bCh = Math.round( 20 + prox * 10);
+          ctx.fillStyle = `rgba(${rCh},${gCh},${bCh},${Math.min(0.9, glowEdge * 0.75)})`;
+          ctx.fill();
+        }
+
+        // -- Dark forest-green tile --
+        hex(cx, cy, curR);
+        // Tile gets very slightly warmer near the light source
+        const tR = Math.round( 9 + prox * 20);
+        const tG = Math.round(17 + prox * 28);
+        const tB = Math.round( 8 + prox * 14);
+        ctx.fillStyle = `rgb(${tR},${tG},${tB})`;
+        ctx.fill();
+
+        // -- Convex bevel: radial gradient, light top-left → dark bottom-right --
+        // Gives each tile the "raised panel" depth of the reference images
+        hex(cx, cy, curR);
+        const bevelSrc = ctx.createRadialGradient(
+          cx - curR * 0.22, cy - curR * 0.22, 0,
+          cx, cy, curR
+        );
+        bevelSrc.addColorStop(0,    'rgba(255,255,255,0.07)');
+        bevelSrc.addColorStop(0.45, 'rgba(255,255,255,0.00)');
+        bevelSrc.addColorStop(1,    'rgba(0,0,0,0.32)');
+        ctx.fillStyle = bevelSrc;
+        ctx.fill();
+      }
+    }
+
+    // ── Logo entry animation ──────────────────────────────────────
+    // Logo phases in after boot reaches 38%, scale 1.10 → 1.00
+    if (rawBoot < 0.38) {
+      logoEl.style.opacity   = '0';
+      logoEl.style.transform = `translate(-50%, calc(-50% + ${parallaxY}px)) scale(1.10)`;
+    } else {
+      const t    = Math.min(1, (rawBoot - 0.38) / 0.62);
+      const ease = 1 - Math.pow(1 - t, 3); // ease-out cubic
+      const sc   = (1.10 - 0.10 * ease).toFixed(4);
+      logoEl.style.opacity   = ease.toFixed(4);
+      logoEl.style.transform = `translate(-50%, calc(-50% + ${parallaxY}px)) scale(${sc})`;
+    }
+
+    requestAnimationFrame(render);
+  }
+
+  requestAnimationFrame(render);
+})();
+
+
+// ── Nav scroll state ──────────────────────────────────────────────
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+}, { passive: true });
+if (window.scrollY > 40) nav.classList.add('scrolled');
+
+
+// ── Mobile menu ───────────────────────────────────────────────────
+const burgerBtn    = document.getElementById('burger-btn');
+const navOverlay   = document.getElementById('nav-overlay');
+const overlayClose = document.getElementById('overlay-close');
+
+const openMenu  = () => { navOverlay.classList.add('open');    burgerBtn.setAttribute('aria-expanded', 'true');  document.body.style.overflow = 'hidden'; };
+const closeMenu = () => { navOverlay.classList.remove('open'); burgerBtn.setAttribute('aria-expanded', 'false'); document.body.style.overflow = '';       };
+
+burgerBtn.addEventListener('click', openMenu);
+overlayClose.addEventListener('click', closeMenu);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+['ov-about','ov-contact'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('click', closeMenu);
+});
+
+
+// ── Reveal on scroll ──────────────────────────────────────────────
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (reducedMotion) {
+  document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+} else {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+}
 </script>
 
 </body>
