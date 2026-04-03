@@ -22,38 +22,29 @@
     }
 
     html { scroll-behavior: smooth; font-size: 16px; }
-
     body {
-      background: var(--white);
-      color: var(--dark-outline);
-      font-family: 'Lora', serif;
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
+      background: var(--white); color: var(--dark-outline);
+      font-family: 'Lora', serif; line-height: 1.6;
+      -webkit-font-smoothing: antialiased; overflow-x: hidden;
     }
-
-    h1, h2, h3, h4 {
-      font-family: 'Space Grotesk', sans-serif;
-      line-height: 1.15; font-weight: 700;
-    }
+    h1,h2,h3,h4 { font-family: 'Space Grotesk', sans-serif; line-height: 1.15; font-weight: 700; }
 
     .skip-link {
       position: absolute; top: -120px; left: 16px;
       background: var(--brand-green); color: var(--white);
       padding: 8px 16px; font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.875rem; text-decoration: none; z-index: 9999;
-      transition: top 0.2s ease-out;
+      font-size: .875rem; text-decoration: none; z-index: 9999;
+      transition: top .2s ease-out;
     }
     .skip-link:focus { top: 16px; }
     :focus-visible { outline: 2px solid var(--brand-green); outline-offset: 2px; }
 
     /* ── NAV ── */
     nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-      height: 64px;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200; height: 64px;
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 5vw;
-      transition: background 0.35s ease-out, border-color 0.35s ease-out;
+      transition: background .35s ease-out, border-color .35s ease-out;
       border-bottom: 1px solid transparent;
     }
     nav.scrolled { background: var(--cream); border-bottom-color: var(--rule); }
@@ -61,43 +52,34 @@
     .nav-mark { display: flex; align-items: center; gap: 11px; text-decoration: none; }
     .nav-hex  { width: 28px; height: 32px; flex-shrink: 0; }
     .nav-wordmark {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.9375rem; font-weight: 500;
-      color: var(--cream); letter-spacing: 0.02em;
-      transition: color 0.35s ease-out;
+      font-family: 'Space Grotesk', sans-serif; font-size: .9375rem; font-weight: 500;
+      color: var(--cream); letter-spacing: .02em; transition: color .35s ease-out;
     }
     nav.scrolled .nav-wordmark { color: var(--dark-outline); }
-
     .nav-links { list-style: none; display: flex; gap: 2.25rem; }
     .nav-links a {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.8125rem; font-weight: 500;
-      letter-spacing: 0.07em; text-transform: uppercase;
-      color: rgba(242,235,218,0.85); text-decoration: none;
-      position: relative; transition: color 0.2s ease-out;
+      font-family: 'Space Grotesk', sans-serif; font-size: .8125rem; font-weight: 500;
+      letter-spacing: .07em; text-transform: uppercase;
+      color: rgba(242,235,218,.85); text-decoration: none;
+      position: relative; transition: color .2s ease-out;
     }
     nav.scrolled .nav-links a { color: var(--dark-outline); }
     .nav-links a::after {
       content: ''; position: absolute; bottom: -5px; left: 0; right: 0;
       height: 2px; background: var(--brand-green);
-      transform: scaleX(0); transform-origin: left;
-      transition: transform 0.2s ease-out;
+      transform: scaleX(0); transform-origin: left; transition: transform .2s ease-out;
     }
     .nav-links a:hover::after { transform: scaleX(1); }
-
     .nav-burger { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
 
     .nav-overlay {
       display: none; position: fixed; inset: 0; z-index: 190;
-      background: var(--cream);
-      flex-direction: column; justify-content: center; align-items: center; gap: 2rem;
+      background: var(--cream); flex-direction: column; justify-content: center; align-items: center; gap: 2rem;
     }
     .nav-overlay.open { display: flex; }
     .nav-overlay a {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.625rem; font-weight: 700;
-      color: var(--dark-outline); text-decoration: none;
-      transition: color 0.2s ease-out;
+      font-family: 'Space Grotesk', sans-serif; font-size: 1.625rem; font-weight: 700;
+      color: var(--dark-outline); text-decoration: none; transition: color .2s ease-out;
     }
     .nav-overlay a:hover { color: var(--brand-orange); }
     .overlay-close {
@@ -107,43 +89,23 @@
     }
 
     /* ── HERO ── */
-    .hero {
-      position: relative;
-      height: 100vh; min-height: 500px;
-      overflow: hidden;
-      background: #050c05; /* fallback while canvas boots */
-    }
-
-    #hex-canvas {
-      position: absolute; inset: 0;
-      display: block; width: 100%; height: 100%;
-    }
-
-    /* Logo floats above canvas */
+    .hero { position: relative; height: 100vh; min-height: 500px; overflow: hidden; background: #030a03; }
+    #hex-canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
     .hero-logo-wrap {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      will-change: transform, opacity;
-      opacity: 0; /* JS controls reveal */
-      z-index: 2;
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      will-change: transform, opacity; opacity: 0; z-index: 2;
     }
-
     .hero-mark {
-      display: block;
-      width: clamp(150px, 28vw, 260px);
-      /* Outer drop-shadow to separate logo from bg on all screens */
+      display: block; width: clamp(150px, 28vw, 260px);
       filter:
-        drop-shadow(0 0 32px rgba(255,160,60,0.55))
-        drop-shadow(0 0 80px rgba(196,113,59,0.30))
-        drop-shadow(0 2px 12px rgba(0,0,0,0.8));
+        drop-shadow(0 0 28px rgba(255,150,50,.65))
+        drop-shadow(0 0 70px rgba(200,100,30,.35))
+        drop-shadow(0 2px 10px rgba(0,0,0,.9));
     }
 
     /* ── DUALITY RULE ── */
-    .duality-rule {
-      height: 3px;
-      background: linear-gradient(90deg, var(--brand-orange), var(--brand-green));
-    }
+    .duality-rule { height: 3px; background: linear-gradient(90deg, var(--brand-orange), var(--brand-green)); }
 
     /* ── CTA BAND ── */
     .cta-band {
@@ -151,89 +113,64 @@
       display: grid; grid-template-columns: 1fr 1px 1fr;
       border-bottom: 2px solid var(--dark-outline);
     }
-    .cta-cell {
-      padding: 3.5rem 5vw;
-      display: flex; flex-direction: column; gap: 0.75rem;
-    }
-    .cta-sep { background: var(--rule); }
+    .cta-cell { padding: 3.5rem 5vw; display: flex; flex-direction: column; gap: .75rem; }
+    .cta-sep  { background: var(--rule); }
     .cta-label {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.6875rem; font-weight: 400;
-      letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted);
+      font-family: 'Space Grotesk', sans-serif; font-size: .6875rem; font-weight: 400;
+      letter-spacing: .09em; text-transform: uppercase; color: var(--muted);
     }
 
     /* ── BUTTONS ── */
     .btn {
       display: inline-block; text-decoration: none;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.875rem; font-weight: 500;
-      letter-spacing: 0.07em; text-transform: uppercase;
-      padding: 0.875rem 1.75rem;
-      border: 2px solid transparent; border-radius: 2px; cursor: pointer;
-      transition: background 0.25s ease-out, color 0.25s ease-out, border-color 0.25s ease-out;
+      font-family: 'Space Grotesk', sans-serif; font-size: .875rem; font-weight: 500;
+      letter-spacing: .07em; text-transform: uppercase;
+      padding: .875rem 1.75rem; border: 2px solid transparent; border-radius: 2px; cursor: pointer;
+      transition: background .25s ease-out, color .25s ease-out, border-color .25s ease-out;
       align-self: flex-start;
     }
-    .btn-primary  { background: var(--brand-orange); color: var(--white); border-color: var(--dark-outline); }
+    .btn-primary   { background: var(--brand-orange); color: var(--white); border-color: var(--dark-outline); }
     .btn-primary:hover  { background: var(--orange-hover); }
     .btn-secondary { background: transparent; color: var(--brand-green); border-color: var(--brand-green); }
     .btn-secondary:hover { background: var(--green-light); }
 
     /* ── SECTION LABEL ── */
     .section-label {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.6875rem; font-weight: 500;
-      letter-spacing: 0.12em; text-transform: uppercase; color: var(--brand-orange);
-      display: flex; align-items: center; gap: 0.75rem;
+      font-family: 'Space Grotesk', sans-serif; font-size: .6875rem; font-weight: 500;
+      letter-spacing: .12em; text-transform: uppercase; color: var(--brand-orange);
+      display: flex; align-items: center; gap: .75rem;
     }
-    .section-label::after {
-      content: ''; flex: 1; max-width: 48px; height: 1px;
-      background: var(--brand-orange); opacity: 0.45;
-    }
+    .section-label::after { content: ''; flex: 1; max-width: 48px; height: 1px; background: var(--brand-orange); opacity: .45; }
 
     /* ── PROGRAMS ── */
     .programs { background: var(--white); padding: 5rem 0 0; }
-    .programs-header { padding: 0 5vw 2.75rem; display: flex; flex-direction: column; gap: 0.75rem; }
-    h2.programs-title { font-size: clamp(1.75rem, 2.6vw, 2.5rem); color: var(--dark-outline); }
-
-    .programs-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr);
-      border-top: 2px solid var(--dark-outline);
-    }
-
+    .programs-header { padding: 0 5vw 2.75rem; display: flex; flex-direction: column; gap: .75rem; }
+    h2.programs-title { font-size: clamp(1.75rem,2.6vw,2.5rem); color: var(--dark-outline); }
+    .programs-grid { display: grid; grid-template-columns: repeat(3,1fr); border-top: 2px solid var(--dark-outline); }
     .prog {
       display: flex; flex-direction: column; gap: 1.375rem;
       padding: 2.5rem 2.25rem 2.25rem;
-      text-decoration: none; color: var(--dark-outline);
-      background: var(--cream); position: relative; overflow: hidden;
+      text-decoration: none; color: var(--dark-outline); background: var(--cream);
+      position: relative; overflow: hidden;
       border: 2px solid transparent; border-top: none;
-      transition: background 0.25s ease-out, box-shadow 0.25s ease-out, border-color 0.25s ease-out;
+      transition: background .25s ease-out, box-shadow .25s ease-out, border-color .25s ease-out;
     }
     .prog + .prog { border-left: 1px solid var(--rule); }
     .prog::after {
-      content: ''; position: absolute; top: 0; right: 0;
-      width: 0; height: 0; border-style: solid;
-      border-width: 0 20px 20px 0;
-      border-color: transparent var(--dark-outline) transparent transparent;
-      transition: border-color 0.25s ease-out;
+      content: ''; position: absolute; top: 0; right: 0; width: 0; height: 0; border-style: solid;
+      border-width: 0 20px 20px 0; border-color: transparent var(--dark-outline) transparent transparent;
+      transition: border-color .25s ease-out;
     }
-    .prog:hover { background: var(--white); box-shadow: 0 6px 28px rgba(44,36,22,0.09); border-color: var(--brand-orange); z-index: 1; }
+    .prog:hover { background: var(--white); box-shadow: 0 6px 28px rgba(44,36,22,.09); border-color: var(--brand-orange); z-index: 1; }
     .prog:hover::after { border-color: transparent var(--brand-orange) transparent transparent; }
-
     .prog-logo-zone { height: 44px; display: flex; align-items: center; }
     .prog-logo { max-height: 100%; max-width: 128px; object-fit: contain; object-position: left; }
-    .prog-logo-mark {
-      font-family: 'Space Grotesk', sans-serif; font-size: 0.6875rem; font-weight: 500;
-      letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); opacity: 0.55; display: none;
-    }
+    .prog-logo-mark { font-family: 'Space Grotesk', sans-serif; font-size: .6875rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); opacity: .55; display: none; }
     .prog-name { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; }
-    .prog-meta { font-family: 'Space Grotesk', sans-serif; font-size: 0.6875rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); }
-    .prog-desc { font-size: 0.9375rem; font-style: italic; color: var(--muted); line-height: 1.65; flex: 1; }
-    .prog-cta {
-      font-family: 'Space Grotesk', sans-serif; font-size: 0.75rem; font-weight: 500;
-      letter-spacing: 0.08em; text-transform: uppercase; color: var(--brand-green);
-      display: flex; align-items: center; gap: 0.45rem; transition: gap 0.2s ease-out;
-    }
-    .prog:hover .prog-cta { gap: 0.85rem; }
+    .prog-meta { font-family: 'Space Grotesk', sans-serif; font-size: .6875rem; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
+    .prog-desc { font-size: .9375rem; font-style: italic; color: var(--muted); line-height: 1.65; flex: 1; }
+    .prog-cta { font-family: 'Space Grotesk', sans-serif; font-size: .75rem; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--brand-green); display: flex; align-items: center; gap: .45rem; transition: gap .2s ease-out; }
+    .prog:hover .prog-cta { gap: .85rem; }
 
     /* ── HONEYCOMB STRIP ── */
     .honeycomb-strip {
@@ -244,82 +181,67 @@
     }
 
     /* ── ABOUT ── */
-    .about {
-      background: var(--cream);
-      display: grid; grid-template-columns: 1fr 1px 1.4fr;
-      border-top: 2px solid var(--dark-outline); border-bottom: 2px solid var(--dark-outline);
-    }
+    .about { background: var(--cream); display: grid; grid-template-columns: 1fr 1px 1.4fr; border-top: 2px solid var(--dark-outline); border-bottom: 2px solid var(--dark-outline); }
     .about-left { padding: 5rem 4rem 5rem 5vw; display: flex; flex-direction: column; gap: 1.875rem; }
-    h2.about-name { font-size: clamp(2rem, 3vw, 3rem); color: var(--dark-outline); line-height: 1.08; }
-    .about-name .name-o  { color: var(--brand-orange); }
-    .about-name .name-sub { display: block; margin-top: 0.25rem; font-size: 0.45em; color: var(--brand-green); letter-spacing: 0.05em; }
+    h2.about-name { font-size: clamp(2rem,3vw,3rem); color: var(--dark-outline); line-height: 1.08; }
+    .about-name .name-o   { color: var(--brand-orange); }
+    .about-name .name-sub { display: block; margin-top: .25rem; font-size: .45em; color: var(--brand-green); letter-spacing: .05em; }
     .about-rule { width: 30px; height: 2px; background: var(--brand-orange); }
     blockquote.pullquote { padding-left: 1.25rem; border-left: 3px solid var(--brand-orange); }
     .pullquote p { font-size: 1rem; font-style: italic; color: var(--dark-outline); line-height: 1.65; }
-    .pullquote cite {
-      display: block; margin-top: 0.75rem;
-      font-family: 'Space Grotesk', sans-serif; font-style: normal;
-      font-size: 0.6875rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--brand-orange);
-    }
+    .pullquote cite { display: block; margin-top: .75rem; font-family: 'Space Grotesk', sans-serif; font-style: normal; font-size: .6875rem; letter-spacing: .1em; text-transform: uppercase; color: var(--brand-orange); }
     .about-vdivider { background: var(--rule); }
     .about-right { padding: 5rem 5vw 5rem 4rem; display: flex; flex-direction: column; gap: 2.375rem; }
-    .fact { display: flex; flex-direction: column; gap: 0.45rem; }
-    .fact-label { font-family: 'Space Grotesk', sans-serif; font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--brand-green); }
-    .fact-body  { font-size: 0.9375rem; font-style: italic; color: var(--muted); line-height: 1.65; }
+    .fact { display: flex; flex-direction: column; gap: .45rem; }
+    .fact-label { font-family: 'Space Grotesk', sans-serif; font-size: .6875rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--brand-green); }
+    .fact-body  { font-size: .9375rem; font-style: italic; color: var(--muted); line-height: 1.65; }
 
     /* ── CONTACT ── */
-    .contact {
-      background: var(--white);
-      display: grid; grid-template-columns: 1fr 1.5fr;
-      border-bottom: 2px solid var(--dark-outline);
-    }
+    .contact { background: var(--white); display: grid; grid-template-columns: 1fr 1.5fr; border-bottom: 2px solid var(--dark-outline); }
     .contact-left { padding: 5rem 4rem 5rem 5vw; display: flex; flex-direction: column; gap: 1.75rem; border-right: 1px solid var(--rule); }
-    h2.contact-heading { font-size: clamp(1.75rem, 2.8vw, 2.75rem); color: var(--dark-outline); }
+    h2.contact-heading { font-size: clamp(1.75rem,2.8vw,2.75rem); color: var(--dark-outline); }
     .contact-heading .h-accent { color: var(--brand-orange); }
-    .contact-body { font-size: 0.9375rem; font-style: italic; color: var(--muted); line-height: 1.65; }
+    .contact-body { font-size: .9375rem; font-style: italic; color: var(--muted); line-height: 1.65; }
     form.contact-form { padding: 5rem 5vw 5rem 4rem; display: flex; flex-direction: column; gap: 1.5rem; }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-    .form-field { display: flex; flex-direction: column; gap: 0.4rem; }
-    .form-label { font-family: 'Space Grotesk', sans-serif; font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
-    .form-input, .form-textarea {
+    .form-field { display: flex; flex-direction: column; gap: .4rem; }
+    .form-label { font-family: 'Space Grotesk', sans-serif; font-size: .6875rem; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+    .form-input,.form-textarea {
       background: transparent; border: none; border-bottom: 2px solid var(--rule);
-      padding: 0.6rem 0; color: var(--dark-outline);
-      font-family: 'Lora', serif; font-size: 1rem; outline: none;
-      transition: border-color 0.22s ease-out;
+      padding: .6rem 0; color: var(--dark-outline); font-family: 'Lora', serif; font-size: 1rem; outline: none;
+      transition: border-color .22s ease-out;
     }
-    .form-input:focus, .form-textarea:focus { border-bottom-color: var(--brand-orange); }
+    .form-input:focus,.form-textarea:focus { border-bottom-color: var(--brand-orange); }
     .form-textarea { resize: vertical; min-height: 120px; }
-    ::placeholder { color: var(--muted); opacity: 0.45; }
+    ::placeholder { color: var(--muted); opacity: .45; }
 
     /* ── FOOTER ── */
     footer {
       background: var(--dark-outline); color: var(--cream);
-      padding: 3.5rem 5vw;
-      display: grid; grid-template-columns: 1.2fr 1fr 1fr;
-      align-items: start; gap: 2.5rem;
-      position: relative; overflow: hidden;
+      padding: 3.5rem 5vw; display: grid; grid-template-columns: 1.2fr 1fr 1fr;
+      align-items: start; gap: 2.5rem; position: relative; overflow: hidden;
     }
     footer::before {
       content: ''; position: absolute; inset: 0; pointer-events: none;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='104' height='90'%3E%3Cpolygon points='26,0 52,15 52,45 26,60 0,45 0,15' fill='none' stroke='%233C5A2B' stroke-width='1.2' stroke-opacity='0.22'/%3E%3Cpolygon points='78,45 104,60 104,90 78,105 52,90 52,60' fill='none' stroke='%233C5A2B' stroke-width='1.2' stroke-opacity='0.22'/%3E%3C/svg%3E");
       background-size: 104px 90px;
     }
-    .footer-brand { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 1rem; }
+    .footer-brand  { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 1rem; }
     .footer-logo-row { display: flex; align-items: center; gap: 10px; }
-    .footer-wordmark { font-family: 'Space Grotesk', sans-serif; font-size: 0.9375rem; font-weight: 500; color: var(--cream); letter-spacing: 0.02em; }
-    .footer-copy { font-family: 'Space Grotesk', sans-serif; font-size: 0.6875rem; letter-spacing: 0.05em; color: rgba(242,235,218,0.4); }
-    .footer-nav { list-style: none; position: relative; z-index: 1; display: flex; flex-direction: column; gap: 0.625rem; }
-    .footer-nav a { font-family: 'Space Grotesk', sans-serif; font-size: 0.8125rem; font-weight: 400; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(242,235,218,0.55); text-decoration: none; transition: color 0.2s ease-out; }
+    .footer-wordmark { font-family: 'Space Grotesk', sans-serif; font-size: .9375rem; font-weight: 500; color: var(--cream); letter-spacing: .02em; }
+    .footer-copy   { font-family: 'Space Grotesk', sans-serif; font-size: .6875rem; letter-spacing: .05em; color: rgba(242,235,218,.4); }
+    .footer-nav    { list-style: none; position: relative; z-index: 1; display: flex; flex-direction: column; gap: .625rem; }
+    .footer-nav a  { font-family: 'Space Grotesk', sans-serif; font-size: .8125rem; font-weight: 400; letter-spacing: .06em; text-transform: uppercase; color: rgba(242,235,218,.55); text-decoration: none; transition: color .2s ease-out; }
     .footer-nav a:hover { color: var(--cream); }
     .footer-contact { position: relative; z-index: 1; }
-    .footer-contact p { font-size: 0.9375rem; color: rgba(242,235,218,0.55); line-height: 1.65; }
+    .footer-contact p { font-size: .9375rem; color: rgba(242,235,218,.55); line-height: 1.65; }
 
     /* ── REVEAL ── */
-    .reveal { opacity: 0; transform: translateY(10px); transition: opacity 0.4s ease-out, transform 0.4s ease-out; }
+    .reveal { opacity: 0; transform: translateY(10px); transition: opacity .4s ease-out, transform .4s ease-out; }
     .reveal.in { opacity: 1; transform: none; }
     @media (prefers-reduced-motion: reduce) {
       .reveal { opacity: 1; transform: none; }
-      *, *::before, *::after { transition-duration: 0.01ms !important; }
+      *,*::before,*::after { transition-duration: .01ms !important; }
     }
 
     /* ── RESPONSIVE ── */
@@ -331,14 +253,14 @@
       nav { padding: 0 1.25rem; }
       .nav-links  { display: none; }
       .nav-burger { display: flex; }
-      .hero-mark  { width: clamp(120px, 55vw, 200px); }
+      .hero-mark  { width: clamp(120px,55vw,200px); }
       .cta-band   { grid-template-columns: 1fr; }
       .cta-sep    { display: none; }
       .cta-cell   { padding: 2.5rem 1.25rem; border-bottom: 1px solid var(--rule); }
       .cta-cell:last-child { border-bottom: none; }
       .programs-grid { grid-template-columns: 1fr; }
       .prog { border: none; border-bottom: 1px solid var(--rule); }
-      .prog + .prog { border-left: none; }
+      .prog+.prog  { border-left: none; }
       .prog::after { display: none; }
       .prog:hover  { box-shadow: none; border-color: transparent; }
       .about { grid-template-columns: 1fr; }
@@ -350,7 +272,7 @@
       form.contact-form { padding: 2rem 1.25rem 3.5rem; }
       .form-row  { grid-template-columns: 1fr; }
       footer { grid-template-columns: 1fr; padding: 3rem 1.25rem; gap: 2rem; }
-      .footer-nav { flex-direction: row; flex-wrap: wrap; gap: 0.75rem 1.5rem; }
+      .footer-nav { flex-direction: row; flex-wrap: wrap; gap: .75rem 1.5rem; }
     }
   </style>
 </head>
@@ -361,11 +283,19 @@
 <!-- NAV -->
 <nav id="nav" aria-label="Main navigation">
   <a href="/" class="nav-mark" aria-label="Cooper's Consulting — home">
+    <!-- Full 5-layer logo — orange band uses gradient for brilliance -->
     <svg class="nav-hex" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <polygon points="200,10 364.54,105 364.54,295 200,390 35.46,295 35.46,105" fill="#2C2416"/>
-      <polygon points="200,18 357.61,109 357.61,291 200,382 42.39,291 42.39,109" fill="#C4713B"/>
-      <polygon points="200,44 335.1,122 335.1,278 200,356 64.9,278 64.9,122" fill="#2C2416"/>
-      <polygon points="200,52 328.17,126 328.17,274 200,348 71.83,274 71.83,126" fill="#F2EBDA"/>
+      <defs>
+        <radialGradient id="og-nav" cx="50%" cy="38%" r="62%" gradientUnits="objectBoundingBox">
+          <stop offset="0%"   stop-color="#FFB060"/>
+          <stop offset="50%"  stop-color="#E07828"/>
+          <stop offset="100%" stop-color="#B85A18"/>
+        </radialGradient>
+      </defs>
+      <polygon points="200,10 364.54,105 364.54,295 200,390 35.46,295 35.46,105"   fill="#2C2416"/>
+      <polygon points="200,18 357.61,109 357.61,291 200,382 42.39,291 42.39,109"   fill="url(#og-nav)"/>
+      <polygon points="200,44 335.1,122 335.1,278 200,356 64.9,278 64.9,122"       fill="#2C2416"/>
+      <polygon points="200,52 328.17,126 328.17,274 200,348 71.83,274 71.83,126"   fill="#F2EBDA"/>
       <path d="M302.19,141 L200,82 L97.81,141 L97.81,259 L200,318 L302.19,259 L302.19,239 L267.55,239 L200,278 L132.45,239 L132.45,161 L200,122 L267.55,161 L302.19,161 Z" fill="#3C5A2B"/>
     </svg>
     <span class="nav-wordmark">Cooper's Consulting</span>
@@ -382,9 +312,9 @@
       <line x1="0" y1="1"  x2="28" y2="1"  stroke="#2C2416" stroke-width="2"/>
       <line x1="0" y1="9"  x2="28" y2="9"  stroke="#2C2416" stroke-width="2"/>
       <line x1="0" y1="17" x2="28" y2="17" stroke="#2C2416" stroke-width="2"/>
-      <line x1="0" y1="1"  x2="4"  y2="4.5" stroke="#2C2416" stroke-width="1" opacity="0.4"/>
-      <line x1="0" y1="9"  x2="4"  y2="12.5" stroke="#2C2416" stroke-width="1" opacity="0.4"/>
-      <line x1="0" y1="17" x2="4"  y2="20.5" stroke="#2C2416" stroke-width="1" opacity="0.4"/>
+      <line x1="0" y1="1"  x2="4"  y2="4.5" stroke="#2C2416" stroke-width="1" opacity=".4"/>
+      <line x1="0" y1="9"  x2="4"  y2="12.5" stroke="#2C2416" stroke-width="1" opacity=".4"/>
+      <line x1="0" y1="17" x2="4"  y2="20.5" stroke="#2C2416" stroke-width="1" opacity=".4"/>
     </svg>
   </button>
 </nav>
@@ -400,16 +330,23 @@
 
 <main id="main">
 
-<!-- ═══════════════════════════════════════════════════════════ HERO -->
+<!-- HERO -->
 <section class="hero" aria-label="Cooper's Consulting">
   <canvas id="hex-canvas" aria-hidden="true"></canvas>
 
   <div class="hero-logo-wrap" id="parallax-logo">
     <svg class="hero-mark" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-label="Cooper's Consulting logo">
-      <polygon points="200,10 364.54,105 364.54,295 200,390 35.46,295 35.46,105" fill="#2C2416"/>
-      <polygon points="200,18 357.61,109 357.61,291 200,382 42.39,291 42.39,109" fill="#C4713B"/>
-      <polygon points="200,44 335.1,122 335.1,278 200,356 64.9,278 64.9,122" fill="#2C2416"/>
-      <polygon points="200,52 328.17,126 328.17,274 200,348 71.83,274 71.83,126" fill="#F2EBDA"/>
+      <defs>
+        <radialGradient id="og-hero" cx="50%" cy="38%" r="62%" gradientUnits="objectBoundingBox">
+          <stop offset="0%"   stop-color="#FFC070"/>
+          <stop offset="40%"  stop-color="#E87E2C"/>
+          <stop offset="100%" stop-color="#B85A18"/>
+        </radialGradient>
+      </defs>
+      <polygon points="200,10 364.54,105 364.54,295 200,390 35.46,295 35.46,105"   fill="#2C2416"/>
+      <polygon points="200,18 357.61,109 357.61,291 200,382 42.39,291 42.39,109"   fill="url(#og-hero)"/>
+      <polygon points="200,44 335.1,122 335.1,278 200,356 64.9,278 64.9,122"       fill="#2C2416"/>
+      <polygon points="200,52 328.17,126 328.17,274 200,348 71.83,274 71.83,126"   fill="#F2EBDA"/>
       <path d="M302.19,141 L200,82 L97.81,141 L97.81,259 L200,318 L302.19,259 L302.19,239 L267.55,239 L200,278 L132.45,239 L132.45,161 L200,122 L267.55,161 L302.19,161 Z" fill="#3C5A2B"/>
     </svg>
   </div>
@@ -476,10 +413,7 @@
 <section class="about" id="about" aria-labelledby="about-heading">
   <div class="about-left">
     <span class="section-label">About</span>
-    <h2 class="about-name" id="about-heading">
-      Dale<br><span class="name-o">Cooper</span>
-      <span class="name-sub">& Joel Cooper</span>
-    </h2>
+    <h2 class="about-name" id="about-heading">Dale<br><span class="name-o">Cooper</span><span class="name-sub">& Joel Cooper</span></h2>
     <div class="about-rule" aria-hidden="true"></div>
     <blockquote class="pullquote reveal">
       <p>"[Quote pending approval]"</p>
@@ -488,18 +422,9 @@
   </div>
   <div class="about-vdivider" aria-hidden="true"></div>
   <div class="about-right">
-    <div class="fact reveal">
-      <p class="fact-label">The Work</p>
-      <p class="fact-body">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim.</p>
-    </div>
-    <div class="fact reveal">
-      <p class="fact-label">The Philosophy</p>
-      <p class="fact-body">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim.</p>
-    </div>
-    <div class="fact reveal">
-      <p class="fact-label">The Partnership</p>
-      <p class="fact-body">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim.</p>
-    </div>
+    <div class="fact reveal"><p class="fact-label">The Work</p><p class="fact-body">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim.</p></div>
+    <div class="fact reveal"><p class="fact-label">The Philosophy</p><p class="fact-body">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim.</p></div>
+    <div class="fact reveal"><p class="fact-label">The Partnership</p><p class="fact-body">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim.</p></div>
   </div>
 </section>
 
@@ -512,19 +437,10 @@
   </div>
   <form class="contact-form reveal" action="#" method="POST">
     <div class="form-row">
-      <div class="form-field">
-        <label class="form-label" for="c-name">Name</label>
-        <input class="form-input" type="text" id="c-name" name="name" placeholder="Your name" required>
-      </div>
-      <div class="form-field">
-        <label class="form-label" for="c-email">Email</label>
-        <input class="form-input" type="email" id="c-email" name="email" placeholder="your@email.com" required>
-      </div>
+      <div class="form-field"><label class="form-label" for="c-name">Name</label><input class="form-input" type="text" id="c-name" name="name" placeholder="Your name" required></div>
+      <div class="form-field"><label class="form-label" for="c-email">Email</label><input class="form-input" type="email" id="c-email" name="email" placeholder="your@email.com" required></div>
     </div>
-    <div class="form-field">
-      <label class="form-label" for="c-msg">Message</label>
-      <textarea class="form-textarea" id="c-msg" name="message" placeholder="What's on your mind?" required></textarea>
-    </div>
+    <div class="form-field"><label class="form-label" for="c-msg">Message</label><textarea class="form-textarea" id="c-msg" name="message" placeholder="What's on your mind?" required></textarea></div>
     <button type="submit" class="btn btn-primary" style="align-self:flex-start">Send Message</button>
   </form>
 </section>
@@ -536,10 +452,17 @@
   <div class="footer-brand">
     <div class="footer-logo-row">
       <svg width="26" height="30" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <polygon points="200,10 364.54,105 364.54,295 200,390 35.46,295 35.46,105" fill="#2C2416"/>
-        <polygon points="200,18 357.61,109 357.61,291 200,382 42.39,291 42.39,109" fill="#C4713B"/>
-        <polygon points="200,44 335.1,122 335.1,278 200,356 64.9,278 64.9,122" fill="#2C2416"/>
-        <polygon points="200,52 328.17,126 328.17,274 200,348 71.83,274 71.83,126" fill="#F2EBDA" opacity="0.9"/>
+        <defs>
+          <radialGradient id="og-ft" cx="50%" cy="38%" r="62%" gradientUnits="objectBoundingBox">
+            <stop offset="0%"   stop-color="#FFB060"/>
+            <stop offset="50%"  stop-color="#E07828"/>
+            <stop offset="100%" stop-color="#B85A18"/>
+          </radialGradient>
+        </defs>
+        <polygon points="200,10 364.54,105 364.54,295 200,390 35.46,295 35.46,105"   fill="#2C2416"/>
+        <polygon points="200,18 357.61,109 357.61,291 200,382 42.39,291 42.39,109"   fill="url(#og-ft)"/>
+        <polygon points="200,44 335.1,122 335.1,278 200,356 64.9,278 64.9,122"       fill="#2C2416"/>
+        <polygon points="200,52 328.17,126 328.17,274 200,348 71.83,274 71.83,126"   fill="#F2EBDA" opacity=".9"/>
         <path d="M302.19,141 L200,82 L97.81,141 L97.81,259 L200,318 L302.19,259 L302.19,239 L267.55,239 L200,278 L132.45,239 L132.45,161 L200,122 L267.55,161 L302.19,161 Z" fill="#3C5A2B"/>
       </svg>
       <span class="footer-wordmark">Cooper's Consulting</span>
@@ -553,33 +476,38 @@
     <li><a href="#about">About</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
-  <div class="footer-contact">
-    <p>Fredericktown, Missouri</p>
-  </div>
+  <div class="footer-contact"><p>Fredericktown, Missouri</p></div>
 </footer>
 
-<!-- ═══════════════════════════════════════════════════════ SCRIPTS -->
 <script>
-// ─────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
 //  HEX CANVAS HERO
-//  Technique: orange radial gradient behind → dark raised hex tiles
-//  on top with gaps → gaps reveal orange glow.
-//  Glow intensity driven by distance from light source.
-//  Light source tracks logo parallax position + mouse + idle drift.
-// ─────────────────────────────────────────────────────────────────
+//
+//  Stack (back → front):
+//  1. Near-black background
+//  2. Orange radial gradient  ← the "light source"
+//  3. Dark flat-top hex tiles ← clean solid fills, no glow rings
+//     Gaps between tiles reveal (2) — those gaps ARE the glow lines
+//  4. Parallax logo on top
+//
+//  Tile render = ONE fill call per tile. No per-tile gradients.
+//  Directional shading baked into tile colour via global position factor.
+//  No shadowBlur. No overlapping shapes. Clean lines everywhere.
+// ─────────────────────────────────────────────────────────────────────────────
 (function () {
-  const canvas  = document.getElementById('hex-canvas');
-  const ctx     = canvas.getContext('2d');
-  const logoEl  = document.getElementById('parallax-logo');
-  const heroEl  = document.querySelector('.hero');
-  const DPR     = Math.min(window.devicePixelRatio || 1, 2);
+  const canvas = document.getElementById('hex-canvas');
+  const ctx    = canvas.getContext('2d');
+  const logoEl = document.getElementById('parallax-logo');
+  const heroEl = document.querySelector('.hero');
+  const DPR    = Math.min(window.devicePixelRatio || 1, 2);
 
   let W, H;
-  let pageScrollY = 0;
-  let mouseX = null, mouseY = null;
+  let scrollY  = 0;
+  let mouseX   = null;
+  let mouseY   = null;
   let startTime = null;
 
-  // ── Resize ──────────────────────────────────────────────────────
+  // ── Resize ───────────────────────────────────────────────────────────────
   function resize() {
     W = heroEl.offsetWidth;
     H = heroEl.offsetHeight;
@@ -590,11 +518,10 @@
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
   }
   resize();
-  window.addEventListener('resize', () => { resize(); }, { passive: true });
+  window.addEventListener('resize', resize, { passive: true });
 
-  // ── Input ────────────────────────────────────────────────────────
-  window.addEventListener('scroll', () => { pageScrollY = window.scrollY; }, { passive: true });
-
+  // ── Input ────────────────────────────────────────────────────────────────
+  window.addEventListener('scroll', () => { scrollY = window.scrollY; }, { passive: true });
   heroEl.addEventListener('mousemove', e => {
     const r = heroEl.getBoundingClientRect();
     mouseX = e.clientX - r.left;
@@ -602,155 +529,132 @@
   }, { passive: true });
   heroEl.addEventListener('mouseleave', () => { mouseX = null; mouseY = null; });
 
-  // ── Flat-top hexagon path helper ─────────────────────────────────
-  function hex(cx, cy, r) {
+  // ── Flat-top hex path ─────────────────────────────────────────────────────
+  // Flat-top: first vertex at angle 0° (rightmost point)
+  function hexPath(cx, cy, r) {
     ctx.beginPath();
     for (let i = 0; i < 6; i++) {
-      const a = (Math.PI / 3) * i;   // flat-top: starts at 0° (right)
-      const x = cx + r * Math.cos(a);
-      const y = cy + r * Math.sin(a);
-      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      const a = (Math.PI / 3) * i;
+      i === 0
+        ? ctx.moveTo(cx + r * Math.cos(a), cy + r * Math.sin(a))
+        : ctx.lineTo(cx + r * Math.cos(a), cy + r * Math.sin(a));
     }
     ctx.closePath();
   }
 
-  // ── Main render loop ─────────────────────────────────────────────
+  // ── Render loop ───────────────────────────────────────────────────────────
   function render(ts) {
     if (!startTime) startTime = ts;
     const elapsed = ts - startTime;
 
-    // Boot progress: 0 → 1 over 2.2 s, ease-out cubic
-    const rawBoot = Math.min(1, elapsed / 2200);
+    // Boot: 0→1 in 2.4 s, ease-out cubic
+    const rawBoot = Math.min(1, elapsed / 2400);
     const boot    = 1 - Math.pow(1 - rawBoot, 3);
 
-    // Hex geometry — responsive
-    const hexR  = Math.max(28, Math.min(54, W / 28));
-    const colW  = hexR * Math.sqrt(3);  // horiz distance, flat-top grid
-    const rowH  = hexR * 1.5;           // vert distance between row centers
-    const GAP   = Math.max(2, hexR * 0.065); // gap width between tiles
+    // Hex sizing — responsive
+    // colW = horiz spacing between flat-top hex centres in same row = hexR * sqrt(3)
+    // rowH = vert spacing between rows = hexR * 1.5
+    const hexR = Math.max(26, Math.min(52, W / 30));
+    const colW = hexR * Math.sqrt(3);
+    const rowH = hexR * 1.5;
+    // GAP: the void between tiles — half on each side of the shared edge
+    // tileR drawn at hexR - GAP ensures uniform spacing with no overlap
+    const GAP   = Math.max(2.5, hexR * 0.075);
     const tileR = hexR - GAP;
 
-    // Parallax offset: logo moves at 45% of scroll speed
-    const parallaxY = Math.min(pageScrollY, H) * 0.45;
+    // Parallax: logo drifts at 45% scroll speed
+    const parallaxY = Math.min(scrollY, H) * 0.45;
 
-    // Light source target
-    // Base: follows logo center (which is at H/2 + parallaxY in hero coords)
+    // Light source base: sits at logo centre in hero-local coordinates
     let tgtX = W * 0.5;
     let tgtY = H * 0.5 + parallaxY;
-
-    // Mouse: small additional offset (max ±8% of dimensions)
     if (mouseX !== null) {
-      tgtX += (mouseX - W * 0.5) * 0.16;
-      tgtY += (mouseY - H * 0.5) * 0.10;
+      tgtX += (mouseX - W * 0.5) * 0.18;
+      tgtY += (mouseY - H * 0.5) * 0.12;
     }
 
-    // Idle drift: subtle sine wave so it lives even when nothing's happening
-    const driftAmp = boot >= 1 ? 1 : boot; // drift starts only as boot completes
-    const lx = tgtX + Math.sin(ts * 0.00022) * W  * 0.022 * driftAmp;
-    const ly = tgtY + Math.cos(ts * 0.00017) * H  * 0.016 * driftAmp;
+    // Idle drift: gentle sine oscillation (only at full brightness)
+    const drift = boot >= 1 ? 1 : boot;
+    const lx = tgtX + Math.sin(ts * 0.00024) * W  * 0.026 * drift;
+    const ly = tgtY + Math.cos(ts * 0.00019) * H  * 0.018 * drift;
 
-    // Post-boot pulse: the glow breathes (±4%)
-    const breathe = boot >= 1 ? 1 + 0.04 * Math.sin(ts * 0.0016) : 1;
+    // Breathe: ±3.5% pulse after fully booted
+    const breathe = boot >= 1 ? 1 + 0.035 * Math.sin(ts * 0.0017) : 1;
+    const gi = boot * breathe; // overall glow intensity
 
-    // ── Draw ─────────────────────────────────────────────────────
+    // ── Draw ────────────────────────────────────────────────────────────────
 
-    // 1. Deep dark background
-    ctx.fillStyle = '#040b04';
+    // 1. Near-black base
+    ctx.fillStyle = '#030a03';
     ctx.fillRect(0, 0, W, H);
 
-    // 2. Orange glow (the light source behind the grid)
-    //    During boot, glow radius expands outward like a power-on sweep
-    const maxGlowR  = Math.hypot(W, H) * 0.9;
-    const glowR     = maxGlowR * (0.15 + 0.85 * boot);  // expands from center
-    const gi        = boot * breathe;                     // intensity
-
-    const grd = ctx.createRadialGradient(lx, ly, 0, lx, ly, glowR);
-    grd.addColorStop(0,     `rgba(255, 185, 80,  ${Math.min(1, 1.05 * gi)})`);
-    grd.addColorStop(0.04,  `rgba(248, 155, 55,  ${0.97 * gi})`);
-    grd.addColorStop(0.12,  `rgba(215, 115, 35,  ${0.80 * gi})`);
-    grd.addColorStop(0.28,  `rgba(150,  65, 15,  ${0.50 * gi})`);
-    grd.addColorStop(0.55,  `rgba( 60,  22,  5,  ${0.22 * gi})`);
-    grd.addColorStop(0.80,  `rgba( 15,   5,  1,  ${0.07 * gi})`);
-    grd.addColorStop(1,     'rgba(0, 0, 0, 0)');
+    // 2. Orange light source — radial gradient expands from centre during boot
+    const glowR = Math.hypot(W, H) * (0.12 + 0.88 * boot);
+    const grd   = ctx.createRadialGradient(lx, ly, 0, lx, ly, glowR);
+    grd.addColorStop(0,    `rgba(255,190, 85, ${Math.min(1, gi * 1.05)})`);
+    grd.addColorStop(0.05, `rgba(250,160, 55, ${gi * 0.96})`);
+    grd.addColorStop(0.16, `rgba(215,115, 32, ${gi * 0.78})`);
+    grd.addColorStop(0.35, `rgba(140, 60, 12, ${gi * 0.46})`);
+    grd.addColorStop(0.60, `rgba( 50, 18,  3, ${gi * 0.18})`);
+    grd.addColorStop(1,    'rgba(0,0,0,0)');
     ctx.fillStyle = grd;
     ctx.fillRect(0, 0, W, H);
 
-    // 3. Hex tile grid
-    const maxDist = Math.max(W, H) * 0.72;
+    // 3. Hex tiles — clean single-fill, no glow rings, no per-tile gradients
+    const maxDist = Math.max(W, H) * 0.70;
     const cols    = Math.ceil(W / colW) + 4;
     const rows    = Math.ceil(H / rowH) + 4;
-    const offX    = -colW * 1.5;
-    const offY    = -rowH * 1.5;
+    // Start offset so grid is centred and tiles bleed to edges
+    const startX  = -colW  * 1.5;
+    const startY  = -rowH  * 1.5;
 
     for (let row = 0; row < rows; row++) {
+      const cy = startY + row * rowH;
+      // Odd rows offset right by half column width — creates the honeycomb stagger
+      const xOff = (row % 2 !== 0) ? colW * 0.5 : 0;
+
       for (let col = 0; col < cols; col++) {
-        // Flat-top grid: every other row offset by half column width
-        const cx = offX + col * colW + (row % 2 !== 0 ? colW * 0.5 : 0);
-        const cy = offY + row * rowH;
+        const cx = startX + col * colW + xOff;
 
-        // Distance from this tile center to light source
+        // Distance from tile centre to light source → glow proximity 0-1
         const dist = Math.hypot(cx - lx, cy - ly);
-        const prox = Math.max(0, 1 - dist / maxDist); // 1=at light, 0=far
+        const prox = Math.max(0, 1 - dist / maxDist);
 
-        // Tile materialisation wave:
-        // Centre tiles appear first, edge tiles later during boot
-        const normDist  = Math.min(1, dist / (Math.max(W, H) * 0.6));
-        const tileDelay = normDist * 0.52;
-        const tileBoot  = Math.max(0, Math.min(1, (boot - tileDelay) / 0.48));
+        // Boot wave: tiles materialise from light-source outward
+        // normDist based on dist from screen centre (boot origin), not light source,
+        // so the wave radiates from initial centre regardless of mouse/scroll
+        const normFromCentre = Math.min(1, Math.hypot(cx - W*0.5, cy - H*0.5) / (Math.max(W,H)*0.6));
+        const tileDelay = normFromCentre * 0.50;
+        const tileBoot  = Math.max(0, Math.min(1, (rawBoot - tileDelay) / 0.50));
         const curR      = tileR * tileBoot;
+        if (curR < 1) continue;
 
-        if (curR < 1) continue; // tile not yet visible
+        // ── Tile colour ──────────────────────────────────────────────────────
+        // Base: very dark forest green
+        // + proximity warming (closer to light → slightly warmer/lighter)
+        // + directional shading (upper-left brighter → gives raised-panel depth)
+        const dir = Math.max(0, Math.min(1, 0.5 + (-cx / W - cy / H) * 0.28));
+        const tR  = Math.round( 8 + prox * 22 + dir * 7);
+        const tG  = Math.round(16 + prox * 32 + dir * 12);
+        const tB  = Math.round( 7 + prox * 16 + dir * 5);
 
-        // -- Edge glow ring (slightly larger hex, warm orange) --
-        // This is what "seeps" through — the gap between tiles.
-        // The tile will cover this except at its edges.
-        if (prox * boot > 0.025) {
-          const glowEdge   = prox * boot * tileBoot;
-          const glowExpand = GAP * Math.min(1.4, glowEdge * 2.8);
-          hex(cx, cy, Math.min(curR + glowExpand, hexR));
-          // Colour shifts: cool-orange near center → deep amber at edges
-          const rCh = Math.round(190 + prox * 65);
-          const gCh = Math.round( 80 + prox * 60);
-          const bCh = Math.round( 20 + prox * 10);
-          ctx.fillStyle = `rgba(${rCh},${gCh},${bCh},${Math.min(0.9, glowEdge * 0.75)})`;
-          ctx.fill();
-        }
-
-        // -- Dark forest-green tile --
-        hex(cx, cy, curR);
-        // Tile gets very slightly warmer near the light source
-        const tR = Math.round( 9 + prox * 20);
-        const tG = Math.round(17 + prox * 28);
-        const tB = Math.round( 8 + prox * 14);
+        hexPath(cx, cy, curR);
         ctx.fillStyle = `rgb(${tR},${tG},${tB})`;
-        ctx.fill();
-
-        // -- Convex bevel: radial gradient, light top-left → dark bottom-right --
-        // Gives each tile the "raised panel" depth of the reference images
-        hex(cx, cy, curR);
-        const bevelSrc = ctx.createRadialGradient(
-          cx - curR * 0.22, cy - curR * 0.22, 0,
-          cx, cy, curR
-        );
-        bevelSrc.addColorStop(0,    'rgba(255,255,255,0.07)');
-        bevelSrc.addColorStop(0.45, 'rgba(255,255,255,0.00)');
-        bevelSrc.addColorStop(1,    'rgba(0,0,0,0.32)');
-        ctx.fillStyle = bevelSrc;
         ctx.fill();
       }
     }
 
-    // ── Logo entry animation ──────────────────────────────────────
-    // Logo phases in after boot reaches 38%, scale 1.10 → 1.00
-    if (rawBoot < 0.38) {
+    // ── Logo animation ───────────────────────────────────────────────────────
+    // Stays hidden until boot reaches 40%, then eases in with a slight scale
+    if (rawBoot < 0.40) {
       logoEl.style.opacity   = '0';
       logoEl.style.transform = `translate(-50%, calc(-50% + ${parallaxY}px)) scale(1.10)`;
     } else {
-      const t    = Math.min(1, (rawBoot - 0.38) / 0.62);
-      const ease = 1 - Math.pow(1 - t, 3); // ease-out cubic
-      const sc   = (1.10 - 0.10 * ease).toFixed(4);
+      const t    = Math.min(1, (rawBoot - 0.40) / 0.60);
+      const ease = 1 - Math.pow(1 - t, 3);
       logoEl.style.opacity   = ease.toFixed(4);
-      logoEl.style.transform = `translate(-50%, calc(-50% + ${parallaxY}px)) scale(${sc})`;
+      logoEl.style.transform =
+        `translate(-50%, calc(-50% + ${parallaxY}px)) scale(${(1.10 - 0.10 * ease).toFixed(4)})`;
     }
 
     requestAnimationFrame(render);
@@ -760,7 +664,7 @@
 })();
 
 
-// ── Nav scroll state ──────────────────────────────────────────────
+// ── Nav scroll state ──────────────────────────────────────────────────────────
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => {
   nav.classList.toggle('scrolled', window.scrollY > 40);
@@ -768,14 +672,12 @@ window.addEventListener('scroll', () => {
 if (window.scrollY > 40) nav.classList.add('scrolled');
 
 
-// ── Mobile menu ───────────────────────────────────────────────────
+// ── Mobile menu ───────────────────────────────────────────────────────────────
 const burgerBtn    = document.getElementById('burger-btn');
 const navOverlay   = document.getElementById('nav-overlay');
 const overlayClose = document.getElementById('overlay-close');
-
-const openMenu  = () => { navOverlay.classList.add('open');    burgerBtn.setAttribute('aria-expanded', 'true');  document.body.style.overflow = 'hidden'; };
-const closeMenu = () => { navOverlay.classList.remove('open'); burgerBtn.setAttribute('aria-expanded', 'false'); document.body.style.overflow = '';       };
-
+const openMenu  = () => { navOverlay.classList.add('open');    burgerBtn.setAttribute('aria-expanded','true');  document.body.style.overflow='hidden'; };
+const closeMenu = () => { navOverlay.classList.remove('open'); burgerBtn.setAttribute('aria-expanded','false'); document.body.style.overflow=''; };
 burgerBtn.addEventListener('click', openMenu);
 overlayClose.addEventListener('click', closeMenu);
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
@@ -785,9 +687,9 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu();
 });
 
 
-// ── Reveal on scroll ──────────────────────────────────────────────
-const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-if (reducedMotion) {
+// ── Reveal on scroll ──────────────────────────────────────────────────────────
+const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (reduced) {
   document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
 } else {
   const obs = new IntersectionObserver(entries => {
@@ -796,6 +698,5 @@ if (reducedMotion) {
   document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 }
 </script>
-
 </body>
 </html>
