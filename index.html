@@ -2,7 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <script>if(history.scrollRestoration)history.scrollRestoration='manual';window.scrollTo(0,0);</script>
+  <script>
+    if(history.scrollRestoration) history.scrollRestoration = 'manual';
+    window.scrollTo(0, 0);
+    window.addEventListener('load', () => window.scrollTo(0, 0));
+    window.addEventListener('pageshow', () => window.scrollTo(0, 0));
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cooper's Consulting</title>
   <link rel="canonical" href="https://coopersconsulting.com/">
@@ -806,11 +811,12 @@ scene.add(fillLight);
 const composer = new EffectComposer(renderer);
 composer.addPass(new RenderPass(scene, camera));
 
+const isMobile = W < 768;
 const bloomPass = new UnrealBloomPass(
   new THREE.Vector2(W, H),
-  0.60,   // strength — restrained glow
-  0.45,   // radius
-  0.28    // threshold
+  isMobile ? 0.30 : 0.60,   // strength — halved on mobile to match desktop darkness
+  isMobile ? 0.30 : 0.45,   // radius
+  isMobile ? 0.45 : 0.28    // threshold — higher on mobile = fewer tiles bloom
 );
 composer.addPass(bloomPass);
 composer.addPass(new OutputPass()); // tone-map → sRGB
