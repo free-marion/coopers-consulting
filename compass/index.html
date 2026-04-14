@@ -198,62 +198,67 @@ if(!window.jspdf){alert("PDF library not loaded — check your connection and re
 const {jsPDF}=window.jspdf;
 const pdf=new jsPDF({orientation:'landscape',unit:'in',format:'letter'});
 
-// Page: 11" x 8.5" landscape
 const M=0.35, PW=10.3, PH=7.8;
-const GAP=0.14, COL=(PW-2*GAP)/3;
+// Unequal columns: col3 (1-Year Plan) gets more room
+const G=0.14;
+const C1W=3.0, C2W=3.0, C3W=PW-C1W-C2W-2*G; // ~4.02"
+const c1=M, c2=M+C1W+G, c3=M+C1W+C2W+2*G;
 
-// Color helpers
 const hx=h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];
 const copper='#B07D4B',teal='#2B3F47',sage='#9EA67C',dk='#333333',lt='#CCCCCC',mid='#8A9AA0';
 const tc=h=>{const[r,g,b]=hx(h);pdf.setTextColor(r,g,b);};
 const dc=h=>{const[r,g,b]=hx(h);pdf.setDrawColor(r,g,b);};
 
-// Draw compass mark centered at cx,cy with outer radius r
+// Watermark: shirt-style logo — single circle, full-diameter X, outward ticks
 function drawCompass(cx,cy,r){
   dc(copper);
-  pdf.setLineWidth(0.01);pdf.circle(cx,cy,r,'S');
-  pdf.setLineWidth(0.006);pdf.circle(cx,cy,r*0.915,'S');
-  pdf.setLineWidth(0.007);
-  pdf.line(cx,cy-r,cx,cy-r*0.82);pdf.line(cx,cy+r,cx,cy+r*0.82);
-  pdf.line(cx-r,cy,cx-r*0.82,cy);pdf.line(cx+r,cy,cx+r*0.82,cy);
-  const ir=r*0.915,d=ir*0.707;
-  pdf.setLineWidth(0.014);
-  pdf.line(cx-d,cy-d,cx+d,cy+d);pdf.line(cx+d,cy-d,cx-d,cy+d);
-  tc(copper);pdf.setFont('helvetica','bold');pdf.setFontSize(r*46);
-  pdf.text('O',cx,cy-ir*0.37,{align:'center',baseline:'middle'});
-  pdf.text('N',cx-ir*0.41,cy+0.01,{align:'center',baseline:'middle'});
-  pdf.text('B',cx+ir*0.41,cy+0.01,{align:'center',baseline:'middle'});
-  pdf.text('A',cx,cy+ir*0.37,{align:'center',baseline:'middle'});
+  pdf.setLineWidth(0.013);pdf.circle(cx,cy,r,'S');
+  // Full-diameter X lines (corner to corner through circle)
+  const d=r*0.707;
+  pdf.setLineWidth(0.018);
+  pdf.line(cx-d,cy-d,cx+d,cy+d);
+  pdf.line(cx+d,cy-d,cx-d,cy+d);
+  // Outward cardinal tick marks
+  const tk=r*0.13;
+  pdf.setLineWidth(0.01);
+  pdf.line(cx,cy-r,cx,cy-r-tk);
+  pdf.line(cx,cy+r,cx,cy+r+tk);
+  pdf.line(cx-r,cy,cx-r-tk,cy);
+  pdf.line(cx+r,cy,cx+r+tk,cy);
+  // Letters in the 4 diamond quadrants
+  tc(copper);pdf.setFont('helvetica','bold');pdf.setFontSize(r*48);
+  pdf.text('O',cx,cy-r*0.44,{align:'center',baseline:'middle'});
+  pdf.text('N',cx-r*0.44,cy+0.01,{align:'center',baseline:'middle'});
+  pdf.text('B',cx+r*0.44,cy+0.01,{align:'center',baseline:'middle'});
+  pdf.text('A',cx,cy+r*0.44,{align:'center',baseline:'middle'});
 }
 
 // Section rule + title — returns new y
 function secH(x,y,w,title){
   dc(copper);pdf.setLineWidth(0.012);pdf.line(x,y,x+w,y);y+=0.16;
-  tc(teal);pdf.setFont('helvetica','bold');pdf.setFontSize(8.5);
+  tc(teal);pdf.setFont('helvetica','bold');pdf.setFontSize(9);
   pdf.text(title.toUpperCase(),x,y);return y+0.14;
 }
-// Field label — returns new y
 function lbl(x,y,text){
-  tc(copper);pdf.setFont('helvetica','bold');pdf.setFontSize(7);
+  tc(copper);pdf.setFont('helvetica','bold');pdf.setFontSize(7.5);
   pdf.text(text.toUpperCase(),x,y);return y+0.15;
 }
-// Body text — returns new y
 function body(x,y,w,text){
   if(!text||!text.trim()){
-    tc(lt);pdf.setFont('helvetica','normal');pdf.setFontSize(8.5);
-    pdf.text('\u2014',x,y);return y+0.15;
+    tc(lt);pdf.setFont('helvetica','normal');pdf.setFontSize(9);
+    pdf.text('\u2014',x,y);return y+0.16;
   }
-  tc(dk);pdf.setFont('helvetica','normal');pdf.setFontSize(8.5);
+  tc(dk);pdf.setFont('helvetica','normal');pdf.setFontSize(9);
   const lines=pdf.splitTextToSize(text.trim(),w-0.02);
-  pdf.text(lines,x,y);return y+lines.length*0.12+0.05;
+  pdf.text(lines,x,y);return y+lines.length*0.13+0.06;
 }
 
-// WATERMARK — drawn first, behind everything
+// WATERMARK first
 pdf.setGState(new pdf.GState({opacity:0.05}));
-drawCompass(5.5,4.25,2.1);
+drawCompass(5.5,4.25,2.2);
 pdf.setGState(new pdf.GState({opacity:1}));
 
-// HEADER — text only, no logo
+// HEADER
 tc(teal);pdf.setFont('helvetica','bold');pdf.setFontSize(16);
 pdf.text('The Compass',M,M+0.17);
 tc(copper);pdf.setFont('helvetica','italic');pdf.setFontSize(8);
@@ -262,87 +267,112 @@ if(nm){tc(teal);pdf.setFont('helvetica','bold');pdf.setFontSize(12);pdf.text(nm,
 if(dt){tc(mid);pdf.setFont('helvetica','normal');pdf.setFontSize(8);pdf.text(fd(dt),M+PW,M+0.31,{align:'right'});}
 dc(copper);pdf.setLineWidth(0.02);pdf.line(M,M+0.42,M+PW,M+0.42);
 
-// LAYOUT
-// Top: 3 columns (Foundation | 3-Year | 1-Year Goals)
-// Bottom: full-width 90-Day Rocks in 2 sub-columns
-const sY=M+0.55;
-const topH=3.5;
-const topEndY=sY+topH;
-const rockStartY=topEndY+0.18;
-const c1=M,c2=M+COL+GAP,c3=M+2*(COL+GAP);
+const sY=M+0.56;
 
-// COL 1: Foundation + 10-Year
+// COL 1: Foundation + 10-Year (draw and track ending y)
 let y1=sY;
-y1=secH(c1,y1,COL,'Foundation');
-y1=lbl(c1,y1,'Purpose');y1=body(c1,y1,COL,fv('purpose'));y1+=0.08;
-y1=lbl(c1,y1,'Tribe');y1=body(c1,y1,COL,fv('tribe'));y1+=0.15;
-y1=secH(c1,y1,COL,'10-Year Target');y1=body(c1,y1,COL,fv('tenYear'));
+y1=secH(c1,y1,C1W,'Foundation');
+y1=lbl(c1,y1,'Purpose');y1=body(c1,y1,C1W,fv('purpose'));y1+=0.1;
+y1=lbl(c1,y1,'Tribe');y1=body(c1,y1,C1W,fv('tribe'));y1+=0.18;
+y1=secH(c1,y1,C1W,'10-Year Target');y1=body(c1,y1,C1W,fv('tenYear'));
 
 // COL 2: 3-Year Picture
 let y2=sY;
-y2=secH(c2,y2,COL,'3-Year Picture');
-y2=lbl(c2,y2,'Health');y2=body(c2,y2,COL,fv('threeHealth'));y2+=0.08;
-y2=lbl(c2,y2,'Finance');y2=body(c2,y2,COL,fv('threeFinance'));y2+=0.08;
-y2=lbl(c2,y2,'Relationship / Spiritual');y2=body(c2,y2,COL,fv('threeRelationship'));
+y2=secH(c2,y2,C2W,'3-Year Picture');
+y2=lbl(c2,y2,'Health');y2=body(c2,y2,C2W,fv('threeHealth'));y2+=0.1;
+y2=lbl(c2,y2,'Finance');y2=body(c2,y2,C2W,fv('threeFinance'));y2+=0.1;
+y2=lbl(c2,y2,'Relationship / Spiritual');y2=body(c2,y2,C2W,fv('threeRelationship'));
 
-// COL 3: 1-Year Plan
+// COL 3: 1-Year Plan (wider column, more breathing room)
 let y3=sY;
-y3=secH(c3,y3,COL,'1-Year Plan');
+y3=secH(c3,y3,C3W,'1-Year Plan');
 const allG=[...FG,...OG];
 for(const g of allG){
   const lb=g.l||(S.gl&&S.gl[g.id])||'Goal '+g.n;
   const v=fv(g.id);
-  tc(copper);pdf.setFont('helvetica','bold');pdf.setFontSize(8.5);
+  tc(copper);pdf.setFont('helvetica','bold');pdf.setFontSize(9);
   pdf.text(g.n+'.',c3,y3);
   tc(g.n<=4?teal:sage);
   const lbStr=lb+(v?':':'');
-  pdf.text(lbStr,c3+0.15,y3);
+  pdf.text(lbStr,c3+0.16,y3);
   if(v){
     tc(dk);pdf.setFont('helvetica','normal');
-    const spaceLeft=COL-0.15-pdf.getTextWidth(lbStr)-0.04;
-    if(spaceLeft>=pdf.getTextWidth(v)){
-      pdf.text(v,c3+0.15+pdf.getTextWidth(lbStr)+0.04,y3);y3+=0.13;
+    const avail=C3W-0.16-pdf.getTextWidth(lbStr)-0.05;
+    if(avail>=pdf.getTextWidth(v)){
+      pdf.text(v,c3+0.16+pdf.getTextWidth(lbStr)+0.05,y3);y3+=0.14;
     }else{
-      y3+=0.13;const vl=pdf.splitTextToSize(v,COL-0.2);
-      pdf.text(vl,c3+0.2,y3);y3+=vl.length*0.115+0.02;
+      y3+=0.14;const vl=pdf.splitTextToSize(v,C3W-0.22);
+      pdf.text(vl,c3+0.22,y3);y3+=vl.length*0.13+0.03;
     }
-  }else{y3+=0.13;}
+  }else{y3+=0.14;}
+  y3+=0.03; // breathing room between goals
 }
 
-// DIVIDER between top and rocks
-dc('#D8D0C4');pdf.setLineWidth(0.008);pdf.line(M,topEndY+0.06,M+PW,topEndY+0.06);
+// Dynamic divider: placed at the bottom of whichever column ran longest
+const topEndY=Math.max(y1,y2,y3)+0.12;
+dc('#D8D0C4');pdf.setLineWidth(0.008);pdf.line(M,topEndY,M+PW,topEndY);
 
-// 90-DAY ROCKS — full width, split into 2 columns
-const halfW=(PW-GAP)/2;
-const rC1=M,rC2=M+halfW+GAP;
+// 90-DAY ROCKS — full width, 2 sub-columns, fills remaining space
+const rockStartY=topEndY+0.14;
+const halfW=(PW-G)/2;
+const rC1=M,rC2=M+halfW+G;
 dc(copper);pdf.setLineWidth(0.012);pdf.line(M,rockStartY,M+PW,rockStartY);
-tc(teal);pdf.setFont('helvetica','bold');pdf.setFontSize(8.5);
-pdf.text('90-DAY ROCKS',M,rockStartY+0.16);
-const rContentY=rockStartY+0.32;
-
-function drawRock(x,y,w,i,r){
-  tc(copper);pdf.setFont('helvetica','bold');pdf.setFontSize(8.5);pdf.text((i+1)+'.',x,y);
-  tc(dk);pdf.setFont('helvetica','normal');
-  const rt=pdf.splitTextToSize(r.text.trim(),w-0.18);
-  pdf.text(rt,x+0.17,y);y+=rt.length*0.12+0.03;
-  for(const m of(r.milestones||[]).filter(m=>m&&m.text&&m.text.trim())){
-    tc(sage);pdf.setFontSize(7.5);pdf.text('\u21b3',x+0.12,y);
-    tc(dk);pdf.setFont('helvetica','normal');
-    const mt=m.date?(m.text.trim()+' \u2014 '+fd(m.date)):m.text.trim();
-    const ml=pdf.splitTextToSize(mt,w-0.34);pdf.text(ml,x+0.26,y);y+=ml.length*0.108+0.02;
-  }
-  return y+0.06;
-}
+tc(teal);pdf.setFont('helvetica','bold');pdf.setFontSize(9);
+pdf.text('90-DAY ROCKS',M,rockStartY+0.17);
+const rContentY=rockStartY+0.33;
+const pageBottom=M+PH-0.06;
 
 const rocks=(S.rocks||[]).filter(r=>r&&r.text&&r.text.trim());
+
+// Estimate total rock content height to calculate adaptive spacing
+function estRockH(r,w){
+  const rt=pdf.splitTextToSize(r.text.trim(),w-0.18);
+  let h=rt.length*0.13+0.03;
+  for(const m of(r.milestones||[]).filter(m=>m&&m.text&&m.text.trim())){
+    const mt=m.date?(m.text.trim()+' \u2014 '+fd(m.date)):m.text.trim();
+    const ml=pdf.splitTextToSize(mt,w-0.34);
+    h+=ml.length*0.115+0.02;
+  }
+  return h;
+}
+
+// Calculate adaptive gap to spread rocks across available space
+let totalRockH=0;
+const leftRocks=rocks.slice(0,4), rightRocks=rocks.slice(4);
+for(const r of leftRocks) totalRockH+=estRockH(r,halfW);
+let leftGap=0.08;
+if(leftRocks.length>0){
+  const leftAvail=pageBottom-rContentY;
+  const leftUsed=totalRockH;
+  leftGap=Math.max(0.07,Math.min(0.25,(leftAvail-leftUsed)/Math.max(leftRocks.length,1)));
+}
+
+function drawRock(x,y,w,i,r,gap){
+  tc(copper);pdf.setFont('helvetica','bold');pdf.setFontSize(9);pdf.text((i+1)+'.',x,y);
+  tc(dk);pdf.setFont('helvetica','normal');
+  const rt=pdf.splitTextToSize(r.text.trim(),w-0.18);
+  pdf.text(rt,x+0.17,y);y+=rt.length*0.13+0.03;
+  for(const m of(r.milestones||[]).filter(m=>m&&m.text&&m.text.trim())){
+    tc(sage);pdf.setFontSize(8);pdf.text('\u21b3',x+0.12,y);
+    tc(dk);pdf.setFont('helvetica','normal');pdf.setFontSize(9);
+    const mt=m.date?(m.text.trim()+' \u2014 '+fd(m.date)):m.text.trim();
+    const ml=pdf.splitTextToSize(mt,w-0.34);pdf.text(ml,x+0.26,y);y+=ml.length*0.115+0.02;
+  }
+  return y+gap;
+}
+
 if(!rocks.length){
-  tc(lt);pdf.setFont('helvetica','normal');pdf.setFontSize(8.5);pdf.text('\u2014',M,rContentY);
+  tc(lt);pdf.setFont('helvetica','normal');pdf.setFontSize(9);pdf.text('\u2014',M,rContentY);
 }else{
   let yl=rContentY,yr=rContentY;
-  for(let i=0;i<rocks.length;i++){
-    if(i<4){yl=drawRock(rC1,yl,halfW,i,rocks[i]);}
-    else{yr=drawRock(rC2,yr,halfW,i,rocks[i]);}
+  // Adaptive gap for right column too
+  let rightGap=0.08;
+  if(rightRocks.length>0){
+    let rh=0;for(const r of rightRocks) rh+=estRockH(r,halfW);
+    rightGap=Math.max(0.07,Math.min(0.25,(pageBottom-rContentY-rh)/Math.max(rightRocks.length,1)));
   }
+  for(let i=0;i<leftRocks.length;i++) yl=drawRock(rC1,yl,halfW,i,leftRocks[i],leftGap);
+  for(let i=0;i<rightRocks.length;i++) yr=drawRock(rC2,yr,halfW,i+4,rightRocks[i],rightGap);
 }
 
 pdf.save('The_Compass_'+(nm||'NOBA').replace(/\s+/g,'_')+'.pdf');
