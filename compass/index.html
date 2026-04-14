@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>The Compass — NOBA 2026</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Barlow+Condensed:wght@800&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root{--teal:#2B3F47;--dark-teal:#1E2D33;--copper:#B07D4B;--sage:#9EA67C;--cream:#F5F0E8;--lt:#3A5560;--mid:#8A9AA0;--white:#FFF}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -188,109 +188,138 @@ function fd(d){if(!d)return"";try{return new Date(d+"T00:00:00").toLocaleDateStr
 function expD(){
 const nm=document.getElementById("uN").value;
 const dt=document.getElementById("uD").value;
-const f=id=>eh((S.f&&S.f[id])||"");
+const fv=id=>((S.f&&S.f[id])||"");
+if(!window.jspdf){alert("PDF library not loaded — check your connection and reload.");return;}
+const {jsPDF}=window.jspdf;
+const pdf=new jsPDF({orientation:'landscape',unit:'in',format:'letter'});
 
-const goalsH=[...FG,...OG].map(g=>{
-const lb=g.l||(S.gl&&S.gl[g.id])||`Goal ${g.n}`;
-const v=f(g.id);
-const ac=g.n<=4?"#2B3F47":"#9EA67C";
-return `<div class="goal"><span class="goal-n">${g.n}.</span><span class="goal-l" style="color:${ac};">${e(lb)}${v?':':''}</span><span class="goal-v">${v||'<span class="empty">—</span>'}</span></div>`}).join("");
+// Page: 11" x 8.5" landscape
+const M=0.35, PW=10.3, PH=7.8;
+const GAP=0.13, COL=(PW-2*GAP)/3;
 
-const rocksH=(S.rocks&&S.rocks.length?S.rocks:[]).map((r,i)=>{
-if(!r||!r.text?.trim())return"";
-const ms=(r.milestones&&r.milestones.length?r.milestones:[]).filter(m=>m&&m.text?.trim()).map(m=>
-`<div class="rock-ms"><span>↳</span> ${e(m.text)}${m.date?` <span style="color:#B07D4B;">— ${fd(m.date)}</span>`:""}</div>`).join("");
-return `<div class="rock"><div class="rock-t"><span class="rock-n">${i+1}.</span><span>${e(r.text)}</span></div>${ms}</div>`}).join("")||'<span class="empty">—</span>';
+// Color helpers (hex → r,g,b)
+const hx=h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];
+const copper='#B07D4B',teal='#2B3F47',sage='#9EA67C',dk='#333333',lt='#CCCCCC',mid='#8A9AA0';
+const tc=h=>{const[r,g,b]=hx(h);pdf.setTextColor(r,g,b);};
+const dc=h=>{const[r,g,b]=hx(h);pdf.setDrawColor(r,g,b);};
 
-// Build the export DOM element (not a full HTML doc — html2pdf renders from DOM)
-const wrap=document.createElement("div");
-wrap.id="exp-wrap";
-wrap.innerHTML=`
-<style>
-#exp-wrap *{box-sizing:border-box;}
-#exp-wrap{font-family:Helvetica,Arial,sans-serif;color:#1a1a1a;background:#fff;width:10.3in;padding:0.35in;position:relative;font-size:8.5px;line-height:1.45;}
-#exp-wrap .watermark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.04;width:380px;height:380px;pointer-events:none;z-index:0;}
-#exp-wrap .header{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #B07D4B;padding-bottom:6px;margin-bottom:8px;position:relative;z-index:1;}
-#exp-wrap .header h1{font-family:Georgia,serif;font-size:14px;color:#2B3F47;margin:0;font-weight:bold;line-height:1.2;}
-#exp-wrap .header .sub{font-size:7.5px;color:#B07D4B;font-style:italic;}
-#exp-wrap .hd-left{display:flex;align-items:center;gap:10px;}
-#exp-wrap .header .right{text-align:right;}
-#exp-wrap .header .name{font-family:Georgia,serif;font-size:11px;color:#2B3F47;font-weight:bold;}
-#exp-wrap .header .date{font-size:7.5px;color:#8A9AA0;}
-#exp-wrap .grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;position:relative;z-index:1;}
-#exp-wrap .col{display:flex;flex-direction:column;gap:8px;}
-#exp-wrap .sec{border-top:1.5px solid #B07D4B;padding-top:5px;}
-#exp-wrap .sec-title{font-family:Georgia,serif;font-size:8.5px;font-weight:bold;color:#2B3F47;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;}
-#exp-wrap .lbl{font-size:7.5px;color:#B07D4B;font-weight:bold;text-transform:uppercase;letter-spacing:.3px;margin-bottom:1px;margin-top:5px;}
-#exp-wrap .lbl:first-of-type{margin-top:0;}
-#exp-wrap .field{font-size:8.5px;color:#333;white-space:pre-wrap;line-height:1.45;min-height:10px;}
-#exp-wrap .goal{display:flex;gap:4px;margin-bottom:3px;font-size:8px;}
-#exp-wrap .goal-n{color:#B07D4B;font-weight:bold;flex-shrink:0;width:11px;}
-#exp-wrap .goal-l{color:#2B3F47;font-weight:bold;flex-shrink:0;}
-#exp-wrap .goal-v{color:#333;}
-#exp-wrap .rock{margin-bottom:5px;}
-#exp-wrap .rock-t{font-size:8px;display:flex;gap:4px;}
-#exp-wrap .rock-n{color:#B07D4B;font-weight:bold;flex-shrink:0;width:11px;}
-#exp-wrap .rock-ms{margin-left:15px;font-size:7.5px;color:#555;}
-#exp-wrap .rock-ms span{color:#9EA67C;}
-#exp-wrap .empty{color:#ccc;}
-#exp-wrap .footer{margin-top:8px;padding-top:6px;border-top:1px solid #eee;display:flex;justify-content:center;align-items:center;gap:14px;position:relative;z-index:1;}
-#exp-wrap .footer svg{height:18px;width:auto;opacity:0.2;}
-</style>
-<div class="watermark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="380" height="380"><defs><clipPath id="wm-clip"><circle cx="200" cy="200" r="163"/></clipPath></defs><circle cx="200" cy="200" r="178" fill="none" stroke="#B07D4B" stroke-width="3.5"/><circle cx="200" cy="200" r="163" fill="none" stroke="#B07D4B" stroke-width="1.8"/><line x1="200" y1="13" x2="200" y2="44" stroke="#B07D4B" stroke-width="2.5" stroke-linecap="square"/><line x1="200" y1="387" x2="200" y2="356" stroke="#B07D4B" stroke-width="2.5" stroke-linecap="square"/><line x1="13" y1="200" x2="44" y2="200" stroke="#B07D4B" stroke-width="2.5" stroke-linecap="square"/><line x1="387" y1="200" x2="356" y2="200" stroke="#B07D4B" stroke-width="2.5" stroke-linecap="square"/><g clip-path="url(#wm-clip)"><line x1="37" y1="37" x2="363" y2="363" stroke="#B07D4B" stroke-width="5" stroke-linecap="butt"/><line x1="363" y1="37" x2="37" y2="363" stroke="#B07D4B" stroke-width="5" stroke-linecap="butt"/></g><text font-family="'Arial Narrow',sans-serif" font-weight="800" font-size="86" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="200" y="112">O</text><text font-family="'Arial Narrow',sans-serif" font-weight="800" font-size="86" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="112" y="200">N</text><text font-family="'Arial Narrow',sans-serif" font-weight="800" font-size="86" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="288" y="200">B</text><text font-family="'Arial Narrow',sans-serif" font-weight="800" font-size="86" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="200" y="291">A</text></svg></div>
-<div class="header">
-<div class="hd-left">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" style="height:34px;width:34px;flex-shrink:0;"><defs><clipPath id="hdr-clip"><circle cx="200" cy="200" r="163"/></clipPath></defs><circle cx="200" cy="200" r="178" fill="none" stroke="#B07D4B" stroke-width="3.5"/><circle cx="200" cy="200" r="163" fill="none" stroke="#B07D4B" stroke-width="1.8"/><line x1="200" y1="13" x2="200" y2="44" stroke="#B07D4B" stroke-width="2.5" stroke-linecap="square"/><line x1="200" y1="387" x2="200" y2="356" stroke="#B07D4B" stroke-width="2.5" stroke-linecap="square"/><line x1="13" y1="200" x2="44" y2="200" stroke="#B07D4B" stroke-width="2.5" stroke-linecap="square"/><line x1="387" y1="200" x2="356" y2="200" stroke="#B07D4B" stroke-width="2.5" stroke-linecap="square"/><g clip-path="url(#hdr-clip)"><line x1="37" y1="37" x2="363" y2="363" stroke="#B07D4B" stroke-width="5"/><line x1="363" y1="37" x2="37" y2="363" stroke="#B07D4B" stroke-width="5"/></g><text font-family="'Arial Narrow',sans-serif" font-weight="800" font-size="86" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="200" y="112">O</text><text font-family="'Arial Narrow',sans-serif" font-weight="800" font-size="86" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="112" y="200">N</text><text font-family="'Arial Narrow',sans-serif" font-weight="800" font-size="86" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="288" y="200">B</text><text font-family="'Arial Narrow',sans-serif" font-weight="800" font-size="86" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="200" y="291">A</text></svg>
-<div><h1>The Compass</h1><div class="sub">Individual Vision / Traction Organizer — NOBA 2026</div></div>
-</div>
-<div class="right"><div class="name">${e(nm)||'&nbsp;'}</div><div class="date">${fd(dt)||'&nbsp;'}</div></div>
-</div>
-<div class="grid">
-<div class="col">
-<div class="sec"><div class="sec-title">Foundation</div>
-<div class="lbl">Purpose</div><div class="field">${f("purpose")||'<span class="empty">—</span>'}</div>
-<div class="lbl">Tribe</div><div class="field">${f("tribe")||'<span class="empty">—</span>'}</div>
-</div>
-<div class="sec"><div class="sec-title">10-Year Target</div>
-<div class="field">${f("tenYear")||'<span class="empty">—</span>'}</div>
-</div>
-</div>
-<div class="col">
-<div class="sec"><div class="sec-title">3-Year Picture</div>
-<div class="lbl">Health</div><div class="field">${f("threeHealth")||'<span class="empty">—</span>'}</div>
-<div class="lbl">Finance</div><div class="field">${f("threeFinance")||'<span class="empty">—</span>'}</div>
-<div class="lbl">Relationship / Spiritual</div><div class="field">${f("threeRelationship")||'<span class="empty">—</span>'}</div>
-</div>
-</div>
-<div class="col">
-<div class="sec"><div class="sec-title">1-Year Plan</div>${goalsH}</div>
-<div class="sec"><div class="sec-title">90-Day Rocks</div>${rocksH}</div>
-</div>
-</div>
-<div class="footer">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><polygon points="200,10 364.54,105 364.54,295 200,390 35.46,295 35.46,105" fill="#0a0a0a"/><polygon points="200,18 357.61,109 357.61,291 200,382 42.39,291 42.39,109" fill="#CC5428"/><path d="M302.19,141 L200,82 L97.81,141 L97.81,259 L200,318 L302.19,259 L302.19,239 L267.55,239 L200,278 L132.45,239 L132.45,161 L200,122 L267.55,161 L302.19,161 Z" fill="#235023"/></svg>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><polygon points="60,6 108,33 108,87 60,114 12,87 12,33" fill="none" stroke="#8B1229" stroke-width="2.2" stroke-linejoin="round"/><text x="60" y="82" text-anchor="middle" font-family="Georgia,serif" font-style="italic" font-size="62" fill="#8B1229">j</text></svg>
-</div>`;
+// Draw NOBA compass mark centered at (cx,cy) with outer radius r
+function drawLogo(cx,cy,r){
+  dc(copper);
+  pdf.setLineWidth(0.007);pdf.circle(cx,cy,r,'S');
+  pdf.setLineWidth(0.004);pdf.circle(cx,cy,r*0.915,'S');
+  pdf.setLineWidth(0.005);
+  pdf.line(cx,cy-r,cx,cy-r*0.82);pdf.line(cx,cy+r,cx,cy+r*0.82);
+  pdf.line(cx-r,cy,cx-r*0.82,cy);pdf.line(cx+r,cy,cx+r*0.82,cy);
+  const ir=r*0.915,d=ir*0.707;
+  pdf.setLineWidth(0.009);
+  pdf.line(cx-d,cy-d,cx+d,cy+d);pdf.line(cx+d,cy-d,cx-d,cy+d);
+  tc(copper);pdf.setFont('helvetica','bold');pdf.setFontSize(r*44);
+  pdf.text('O',cx,cy-ir*0.37,{align:'center',baseline:'middle'});
+  pdf.text('N',cx-ir*0.41,cy+0.005,{align:'center',baseline:'middle'});
+  pdf.text('B',cx+ir*0.41,cy+0.005,{align:'center',baseline:'middle'});
+  pdf.text('A',cx,cy+ir*0.37,{align:'center',baseline:'middle'});
+}
 
-// Position visible but transparent so html2canvas can capture it
-wrap.style.cssText="position:fixed;top:0;left:0;width:1056px;opacity:0;pointer-events:none;z-index:9999;";
-document.body.appendChild(wrap);
+// Section rule + title — returns new y
+function secH(x,y,title){
+  dc(copper);pdf.setLineWidth(0.01);pdf.line(x,y,x+COL,y);y+=0.14;
+  tc(teal);pdf.setFont('helvetica','bold');pdf.setFontSize(7.5);
+  pdf.text(title.toUpperCase(),x,y);return y+0.12;
+}
+// Field label — returns new y
+function lbl(x,y,text){
+  tc(copper);pdf.setFont('helvetica','bold');pdf.setFontSize(6.5);
+  pdf.text(text.toUpperCase(),x,y);return y+0.13;
+}
+// Body text with word wrap — returns new y
+function body(x,y,text){
+  if(!text||!text.trim()){
+    tc(lt);pdf.setFont('helvetica','normal');pdf.setFontSize(7.5);
+    pdf.text('\u2014',x,y);return y+0.13;
+  }
+  tc(dk);pdf.setFont('helvetica','normal');pdf.setFontSize(7.5);
+  const lines=pdf.splitTextToSize(text.trim(),COL-0.02);
+  pdf.text(lines,x,y);return y+lines.length*0.108+0.04;
+}
 
-const fn=`The_Compass_${(nm||"NOBA").replace(/\s+/g,"_")}.pdf`;
-const opt={
-  margin:0,
-  filename:fn,
-  image:{type:"jpeg",quality:0.97},
-  html2canvas:{scale:2,useCORS:true,logging:false,width:1056,windowWidth:1056},
-  jsPDF:{unit:"in",format:"letter",orientation:"landscape"}
-};
+// ── HEADER ──
+drawLogo(M+0.165,M+0.18,0.165);
+tc(teal);pdf.setFont('helvetica','bold');pdf.setFontSize(13);
+pdf.text('The Compass',M+0.39,M+0.1);
+tc(copper);pdf.setFont('helvetica','italic');pdf.setFontSize(7);
+pdf.text('Individual Vision / Traction Organizer \u2014 NOBA 2026',M+0.39,M+0.22);
+if(nm){tc(teal);pdf.setFont('helvetica','bold');pdf.setFontSize(10);pdf.text(nm,M+PW,M+0.1,{align:'right'});}
+if(dt){tc(mid);pdf.setFont('helvetica','normal');pdf.setFontSize(7);pdf.text(fd(dt),M+PW,M+0.22,{align:'right'});}
+dc(copper);pdf.setLineWidth(0.018);pdf.line(M,M+0.37,M+PW,M+0.37);
 
-// Small delay to let browser render before capture
-setTimeout(()=>{
-  html2pdf().set(opt).from(wrap).save().then(()=>{
-    document.body.removeChild(wrap);
-  });
-},150);
+const sY=M+0.49,c1=M,c2=M+COL+GAP,c3=M+2*(COL+GAP);
+
+// ── COL 1: Foundation + 10-Year ──
+let y1=sY;
+y1=secH(c1,y1,'Foundation');
+y1=lbl(c1,y1,'Purpose');y1=body(c1,y1,fv('purpose'));y1+=0.05;
+y1=lbl(c1,y1,'Tribe');y1=body(c1,y1,fv('tribe'));y1+=0.1;
+y1=secH(c1,y1,'10-Year Target');y1=body(c1,y1,fv('tenYear'));
+
+// ── COL 2: 3-Year Picture ──
+let y2=sY;
+y2=secH(c2,y2,'3-Year Picture');
+y2=lbl(c2,y2,'Health');y2=body(c2,y2,fv('threeHealth'));y2+=0.05;
+y2=lbl(c2,y2,'Finance');y2=body(c2,y2,fv('threeFinance'));y2+=0.05;
+y2=lbl(c2,y2,'Relationship / Spiritual');y2=body(c2,y2,fv('threeRelationship'));
+
+// ── COL 3: 1-Year Plan ──
+let y3=sY;
+y3=secH(c3,y3,'1-Year Plan');
+const allG=[...FG,...OG];
+for(const g of allG){
+  const lb=g.l||(S.gl&&S.gl[g.id])||`Goal ${g.n}`;
+  const v=fv(g.id);
+  tc(copper);pdf.setFont('helvetica','bold');pdf.setFontSize(7.5);
+  pdf.text(`${g.n}.`,c3,y3);
+  tc(g.n<=4?teal:sage);
+  const lbStr=lb+(v?':':'');
+  pdf.text(lbStr,c3+0.13,y3);
+  if(v){
+    const afterLb=c3+0.13+pdf.getTextWidth(lbStr)+0.03;
+    tc(dk);pdf.setFont('helvetica','normal');
+    if(afterLb+pdf.getTextWidth(v)<c3+COL){
+      pdf.text(v,afterLb,y3);y3+=0.115;
+    }else{
+      y3+=0.115;
+      const vl=pdf.splitTextToSize(v,COL-0.18);
+      pdf.text(vl,c3+0.18,y3);y3+=vl.length*0.1+0.02;
+    }
+  }else{y3+=0.115;}
+}
+
+// ── COL 3: 90-Day Rocks ──
+y3+=0.06;y3=secH(c3,y3,'90-Day Rocks');
+const rocks=(S.rocks||[]).filter(r=>r&&r.text?.trim());
+if(!rocks.length){
+  tc(lt);pdf.setFont('helvetica','normal');pdf.setFontSize(7.5);pdf.text('\u2014',c3,y3);
+}else{
+  for(let i=0;i<rocks.length;i++){
+    const r=rocks[i];
+    tc(copper);pdf.setFont('helvetica','bold');pdf.setFontSize(7.5);pdf.text(`${i+1}.`,c3,y3);
+    tc(dk);pdf.setFont('helvetica','normal');
+    const rt=pdf.splitTextToSize(r.text.trim(),COL-0.16);
+    pdf.text(rt,c3+0.14,y3);y3+=rt.length*0.105+0.02;
+    for(const m of(r.milestones||[]).filter(m=>m&&m.text?.trim())){
+      tc(sage);pdf.setFontSize(6.5);pdf.text('\u21b3',c3+0.1,y3);
+      tc(dk);const mt=m.date?`${m.text.trim()} \u2014 ${fd(m.date)}`:m.text.trim();
+      const ml=pdf.splitTextToSize(mt,COL-0.3);pdf.text(ml,c3+0.22,y3);y3+=ml.length*0.095+0.02;
+    }
+    y3+=0.04;
+  }
+}
+
+// ── FOOTER ──
+const fY=M+PH-0.02;
+dc('#DDDDDD');pdf.setLineWidth(0.005);pdf.line(M,fY,M+PW,fY);
+
+pdf.save(`The_Compass_${(nm||"NOBA").replace(/\s+/g,"_")}.pdf`);
 hideM();}
 
 ld();rT();rC();up();
