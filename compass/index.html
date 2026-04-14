@@ -80,8 +80,8 @@ textarea:focus,.ti:focus{border-color:var(--copper)}
 <div class="ct" id="ct"></div>
 <div class="mo hd" id="mO" onclick="hideM()"><div class="ml" onclick="event.stopPropagation()">
 <h3>Export Your Compass</h3>
-<p>Downloads a polished landscape document matching the NOBA print format. Open in any browser and print to PDF.</p>
-<button class="mp" onclick="expD()">Download Document</button>
+<p>Opens your Compass as a print-ready document. In the dialog that appears, choose <strong style="color:#B07D4B">Save as PDF</strong> to download.</p>
+<button class="mp" onclick="expD()">Export as PDF</button>
 <button class="mc" onclick="hideM()">Cancel</button>
 </div></div>
 
@@ -273,14 +273,13 @@ h3{font-family:Georgia,serif;font-size:10px;color:#B07D4B;margin:8px 0 3px;}
 </div>
 
 <div class="footer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" style="height:16px;opacity:0.3;vertical-align:middle;"><defs><clipPath id="rc2"><circle cx="200" cy="200" r="163"/></clipPath></defs><circle cx="200" cy="200" r="178" fill="none" stroke="#B07D4B" stroke-width="3.5"/><circle cx="200" cy="200" r="163" fill="none" stroke="#B07D4B" stroke-width="1.8"/><g clip-path="url(#rc2)"><line x1="37" y1="37" x2="363" y2="363" stroke="#B07D4B" stroke-width="5"/><line x1="363" y1="37" x2="37" y2="363" stroke="#B07D4B" stroke-width="5"/></g><text font-family="Georgia,serif" font-weight="700" font-size="82" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="200" y="112">O</text><text font-family="Georgia,serif" font-weight="700" font-size="82" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="112" y="200">N</text><text font-family="Georgia,serif" font-weight="700" font-size="82" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="288" y="200">B</text><text font-family="Georgia,serif" font-weight="700" font-size="82" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="200" y="291">A</text></svg>The Compass — NOBA 2026</div>
-</div></body></html>`;
+</div><script>window.onload=function(){setTimeout(function(){window.print();},800);};</script></body></html>`;
 
 const blob=new Blob([doc],{type:"text/html"});
 const url=URL.createObjectURL(blob);
-const a=document.createElement("a");
-a.href=url;a.download=`The_Compass_${(nm||"NOBA").replace(/\s+/g,"_")}.html`;
-document.body.appendChild(a);a.click();document.body.removeChild(a);
-URL.revokeObjectURL(url);hideM()}
+const w=window.open(url,'_blank');
+if(!w){alert('Please allow pop-ups for this site to open your export.');}
+setTimeout(()=>URL.revokeObjectURL(url),60000);hideM()}
 
 ld();rT();rC();up();
 </script>
