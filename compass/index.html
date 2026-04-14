@@ -20,6 +20,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--dark-teal);color:var(--cr
 .hdr-top{display:flex;justify-content:space-between;align-items:center}
 .hdr h1{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--cream)}
 .hdr .sub{font-size:11px;color:var(--copper);font-style:italic;margin-top:2px}
+.app-foot{display:flex;align-items:center;justify-content:center;gap:14px;padding:10px 0 12px;flex-shrink:0;opacity:0.25;}
 .btn-exp{background:var(--copper);border:none;color:var(--cream);padding:8px 16px;border-radius:3px;font-size:12px;font-family:'DM Sans',sans-serif;font-weight:700;cursor:pointer}
 .btn-exp:hover{opacity:.85}
 .meta-row{display:flex;gap:12px;margin-top:10px}
@@ -88,6 +89,10 @@ textarea:focus,.ti:focus{border-color:var(--copper)}
 </div>
 <div class="tabs" id="tabs"></div>
 <div class="ct" id="ct"></div>
+<div class="app-foot">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" height="28" width="28"><polygon points="200,10 364.54,105 364.54,295 200,390 35.46,295 35.46,105" fill="#0a0a0a"/><polygon points="200,18 357.61,109 357.61,291 200,382 42.39,291 42.39,109" fill="#CC5428"/><path d="M302.19,141 L200,82 L97.81,141 L97.81,259 L200,318 L302.19,259 L302.19,239 L267.55,239 L200,278 L132.45,239 L132.45,161 L200,122 L267.55,161 L302.19,161 Z" fill="#235023"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" height="28" width="28"><polygon points="60,6 108,33 108,87 60,114 12,87 12,33" fill="none" stroke="#8B1229" stroke-width="2.2" stroke-linejoin="round"/><text x="60" y="82" text-anchor="middle" font-family="Georgia,serif" font-style="italic" font-size="62" fill="#8B1229">j</text></svg>
+</div>
 <div class="mo hd" id="mO" onclick="hideM()"><div class="ml" onclick="event.stopPropagation()">
 <h3>Export Your Compass</h3>
 <p>Opens your Compass as a print-ready document. In the dialog that appears, choose <strong style="color:#B07D4B">Save as PDF</strong> to download.</p>
@@ -195,131 +200,152 @@ const pdf=new jsPDF({orientation:'landscape',unit:'in',format:'letter'});
 
 // Page: 11" x 8.5" landscape
 const M=0.35, PW=10.3, PH=7.8;
-const GAP=0.13, COL=(PW-2*GAP)/3;
+const GAP=0.14, COL=(PW-2*GAP)/3;
 
-// Color helpers (hex → r,g,b)
+// Color helpers
 const hx=h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];
 const copper='#B07D4B',teal='#2B3F47',sage='#9EA67C',dk='#333333',lt='#CCCCCC',mid='#8A9AA0';
 const tc=h=>{const[r,g,b]=hx(h);pdf.setTextColor(r,g,b);};
 const dc=h=>{const[r,g,b]=hx(h);pdf.setDrawColor(r,g,b);};
 
-// Draw NOBA compass mark centered at (cx,cy) with outer radius r
-function drawLogo(cx,cy,r){
+// Draw compass mark centered at cx,cy with outer radius r
+function drawCompass(cx,cy,r){
   dc(copper);
-  pdf.setLineWidth(0.007);pdf.circle(cx,cy,r,'S');
-  pdf.setLineWidth(0.004);pdf.circle(cx,cy,r*0.915,'S');
-  pdf.setLineWidth(0.005);
+  pdf.setLineWidth(0.01);pdf.circle(cx,cy,r,'S');
+  pdf.setLineWidth(0.006);pdf.circle(cx,cy,r*0.915,'S');
+  pdf.setLineWidth(0.007);
   pdf.line(cx,cy-r,cx,cy-r*0.82);pdf.line(cx,cy+r,cx,cy+r*0.82);
   pdf.line(cx-r,cy,cx-r*0.82,cy);pdf.line(cx+r,cy,cx+r*0.82,cy);
   const ir=r*0.915,d=ir*0.707;
-  pdf.setLineWidth(0.009);
+  pdf.setLineWidth(0.014);
   pdf.line(cx-d,cy-d,cx+d,cy+d);pdf.line(cx+d,cy-d,cx-d,cy+d);
-  tc(copper);pdf.setFont('helvetica','bold');pdf.setFontSize(r*44);
+  tc(copper);pdf.setFont('helvetica','bold');pdf.setFontSize(r*46);
   pdf.text('O',cx,cy-ir*0.37,{align:'center',baseline:'middle'});
-  pdf.text('N',cx-ir*0.41,cy+0.005,{align:'center',baseline:'middle'});
-  pdf.text('B',cx+ir*0.41,cy+0.005,{align:'center',baseline:'middle'});
+  pdf.text('N',cx-ir*0.41,cy+0.01,{align:'center',baseline:'middle'});
+  pdf.text('B',cx+ir*0.41,cy+0.01,{align:'center',baseline:'middle'});
   pdf.text('A',cx,cy+ir*0.37,{align:'center',baseline:'middle'});
 }
 
 // Section rule + title — returns new y
-function secH(x,y,title){
-  dc(copper);pdf.setLineWidth(0.01);pdf.line(x,y,x+COL,y);y+=0.14;
-  tc(teal);pdf.setFont('helvetica','bold');pdf.setFontSize(7.5);
-  pdf.text(title.toUpperCase(),x,y);return y+0.12;
+function secH(x,y,w,title){
+  dc(copper);pdf.setLineWidth(0.012);pdf.line(x,y,x+w,y);y+=0.16;
+  tc(teal);pdf.setFont('helvetica','bold');pdf.setFontSize(8.5);
+  pdf.text(title.toUpperCase(),x,y);return y+0.14;
 }
 // Field label — returns new y
 function lbl(x,y,text){
-  tc(copper);pdf.setFont('helvetica','bold');pdf.setFontSize(6.5);
-  pdf.text(text.toUpperCase(),x,y);return y+0.13;
+  tc(copper);pdf.setFont('helvetica','bold');pdf.setFontSize(7);
+  pdf.text(text.toUpperCase(),x,y);return y+0.15;
 }
-// Body text with word wrap — returns new y
-function body(x,y,text){
+// Body text — returns new y
+function body(x,y,w,text){
   if(!text||!text.trim()){
-    tc(lt);pdf.setFont('helvetica','normal');pdf.setFontSize(7.5);
-    pdf.text('\u2014',x,y);return y+0.13;
+    tc(lt);pdf.setFont('helvetica','normal');pdf.setFontSize(8.5);
+    pdf.text('\u2014',x,y);return y+0.15;
   }
-  tc(dk);pdf.setFont('helvetica','normal');pdf.setFontSize(7.5);
-  const lines=pdf.splitTextToSize(text.trim(),COL-0.02);
-  pdf.text(lines,x,y);return y+lines.length*0.108+0.04;
+  tc(dk);pdf.setFont('helvetica','normal');pdf.setFontSize(8.5);
+  const lines=pdf.splitTextToSize(text.trim(),w-0.02);
+  pdf.text(lines,x,y);return y+lines.length*0.12+0.05;
 }
 
-// ── HEADER ──
-drawLogo(M+0.165,M+0.18,0.165);
-tc(teal);pdf.setFont('helvetica','bold');pdf.setFontSize(13);
-pdf.text('The Compass',M+0.39,M+0.1);
-tc(copper);pdf.setFont('helvetica','italic');pdf.setFontSize(7);
-pdf.text('Individual Vision / Traction Organizer \u2014 NOBA 2026',M+0.39,M+0.22);
-if(nm){tc(teal);pdf.setFont('helvetica','bold');pdf.setFontSize(10);pdf.text(nm,M+PW,M+0.1,{align:'right'});}
-if(dt){tc(mid);pdf.setFont('helvetica','normal');pdf.setFontSize(7);pdf.text(fd(dt),M+PW,M+0.22,{align:'right'});}
-dc(copper);pdf.setLineWidth(0.018);pdf.line(M,M+0.37,M+PW,M+0.37);
+// WATERMARK — drawn first, behind everything
+pdf.setGState(new pdf.GState({opacity:0.05}));
+drawCompass(5.5,4.25,2.1);
+pdf.setGState(new pdf.GState({opacity:1}));
 
-const sY=M+0.49,c1=M,c2=M+COL+GAP,c3=M+2*(COL+GAP);
+// HEADER — text only, no logo
+tc(teal);pdf.setFont('helvetica','bold');pdf.setFontSize(16);
+pdf.text('The Compass',M,M+0.17);
+tc(copper);pdf.setFont('helvetica','italic');pdf.setFontSize(8);
+pdf.text('Individual Vision / Traction Organizer \u2014 NOBA 2026',M,M+0.31);
+if(nm){tc(teal);pdf.setFont('helvetica','bold');pdf.setFontSize(12);pdf.text(nm,M+PW,M+0.17,{align:'right'});}
+if(dt){tc(mid);pdf.setFont('helvetica','normal');pdf.setFontSize(8);pdf.text(fd(dt),M+PW,M+0.31,{align:'right'});}
+dc(copper);pdf.setLineWidth(0.02);pdf.line(M,M+0.42,M+PW,M+0.42);
 
-// ── COL 1: Foundation + 10-Year ──
+// LAYOUT
+// Top: 3 columns (Foundation | 3-Year | 1-Year Goals)
+// Bottom: full-width 90-Day Rocks in 2 sub-columns
+const sY=M+0.55;
+const topH=3.5;
+const topEndY=sY+topH;
+const rockStartY=topEndY+0.18;
+const c1=M,c2=M+COL+GAP,c3=M+2*(COL+GAP);
+
+// COL 1: Foundation + 10-Year
 let y1=sY;
-y1=secH(c1,y1,'Foundation');
-y1=lbl(c1,y1,'Purpose');y1=body(c1,y1,fv('purpose'));y1+=0.05;
-y1=lbl(c1,y1,'Tribe');y1=body(c1,y1,fv('tribe'));y1+=0.1;
-y1=secH(c1,y1,'10-Year Target');y1=body(c1,y1,fv('tenYear'));
+y1=secH(c1,y1,COL,'Foundation');
+y1=lbl(c1,y1,'Purpose');y1=body(c1,y1,COL,fv('purpose'));y1+=0.08;
+y1=lbl(c1,y1,'Tribe');y1=body(c1,y1,COL,fv('tribe'));y1+=0.15;
+y1=secH(c1,y1,COL,'10-Year Target');y1=body(c1,y1,COL,fv('tenYear'));
 
-// ── COL 2: 3-Year Picture ──
+// COL 2: 3-Year Picture
 let y2=sY;
-y2=secH(c2,y2,'3-Year Picture');
-y2=lbl(c2,y2,'Health');y2=body(c2,y2,fv('threeHealth'));y2+=0.05;
-y2=lbl(c2,y2,'Finance');y2=body(c2,y2,fv('threeFinance'));y2+=0.05;
-y2=lbl(c2,y2,'Relationship / Spiritual');y2=body(c2,y2,fv('threeRelationship'));
+y2=secH(c2,y2,COL,'3-Year Picture');
+y2=lbl(c2,y2,'Health');y2=body(c2,y2,COL,fv('threeHealth'));y2+=0.08;
+y2=lbl(c2,y2,'Finance');y2=body(c2,y2,COL,fv('threeFinance'));y2+=0.08;
+y2=lbl(c2,y2,'Relationship / Spiritual');y2=body(c2,y2,COL,fv('threeRelationship'));
 
-// ── COL 3: 1-Year Plan ──
+// COL 3: 1-Year Plan
 let y3=sY;
-y3=secH(c3,y3,'1-Year Plan');
+y3=secH(c3,y3,COL,'1-Year Plan');
 const allG=[...FG,...OG];
 for(const g of allG){
-  const lb=g.l||(S.gl&&S.gl[g.id])||`Goal ${g.n}`;
+  const lb=g.l||(S.gl&&S.gl[g.id])||'Goal '+g.n;
   const v=fv(g.id);
-  tc(copper);pdf.setFont('helvetica','bold');pdf.setFontSize(7.5);
-  pdf.text(`${g.n}.`,c3,y3);
+  tc(copper);pdf.setFont('helvetica','bold');pdf.setFontSize(8.5);
+  pdf.text(g.n+'.',c3,y3);
   tc(g.n<=4?teal:sage);
   const lbStr=lb+(v?':':'');
-  pdf.text(lbStr,c3+0.13,y3);
+  pdf.text(lbStr,c3+0.15,y3);
   if(v){
-    const afterLb=c3+0.13+pdf.getTextWidth(lbStr)+0.03;
     tc(dk);pdf.setFont('helvetica','normal');
-    if(afterLb+pdf.getTextWidth(v)<c3+COL){
-      pdf.text(v,afterLb,y3);y3+=0.115;
+    const spaceLeft=COL-0.15-pdf.getTextWidth(lbStr)-0.04;
+    if(spaceLeft>=pdf.getTextWidth(v)){
+      pdf.text(v,c3+0.15+pdf.getTextWidth(lbStr)+0.04,y3);y3+=0.13;
     }else{
-      y3+=0.115;
-      const vl=pdf.splitTextToSize(v,COL-0.18);
-      pdf.text(vl,c3+0.18,y3);y3+=vl.length*0.1+0.02;
+      y3+=0.13;const vl=pdf.splitTextToSize(v,COL-0.2);
+      pdf.text(vl,c3+0.2,y3);y3+=vl.length*0.115+0.02;
     }
-  }else{y3+=0.115;}
+  }else{y3+=0.13;}
 }
 
-// ── COL 3: 90-Day Rocks ──
-y3+=0.06;y3=secH(c3,y3,'90-Day Rocks');
-const rocks=(S.rocks||[]).filter(r=>r&&r.text?.trim());
-if(!rocks.length){
-  tc(lt);pdf.setFont('helvetica','normal');pdf.setFontSize(7.5);pdf.text('\u2014',c3,y3);
-}else{
-  for(let i=0;i<rocks.length;i++){
-    const r=rocks[i];
-    tc(copper);pdf.setFont('helvetica','bold');pdf.setFontSize(7.5);pdf.text(`${i+1}.`,c3,y3);
+// DIVIDER between top and rocks
+dc('#D8D0C4');pdf.setLineWidth(0.008);pdf.line(M,topEndY+0.06,M+PW,topEndY+0.06);
+
+// 90-DAY ROCKS — full width, split into 2 columns
+const halfW=(PW-GAP)/2;
+const rC1=M,rC2=M+halfW+GAP;
+dc(copper);pdf.setLineWidth(0.012);pdf.line(M,rockStartY,M+PW,rockStartY);
+tc(teal);pdf.setFont('helvetica','bold');pdf.setFontSize(8.5);
+pdf.text('90-DAY ROCKS',M,rockStartY+0.16);
+const rContentY=rockStartY+0.32;
+
+function drawRock(x,y,w,i,r){
+  tc(copper);pdf.setFont('helvetica','bold');pdf.setFontSize(8.5);pdf.text((i+1)+'.',x,y);
+  tc(dk);pdf.setFont('helvetica','normal');
+  const rt=pdf.splitTextToSize(r.text.trim(),w-0.18);
+  pdf.text(rt,x+0.17,y);y+=rt.length*0.12+0.03;
+  for(const m of(r.milestones||[]).filter(m=>m&&m.text&&m.text.trim())){
+    tc(sage);pdf.setFontSize(7.5);pdf.text('\u21b3',x+0.12,y);
     tc(dk);pdf.setFont('helvetica','normal');
-    const rt=pdf.splitTextToSize(r.text.trim(),COL-0.16);
-    pdf.text(rt,c3+0.14,y3);y3+=rt.length*0.105+0.02;
-    for(const m of(r.milestones||[]).filter(m=>m&&m.text?.trim())){
-      tc(sage);pdf.setFontSize(6.5);pdf.text('\u21b3',c3+0.1,y3);
-      tc(dk);const mt=m.date?`${m.text.trim()} \u2014 ${fd(m.date)}`:m.text.trim();
-      const ml=pdf.splitTextToSize(mt,COL-0.3);pdf.text(ml,c3+0.22,y3);y3+=ml.length*0.095+0.02;
-    }
-    y3+=0.04;
+    const mt=m.date?(m.text.trim()+' \u2014 '+fd(m.date)):m.text.trim();
+    const ml=pdf.splitTextToSize(mt,w-0.34);pdf.text(ml,x+0.26,y);y+=ml.length*0.108+0.02;
+  }
+  return y+0.06;
+}
+
+const rocks=(S.rocks||[]).filter(r=>r&&r.text&&r.text.trim());
+if(!rocks.length){
+  tc(lt);pdf.setFont('helvetica','normal');pdf.setFontSize(8.5);pdf.text('\u2014',M,rContentY);
+}else{
+  let yl=rContentY,yr=rContentY;
+  for(let i=0;i<rocks.length;i++){
+    if(i<4){yl=drawRock(rC1,yl,halfW,i,rocks[i]);}
+    else{yr=drawRock(rC2,yr,halfW,i,rocks[i]);}
   }
 }
 
-// ── FOOTER ──
-const fY=M+PH-0.02;
-dc('#DDDDDD');pdf.setLineWidth(0.005);pdf.line(M,fY,M+PW,fY);
-
-pdf.save(`The_Compass_${(nm||"NOBA").replace(/\s+/g,"_")}.pdf`);
+pdf.save('The_Compass_'+(nm||'NOBA').replace(/\s+/g,'_')+'.pdf');
 hideM();}
 
 ld();rT();rC();up();
