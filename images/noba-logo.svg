@@ -1,18 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
   <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800&display=swap');
+    </style>
     <clipPath id="ring-clip">
       <circle cx="200" cy="200" r="163"/>
     </clipPath>
-    <style>
-      .letter {
-        font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
-        font-weight: 700;
-        font-size: 82px;
-        fill: #B07D4B;
-        text-anchor: middle;
-        dominant-baseline: central;
-      }
-    </style>
   </defs>
 
   <!-- Outer ring -->
@@ -26,15 +19,15 @@
   <line x1="13"  y1="200" x2="44"  y2="200" stroke="#B07D4B" stroke-width="2.5" stroke-linecap="square"/>
   <line x1="387" y1="200" x2="356" y2="200" stroke="#B07D4B" stroke-width="2.5" stroke-linecap="square"/>
 
-  <!-- Diagonal X crosshair lines (clipped to inner ring) -->
+  <!-- Diagonal X crosshair (clipped to inner ring) -->
   <g clip-path="url(#ring-clip)">
     <line x1="37"  y1="37"  x2="363" y2="363" stroke="#B07D4B" stroke-width="5" stroke-linecap="butt"/>
     <line x1="363" y1="37"  x2="37"  y2="363" stroke="#B07D4B" stroke-width="5" stroke-linecap="butt"/>
   </g>
 
-  <!-- Letters: O top, N left, B right, A bottom -->
-  <text class="letter" x="200" y="112">O</text>
-  <text class="letter" x="112" y="200">N</text>
-  <text class="letter" x="288" y="200">B</text>
-  <text class="letter" x="200" y="291">A</text>
+  <!-- Letters: O top, N left, B right, A bottom — Barlow Condensed ExtraBold -->
+  <text font-family="'Barlow Condensed', 'Arial Narrow', sans-serif" font-weight="800" font-size="86" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="200" y="112">O</text>
+  <text font-family="'Barlow Condensed', 'Arial Narrow', sans-serif" font-weight="800" font-size="86" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="110" y="202">N</text>
+  <text font-family="'Barlow Condensed', 'Arial Narrow', sans-serif" font-weight="800" font-size="86" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="290" y="202">B</text>
+  <text font-family="'Barlow Condensed', 'Arial Narrow', sans-serif" font-weight="800" font-size="86" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="200" y="292">A</text>
 </svg>
