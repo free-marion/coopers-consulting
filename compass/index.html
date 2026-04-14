@@ -91,7 +91,6 @@ const LOGO_B64='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADBCAYAAACKV/
 const G=[{id:"foundation",t:"Foundation",i:"◎"},{id:"vision",t:"10-Year Target",i:"◈"},{id:"threeYear",t:"3-Year Picture",i:"◇"},{id:"oneYear",t:"1-Year Plan",i:"◆"},{id:"rocks",t:"90-Day Rocks",i:"▣"}];
 
 const TIPS={
-foundation:`<strong>Start here.</strong> Everything else flows from this. Your Purpose isn't your job title or your role — it's the deepest reason you do what you do. Don't overthink it. Write the first honest thing that comes to mind. Your Tribe isn't everyone you know — it's the <em>2–5 people</em> who will tell you the truth when you don't want to hear it.`,
 vision:`<strong>Think bigger than you're comfortable with.</strong> Where will you be in 10 years? Not where you hope — where you <em>will</em> be. This isn't a wish list. It's a declaration. Write it like it's already decided. One clear sentence. If it doesn't make you a little nervous, you're not aiming high enough.`,
 threeYear:`<strong>Three years is close enough to be real.</strong> Don't write goals — write a picture. What does your life actually look like? Be specific. What does your body feel like? What's in your bank account? Who are you spending time with? If you can see it clearly, you can build toward it.`,
 oneYear:`<strong>The One Thing comes first.</strong> This is the single domino that, if you knock it over, starts a chain reaction across everything else. The test: if you accomplish it and nothing else changes downstream, it's just a goal. If three other problems start solving themselves, you found it. <em>Goals 2–4 are non-negotiable.</em> Goals 5–7 are yours to define.`,
@@ -140,10 +139,15 @@ let h=`<div class="st">${g.t}</div><div class="sr"></div>`;
 
 // Coaching tip
 if(TIPS[ag])h+=`<div class="tip">${TIPS[ag]}</div>`;
+if(ag==="vision")h+=`<div class="sh">Paint the clearest picture you can of where you want to be in 10 years. Be bold — this is your north star, not a guarantee.</div>`;
 
 if(FLD[ag]){
 if(ag==="threeYear")h+=`<div class="sh">What does your life look like three years from now?</div>`;
-FLD[ag].forEach(f=>{h+=`<div class="cd"><div class="cl">${f.l}</div><div class="ch">${f.h}</div><textarea rows="3" oninput="sf('${f.id}',this.value)">${e(gf(f.id))}</textarea></div>`})}
+if(ag==="foundation"){
+const foundationTips={purpose:"What drives you? Your purpose is your <em>why</em> — the reason you get out of bed and do the hard things.",tribe:"Who are your people? Name the community, brotherhood, or circle you're building toward and fighting for."};
+FLD[ag].forEach(f=>{h+=`<div class="tip">${foundationTips[f.id]}</div><div class="cd"><div class="cl">${f.l}</div><div class="ch">${f.h}</div><textarea rows="3" oninput="sf('${f.id}',this.value)">${e(gf(f.id))}</textarea></div>`});
+}else{
+FLD[ag].forEach(f=>{h+=`<div class="cd"><div class="cl">${f.l}</div><div class="ch">${f.h}</div><textarea rows="3" oninput="sf('${f.id}',this.value)">${e(gf(f.id))}</textarea></div>`})}}
 
 if(ag==="oneYear"){
 h+=`<div class="sh">What must be true 12 months from now?</div>`;
@@ -174,10 +178,10 @@ function fd(d){if(!d)return"";try{return new Date(d+"T00:00:00").toLocaleDateStr
 function expD(){
 const nm=document.getElementById("uN").value;
 const dt=document.getElementById("uD").value;
-const f=id=>eh(S.f[id]);
+const f=id=>eh((S.f&&S.f[id])||"");
 
 const goalsH=[...FG,...OG].map(g=>{
-const lb=g.l||S.gl[g.id]||`Goal ${g.n}`;
+const lb=g.l||(S.gl&&S.gl[g.id])||`Goal ${g.n}`;
 const v=f(g.id);
 const ac=g.n<=4?"#2B3F47":"#9EA67C";
 return `<div style="margin-bottom:6px;padding:4px 0;border-bottom:1px solid #eee;">
@@ -186,9 +190,9 @@ return `<div style="margin-bottom:6px;padding:4px 0;border-bottom:1px solid #eee
 <div style="font-size:9px;color:#444;margin-top:2px;margin-left:16px;">${v||'<span style="color:#ccc;">—</span>'}</div>
 </div>`}).join("");
 
-const rocksH=S.rocks.map((r,i)=>{
-if(!r.text?.trim())return"";
-const ms=r.milestones.filter(m=>m.text?.trim()).map(m=>
+const rocksH=(S.rocks&&S.rocks.length?S.rocks:[]).map((r,i)=>{
+if(!r||!r.text?.trim())return"";
+const ms=(r.milestones&&r.milestones.length?r.milestones:[]).filter(m=>m&&m.text?.trim()).map(m=>
 `<div style="margin:2px 0 2px 18px;font-size:8px;color:#555;">
 <span style="color:#9EA67C;">↳</span> ${e(m.text)}${m.date?` <span style="color:#B07D4B;">— ${fd(m.date)}</span>`:""}</div>`).join("");
 return `<div style="margin-bottom:8px;">
@@ -198,11 +202,11 @@ return `<div style="margin-bottom:8px;">
 const doc=`<!DOCTYPE html><html><head><meta charset="utf-8">
 <title>The Compass — ${e(nm)||"NOBA 2026"}</title>
 <style>
-@page{size:landscape;margin:0.5in 0.6in;}
+@page{size:letter portrait;margin:0.5in;}
 @media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}
-body{font-family:Helvetica,Arial,sans-serif;color:#1a1a1a;background:#fff;margin:0;padding:20px 28px;max-width:1100px;}
+body{font-family:Helvetica,Arial,sans-serif;color:#1a1a1a;background:#fff;margin:0 auto;padding:20px 28px;width:100%;max-width:7.5in;}
 .page{position:relative;width:100%;}
-.watermark{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.04;width:300px;height:300px;pointer-events:none;z-index:0;}
+.watermark{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.04;width:400px;height:400px;pointer-events:none;z-index:0;}
 .header{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid #B07D4B;padding-bottom:10px;margin-bottom:14px;}
 .header h1{font-family:Georgia,serif;font-size:20px;color:#2B3F47;margin:0;font-weight:bold;}
 .header .sub{font-size:9px;color:#B07D4B;font-style:italic;}
@@ -220,7 +224,27 @@ h3{font-family:Georgia,serif;font-size:10px;color:#B07D4B;margin:8px 0 3px;}
 .footer{margin-top:20px;padding-top:8px;border-top:1px solid #ddd;font-size:8px;color:#bbb;text-align:center;display:flex;justify-content:center;align-items:center;gap:8px;}
 .footer img{height:16px;opacity:0.3;}
 </style></head><body>
-<img class="watermark" src="${LOGO_B64}" alt="">
+<div class="watermark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <clipPath id="ring-clip">
+      <circle cx="200" cy="200" r="163"/>
+    </clipPath>
+  </defs>
+  <circle cx="200" cy="200" r="178" fill="none" stroke="#B07D4B" stroke-width="3.5"/>
+  <circle cx="200" cy="200" r="163" fill="none" stroke="#B07D4B" stroke-width="1.8"/>
+  <line x1="200" y1="13"  x2="200" y2="44"  stroke="#B07D4B" stroke-width="2.5" stroke-linecap="square"/>
+  <line x1="200" y1="387" x2="200" y2="356" stroke="#B07D4B" stroke-width="2.5" stroke-linecap="square"/>
+  <line x1="13"  y1="200" x2="44"  y2="200" stroke="#B07D4B" stroke-width="2.5" stroke-linecap="square"/>
+  <line x1="387" y1="200" x2="356" y2="200" stroke="#B07D4B" stroke-width="2.5" stroke-linecap="square"/>
+  <g clip-path="url(#ring-clip)">
+    <line x1="37"  y1="37"  x2="363" y2="363" stroke="#B07D4B" stroke-width="5" stroke-linecap="butt"/>
+    <line x1="363" y1="37"  x2="37"  y2="363" stroke="#B07D4B" stroke-width="5" stroke-linecap="butt"/>
+  </g>
+  <text font-family="'Playfair Display', Georgia, serif" font-weight="700" font-size="82" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="200" y="112">O</text>
+  <text font-family="'Playfair Display', Georgia, serif" font-weight="700" font-size="82" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="112" y="200">N</text>
+  <text font-family="'Playfair Display', Georgia, serif" font-weight="700" font-size="82" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="288" y="200">B</text>
+  <text font-family="'Playfair Display', Georgia, serif" font-weight="700" font-size="82" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="200" y="291">A</text>
+</svg></div>
 <div class="page">
 <div class="header">
 <div><h1>The Compass</h1><div class="sub">Individual Vision / Traction Organizer — NOBA 2026</div></div>
@@ -248,7 +272,7 @@ h3{font-family:Georgia,serif;font-size:10px;color:#B07D4B;margin:8px 0 3px;}
 <div><h3 style="margin-top:0;">90-Day Rocks</h3>${rocksH}</div>
 </div>
 
-<div class="footer"><img src="${LOGO_B64}" alt="NOBA">The Compass — NOBA 2026</div>
+<div class="footer"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" style="height:16px;opacity:0.3;vertical-align:middle;"><defs><clipPath id="rc2"><circle cx="200" cy="200" r="163"/></clipPath></defs><circle cx="200" cy="200" r="178" fill="none" stroke="#B07D4B" stroke-width="3.5"/><circle cx="200" cy="200" r="163" fill="none" stroke="#B07D4B" stroke-width="1.8"/><g clip-path="url(#rc2)"><line x1="37" y1="37" x2="363" y2="363" stroke="#B07D4B" stroke-width="5"/><line x1="363" y1="37" x2="37" y2="363" stroke="#B07D4B" stroke-width="5"/></g><text font-family="Georgia,serif" font-weight="700" font-size="82" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="200" y="112">O</text><text font-family="Georgia,serif" font-weight="700" font-size="82" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="112" y="200">N</text><text font-family="Georgia,serif" font-weight="700" font-size="82" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="288" y="200">B</text><text font-family="Georgia,serif" font-weight="700" font-size="82" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="200" y="291">A</text></svg>The Compass — NOBA 2026</div>
 </div></body></html>`;
 
 const blob=new Blob([doc],{type:"text/html"});
