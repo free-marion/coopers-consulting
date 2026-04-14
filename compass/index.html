@@ -272,8 +272,8 @@ wrap.innerHTML=`
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><polygon points="60,6 108,33 108,87 60,114 12,87 12,33" fill="none" stroke="#8B1229" stroke-width="2.2" stroke-linejoin="round"/><text x="60" y="82" text-anchor="middle" font-family="Georgia,serif" font-style="italic" font-size="62" fill="#8B1229">j</text></svg>
 </div>`;
 
-// Append off-screen, render, then generate PDF
-wrap.style.cssText="position:fixed;left:-9999px;top:0;z-index:-1;";
+// Position visible but transparent so html2canvas can capture it
+wrap.style.cssText="position:fixed;top:0;left:0;width:1056px;opacity:0;pointer-events:none;z-index:9999;";
 document.body.appendChild(wrap);
 
 const fn=`The_Compass_${(nm||"NOBA").replace(/\s+/g,"_")}.pdf`;
@@ -281,13 +281,16 @@ const opt={
   margin:0,
   filename:fn,
   image:{type:"jpeg",quality:0.97},
-  html2canvas:{scale:2,useCORS:true,logging:false,width:wrap.offsetWidth},
+  html2canvas:{scale:2,useCORS:true,logging:false,width:1056,windowWidth:1056},
   jsPDF:{unit:"in",format:"letter",orientation:"landscape"}
 };
 
-html2pdf().set(opt).from(wrap).save().then(()=>{
-  document.body.removeChild(wrap);
-});
+// Small delay to let browser render before capture
+setTimeout(()=>{
+  html2pdf().set(opt).from(wrap).save().then(()=>{
+    document.body.removeChild(wrap);
+  });
+},150);
 hideM();}
 
 ld();rT();rC();up();
