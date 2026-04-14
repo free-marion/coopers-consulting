@@ -109,7 +109,7 @@ const TIPS={
 vision:`<strong>Think bigger than you're comfortable with.</strong> Where will you be in 10 years? Not where you hope — where you <em>will</em> be. This isn't a wish list. It's a declaration. Write it like it's already decided. One clear sentence. If it doesn't make you a little nervous, you're not aiming high enough.`,
 threeYear:`<strong>Three years is close enough to be real.</strong> Don't write goals — write a picture. What does your life actually look like? Be specific. What does your body feel like? What's in your bank account? Who are you spending time with? If you can see it clearly, you can build toward it.`,
 oneYear:`<strong>The One Thing comes first.</strong> This is the single domino that, if you knock it over, starts a chain reaction across everything else. The test: if you accomplish it and nothing else changes downstream, it's just a goal. If three other problems start solving themselves, you found it. <em>Goals 2–4 are non-negotiable.</em> Goals 5–7 are yours to define.`,
-rocks:`<strong>Rocks are not to-do items.</strong> They're the 3–7 things that <em>must</em> get done in the next 90 days. Write each one as a completable outcome with a clear done/not-done line. Add milestones to keep yourself honest — each one is a checkpoint with a date. If a rock doesn't have milestones, it's a wish, not a plan.`
+rocks:`<strong>Rocks are not to-do items.</strong> They're the up to 5 things that <em>must</em> get done in the next 90 days. Write each one as a completable outcome with a clear done/not-done line. Add milestones to keep yourself honest — each one is a checkpoint with a date. If a rock doesn't have milestones, it's a wish, not a plan.`
 };
 
 const FLD={
@@ -126,7 +126,7 @@ const FG=[
 ];
 const OG=[{id:"yearGoal5",n:5},{id:"yearGoal6",n:6},{id:"yearGoal7",n:7}];
 
-let S={f:{},gl:{},rocks:Array.from({length:7},()=>({text:"",milestones:[{text:"",date:""}]}))};
+let S={f:{},gl:{},rocks:Array.from({length:5},()=>({text:"",milestones:[{text:"",date:""}]}))};
 let ag="foundation";
 
 function ld(){try{const r=localStorage.getItem("compass-v4");if(r){const p=JSON.parse(r);S.f=p.f||{};S.gl=p.gl||{};if(p.rocks)S.rocks=p.rocks;if(p.name)document.getElementById("uN").value=p.name;if(p.date)document.getElementById("uD").value=p.date}}catch(e){}}
@@ -135,7 +135,7 @@ let st;function sv(){clearTimeout(st);st=setTimeout(()=>{try{localStorage.setIte
 
 function up(){const ids=["purpose","tribe","tenYear","threeHealth","threeFinance","threeRelationship","oneThingYear","yearHealth","yearFinance","yearRelationship","yearGoal5","yearGoal6","yearGoal7"];
 let c=ids.filter(i=>S.f[i]?.trim()).length+S.rocks.filter(r=>r.text?.trim()).length;
-const pct=Math.round(c/(ids.length+7)*100);
+const pct=Math.round(c/(ids.length+5)*100);
 document.getElementById("pf").style.width=pct+"%";
 document.getElementById("pl").textContent=pct+"% complete"}
 
@@ -170,7 +170,7 @@ FG.forEach(g=>{h+=`<div class="cd"><div class="chr"><span class="cn">${g.n}.</sp
 OG.forEach(g=>{const lb=S.gl[g.id]||"";h+=`<div class="cd sg"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span class="cn">${g.n}.</span><input class="gni" value="${e(lb)}" placeholder="Name this goal..." oninput="S.gl['${g.id}']=this.value;sv()"></div><textarea rows="2" placeholder="Describe your goal..." oninput="sf('${g.id}',this.value)">${e(gf(g.id))}</textarea></div>`})}
 
 if(ag==="rocks"){
-h+=`<div class="sh">3–7 priorities for the next 90 days. Done or not done.</div>`;
+h+=`<div class="sh">Up to 5 priorities for the next 90 days. Done or not done.</div>`;
 S.rocks.forEach((r,ri)=>{
 h+=`<div class="cd"><div class="rtr"><span class="rn">${ri+1}</span><input class="ti" value="${e(r.text)}" placeholder="Rock ${ri+1} — what must get done?" oninput="S.rocks[${ri}].text=this.value;sv()"></div>`;
 r.milestones.forEach((m,mi)=>{
@@ -198,94 +198,81 @@ if(!window.jspdf){alert("PDF library not loaded — check your connection and re
 const {jsPDF}=window.jspdf;
 const pdf=new jsPDF({orientation:'landscape',unit:'in',format:'letter'});
 
-const M=0.35, PW=10.3, PH=7.8;
-// Unequal columns: col3 (1-Year Plan) gets more room
-const G=0.14;
-const C1W=3.0, C2W=3.0, C3W=PW-C1W-C2W-2*G; // ~4.02"
+// ── CONSTANTS ──────────────────────────────────────────────────────
+const M=0.35;          // page margin
+const PW=10.3;         // content width  (11 - 2*M)
+const PH=7.8;          // content height (8.5 - 2*M)
+const G=0.14;          // gap between columns
+
+// Fixed Y boundaries — always the same regardless of content
+const HDR_RULE=M+0.42; // copper header rule
+const TOP_Y=M+0.56;    // top section content start
+const TOP_H=3.5;       // top section height (fixed)
+const DIV_Y=TOP_Y+TOP_H;           // divider between top and rocks
+const ROCK_TITLE_Y=DIV_Y+0.16;     // "90-DAY ROCKS" label
+const ROCK_Y=ROCK_TITLE_Y+0.28;    // rock content start
+const FOOT_Y=M+PH-0.04;            // footer line
+const FOOT_TXT_Y=FOOT_Y+0.14;      // "NOBA 2026" text
+
+// Top section columns: col1 + col2 equal, col3 wider for 1-Year Plan
+const C1W=2.9, C2W=2.9, C3W=PW-C1W-C2W-2*G;  // C3W ≈ 4.12"
 const c1=M, c2=M+C1W+G, c3=M+C1W+C2W+2*G;
 
+// ── COLOR HELPERS ──────────────────────────────────────────────────
 const hx=h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];
-const copper='#B07D4B',teal='#2B3F47',sage='#9EA67C',dk='#333333',lt='#CCCCCC',mid='#8A9AA0';
+const copper='#B07D4B',teal='#2B3F47',sage='#9EA67C',dk='#333333',lt='#BBBBBB',mid='#8A9AA0';
 const tc=h=>{const[r,g,b]=hx(h);pdf.setTextColor(r,g,b);};
 const dc=h=>{const[r,g,b]=hx(h);pdf.setDrawColor(r,g,b);};
 
-// Watermark: shirt-style logo — single circle, full-diameter X, outward ticks
-function drawCompass(cx,cy,r){
-  dc(copper);
-  pdf.setLineWidth(0.013);pdf.circle(cx,cy,r,'S');
-  // Full-diameter X lines (corner to corner through circle)
-  const d=r*0.707;
-  pdf.setLineWidth(0.018);
-  pdf.line(cx-d,cy-d,cx+d,cy+d);
-  pdf.line(cx+d,cy-d,cx-d,cy+d);
-  // Outward cardinal tick marks
-  const tk=r*0.13;
-  pdf.setLineWidth(0.01);
-  pdf.line(cx,cy-r,cx,cy-r-tk);
-  pdf.line(cx,cy+r,cx,cy+r+tk);
-  pdf.line(cx-r,cy,cx-r-tk,cy);
-  pdf.line(cx+r,cy,cx+r+tk,cy);
-  // Letters in the 4 diamond quadrants
-  tc(copper);pdf.setFont('helvetica','bold');pdf.setFontSize(r*48);
-  pdf.text('O',cx,cy-r*0.44,{align:'center',baseline:'middle'});
-  pdf.text('N',cx-r*0.44,cy+0.01,{align:'center',baseline:'middle'});
-  pdf.text('B',cx+r*0.44,cy+0.01,{align:'center',baseline:'middle'});
-  pdf.text('A',cx,cy+r*0.44,{align:'center',baseline:'middle'});
-}
-
-// Section rule + title — returns new y
+// ── LAYOUT HELPERS ─────────────────────────────────────────────────
+// Copper rule + section title, returns y after title
 function secH(x,y,w,title){
-  dc(copper);pdf.setLineWidth(0.012);pdf.line(x,y,x+w,y);y+=0.16;
+  dc(copper);pdf.setLineWidth(0.011);pdf.line(x,y,x+w,y);
   tc(teal);pdf.setFont('helvetica','bold');pdf.setFontSize(9);
-  pdf.text(title.toUpperCase(),x,y);return y+0.14;
+  pdf.text(title.toUpperCase(),x,y+0.16);
+  return y+0.3;
 }
+// Small copper label
 function lbl(x,y,text){
   tc(copper);pdf.setFont('helvetica','bold');pdf.setFontSize(7.5);
-  pdf.text(text.toUpperCase(),x,y);return y+0.15;
+  pdf.text(text.toUpperCase(),x,y);
+  return y+0.15;
 }
+// Body text, word-wrapped
 function body(x,y,w,text){
   if(!text||!text.trim()){
     tc(lt);pdf.setFont('helvetica','normal');pdf.setFontSize(9);
     pdf.text('\u2014',x,y);return y+0.16;
   }
   tc(dk);pdf.setFont('helvetica','normal');pdf.setFontSize(9);
-  const lines=pdf.splitTextToSize(text.trim(),w-0.02);
-  pdf.text(lines,x,y);return y+lines.length*0.13+0.06;
+  const lines=pdf.splitTextToSize(text.trim(),w);
+  pdf.text(lines,x,y);
+  return y+lines.length*0.13+0.06;
 }
 
-// WATERMARK first
-pdf.setGState(new pdf.GState({opacity:0.05}));
-drawCompass(5.5,4.25,2.2);
-pdf.setGState(new pdf.GState({opacity:1}));
-
-// HEADER
+// ── HEADER ─────────────────────────────────────────────────────────
 tc(teal);pdf.setFont('helvetica','bold');pdf.setFontSize(16);
 pdf.text('The Compass',M,M+0.17);
 tc(copper);pdf.setFont('helvetica','italic');pdf.setFontSize(8);
 pdf.text('Individual Vision / Traction Organizer \u2014 NOBA 2026',M,M+0.31);
 if(nm){tc(teal);pdf.setFont('helvetica','bold');pdf.setFontSize(12);pdf.text(nm,M+PW,M+0.17,{align:'right'});}
 if(dt){tc(mid);pdf.setFont('helvetica','normal');pdf.setFontSize(8);pdf.text(fd(dt),M+PW,M+0.31,{align:'right'});}
-dc(copper);pdf.setLineWidth(0.02);pdf.line(M,M+0.42,M+PW,M+0.42);
+dc(copper);pdf.setLineWidth(0.02);pdf.line(M,HDR_RULE,M+PW,HDR_RULE);
 
-const sY=M+0.56;
-
-// COL 1: Foundation + 10-Year (draw and track ending y)
-let y1=sY;
-y1=secH(c1,y1,C1W,'Foundation');
+// ── COL 1: Foundation + 10-Year Target ─────────────────────────────
+let y1=secH(c1,TOP_Y,C1W,'Foundation');
 y1=lbl(c1,y1,'Purpose');y1=body(c1,y1,C1W,fv('purpose'));y1+=0.1;
 y1=lbl(c1,y1,'Tribe');y1=body(c1,y1,C1W,fv('tribe'));y1+=0.18;
 y1=secH(c1,y1,C1W,'10-Year Target');y1=body(c1,y1,C1W,fv('tenYear'));
 
-// COL 2: 3-Year Picture
-let y2=sY;
-y2=secH(c2,y2,C2W,'3-Year Picture');
+// ── COL 2: 3-Year Picture ──────────────────────────────────────────
+let y2=secH(c2,TOP_Y,C2W,'3-Year Picture');
 y2=lbl(c2,y2,'Health');y2=body(c2,y2,C2W,fv('threeHealth'));y2+=0.1;
 y2=lbl(c2,y2,'Finance');y2=body(c2,y2,C2W,fv('threeFinance'));y2+=0.1;
 y2=lbl(c2,y2,'Relationship / Spiritual');y2=body(c2,y2,C2W,fv('threeRelationship'));
 
-// COL 3: 1-Year Plan (wider column, more breathing room)
-let y3=sY;
-y3=secH(c3,y3,C3W,'1-Year Plan');
+// ── COL 3: 1-Year Plan ─────────────────────────────────────────────
+let y3=secH(c3,TOP_Y,C3W,'1-Year Plan');
 const allG=[...FG,...OG];
 for(const g of allG){
   const lb=g.l||(S.gl&&S.gl[g.id])||'Goal '+g.n;
@@ -301,79 +288,61 @@ for(const g of allG){
     if(avail>=pdf.getTextWidth(v)){
       pdf.text(v,c3+0.16+pdf.getTextWidth(lbStr)+0.05,y3);y3+=0.14;
     }else{
-      y3+=0.14;const vl=pdf.splitTextToSize(v,C3W-0.22);
-      pdf.text(vl,c3+0.22,y3);y3+=vl.length*0.13+0.03;
+      y3+=0.14;
+      const vl=pdf.splitTextToSize(v,C3W-0.22);
+      pdf.text(vl,c3+0.22,y3);y3+=vl.length*0.13+0.02;
     }
   }else{y3+=0.14;}
-  y3+=0.03; // breathing room between goals
+  y3+=0.04;
 }
 
-// Dynamic divider: placed at the bottom of whichever column ran longest
-const topEndY=Math.max(y1,y2,y3)+0.12;
-dc('#D8D0C4');pdf.setLineWidth(0.008);pdf.line(M,topEndY,M+PW,topEndY);
+// ── FIXED DIVIDER ──────────────────────────────────────────────────
+dc('#D0C8BC');pdf.setLineWidth(0.008);pdf.line(M,DIV_Y,M+PW,DIV_Y);
 
-// 90-DAY ROCKS — full width, 2 sub-columns, fills remaining space
-const rockStartY=topEndY+0.14;
-const halfW=(PW-G)/2;
-const rC1=M,rC2=M+halfW+G;
-dc(copper);pdf.setLineWidth(0.012);pdf.line(M,rockStartY,M+PW,rockStartY);
+// ── 90-DAY ROCKS — fixed bottom section ────────────────────────────
 tc(teal);pdf.setFont('helvetica','bold');pdf.setFontSize(9);
-pdf.text('90-DAY ROCKS',M,rockStartY+0.17);
-const rContentY=rockStartY+0.33;
-const pageBottom=M+PH-0.06;
+pdf.text('90-DAY ROCKS',M,ROCK_TITLE_Y);
 
 const rocks=(S.rocks||[]).filter(r=>r&&r.text&&r.text.trim());
+const nCols=Math.min(Math.max(rocks.length,1),5);
+const rColW=(PW-(nCols-1)*G)/nCols;
 
-// Estimate total rock content height to calculate adaptive spacing
-function estRockH(r,w){
-  const rt=pdf.splitTextToSize(r.text.trim(),w-0.18);
-  let h=rt.length*0.13+0.03;
-  for(const m of(r.milestones||[]).filter(m=>m&&m.text&&m.text.trim())){
-    const mt=m.date?(m.text.trim()+' \u2014 '+fd(m.date)):m.text.trim();
-    const ml=pdf.splitTextToSize(mt,w-0.34);
-    h+=ml.length*0.115+0.02;
-  }
-  return h;
-}
-
-// Calculate adaptive gap to spread rocks across available space
-let totalRockH=0;
-const leftRocks=rocks.slice(0,4), rightRocks=rocks.slice(4);
-for(const r of leftRocks) totalRockH+=estRockH(r,halfW);
-let leftGap=0.08;
-if(leftRocks.length>0){
-  const leftAvail=pageBottom-rContentY;
-  const leftUsed=totalRockH;
-  leftGap=Math.max(0.07,Math.min(0.25,(leftAvail-leftUsed)/Math.max(leftRocks.length,1)));
-}
-
-function drawRock(x,y,w,i,r,gap){
-  tc(copper);pdf.setFont('helvetica','bold');pdf.setFontSize(9);pdf.text((i+1)+'.',x,y);
+// Draw one rock block at (x,y), returns ending y
+function drawRock(x,y,w,num,r){
+  // Rock title
+  tc(copper);pdf.setFont('helvetica','bold');pdf.setFontSize(9);
+  pdf.text(num+'.',x,y);
   tc(dk);pdf.setFont('helvetica','normal');
   const rt=pdf.splitTextToSize(r.text.trim(),w-0.18);
-  pdf.text(rt,x+0.17,y);y+=rt.length*0.13+0.03;
+  pdf.text(rt,x+0.17,y);
+  y+=rt.length*0.13+0.05;
+  // Milestones
   for(const m of(r.milestones||[]).filter(m=>m&&m.text&&m.text.trim())){
-    tc(sage);pdf.setFontSize(8);pdf.text('\u21b3',x+0.12,y);
-    tc(dk);pdf.setFont('helvetica','normal');pdf.setFontSize(9);
+    tc(sage);pdf.setFontSize(8);
+    pdf.text('\u21b3',x+0.1,y);
+    tc(dk);pdf.setFont('helvetica','normal');pdf.setFontSize(8.5);
     const mt=m.date?(m.text.trim()+' \u2014 '+fd(m.date)):m.text.trim();
-    const ml=pdf.splitTextToSize(mt,w-0.34);pdf.text(ml,x+0.26,y);y+=ml.length*0.115+0.02;
+    const ml=pdf.splitTextToSize(mt,w-0.3);
+    pdf.text(ml,x+0.24,y);
+    y+=ml.length*0.12+0.02;
   }
-  return y+gap;
+  return y;
 }
 
 if(!rocks.length){
-  tc(lt);pdf.setFont('helvetica','normal');pdf.setFontSize(9);pdf.text('\u2014',M,rContentY);
+  tc(lt);pdf.setFont('helvetica','normal');pdf.setFontSize(9);
+  pdf.text('\u2014',M,ROCK_Y);
 }else{
-  let yl=rContentY,yr=rContentY;
-  // Adaptive gap for right column too
-  let rightGap=0.08;
-  if(rightRocks.length>0){
-    let rh=0;for(const r of rightRocks) rh+=estRockH(r,halfW);
-    rightGap=Math.max(0.07,Math.min(0.25,(pageBottom-rContentY-rh)/Math.max(rightRocks.length,1)));
+  for(let i=0;i<rocks.length;i++){
+    const x=M+i*(rColW+G);
+    drawRock(x,ROCK_Y,rColW,i+1,rocks[i]);
   }
-  for(let i=0;i<leftRocks.length;i++) yl=drawRock(rC1,yl,halfW,i,leftRocks[i],leftGap);
-  for(let i=0;i<rightRocks.length;i++) yr=drawRock(rC2,yr,halfW,i+4,rightRocks[i],rightGap);
 }
+
+// ── FOOTER ─────────────────────────────────────────────────────────
+dc('#D0C8BC');pdf.setLineWidth(0.006);pdf.line(M,FOOT_Y,M+PW,FOOT_Y);
+tc(mid);pdf.setFont('helvetica','normal');pdf.setFontSize(8);
+pdf.text('NOBA 2026',M+PW/2,FOOT_TXT_Y,{align:'center'});
 
 pdf.save('The_Compass_'+(nm||'NOBA').replace(/\s+/g,'_')+'.pdf');
 hideM();}
