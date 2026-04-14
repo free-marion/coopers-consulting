@@ -184,45 +184,47 @@ const goalsH=[...FG,...OG].map(g=>{
 const lb=g.l||(S.gl&&S.gl[g.id])||`Goal ${g.n}`;
 const v=f(g.id);
 const ac=g.n<=4?"#2B3F47":"#9EA67C";
-return `<div style="margin-bottom:6px;padding:4px 0;border-bottom:1px solid #eee;">
-<span style="color:#B07D4B;font-weight:bold;font-size:11px;margin-right:4px;">${g.n}.</span>
-<span style="font-weight:bold;font-size:10px;color:${ac};">${e(lb)}</span>
-<div style="font-size:9px;color:#444;margin-top:2px;margin-left:16px;">${v||'<span style="color:#ccc;">—</span>'}</div>
-</div>`}).join("");
+return `<div class="goal"><span class="goal-n">${g.n}.</span><span class="goal-l" style="color:${ac};">${e(lb)}${v?':':''}</span><span class="goal-v">${v||'<span class="empty">—</span>'}</span></div>`}).join("");
 
 const rocksH=(S.rocks&&S.rocks.length?S.rocks:[]).map((r,i)=>{
 if(!r||!r.text?.trim())return"";
 const ms=(r.milestones&&r.milestones.length?r.milestones:[]).filter(m=>m&&m.text?.trim()).map(m=>
-`<div style="margin:2px 0 2px 18px;font-size:8px;color:#555;">
-<span style="color:#9EA67C;">↳</span> ${e(m.text)}${m.date?` <span style="color:#B07D4B;">— ${fd(m.date)}</span>`:""}</div>`).join("");
-return `<div style="margin-bottom:8px;">
-<span style="color:#B07D4B;font-weight:bold;font-size:10px;margin-right:4px;">${i+1}.</span>
-<span style="font-size:9px;">${e(r.text)}</span>${ms}</div>`}).join("")||'<span style="color:#ccc;font-size:9px;">—</span>';
+`<div class="rock-ms"><span>↳</span> ${e(m.text)}${m.date?` <span style="color:#B07D4B;">— ${fd(m.date)}</span>`:""}</div>`).join("");
+return `<div class="rock"><div class="rock-t"><span class="rock-n">${i+1}.</span><span>${e(r.text)}</span></div>${ms}</div>`}).join("")||'<span class="empty">—</span>';
 
 const doc=`<!DOCTYPE html><html><head><meta charset="utf-8">
 <title>The Compass — ${e(nm)||"NOBA 2026"}</title>
 <style>
-@page{size:letter landscape;margin:0.5in;}
+@page{size:letter landscape;margin:0.35in;}
 @media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}
-body{font-family:Helvetica,Arial,sans-serif;color:#1a1a1a;background:#fff;margin:0 auto;padding:20px 28px;width:100%;max-width:7.5in;}
-.page{position:relative;width:100%;}
-.watermark{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.04;width:400px;height:400px;pointer-events:none;z-index:0;}
-.header{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid #B07D4B;padding-bottom:10px;margin-bottom:14px;}
-.header h1{font-family:Georgia,serif;font-size:20px;color:#2B3F47;margin:0;font-weight:bold;}
-.header .sub{font-size:9px;color:#B07D4B;font-style:italic;}
+*{box-sizing:border-box;}
+body{font-family:Helvetica,Arial,sans-serif;color:#1a1a1a;background:#fff;margin:0;padding:0;font-size:8px;line-height:1.4;}
+.watermark{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.04;width:340px;height:340px;pointer-events:none;z-index:0;}
+.header{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #B07D4B;padding-bottom:5px;margin-bottom:7px;}
+.header h1{font-family:Georgia,serif;font-size:13px;color:#2B3F47;margin:0;font-weight:bold;line-height:1.2;}
+.header .sub{font-size:7px;color:#B07D4B;font-style:italic;}
 .header .right{text-align:right;}
-.header .name{font-family:Georgia,serif;font-size:13px;color:#2B3F47;}
-.header .date{font-size:9px;color:#8A9AA0;}
-h2{font-family:Georgia,serif;font-size:12px;color:#2B3F47;margin:16px 0 8px;padding-bottom:3px;border-bottom:1.5px solid #B07D4B;}
-h3{font-family:Georgia,serif;font-size:10px;color:#B07D4B;margin:8px 0 3px;}
-.row{display:flex;gap:16px;margin-bottom:6px;}
-.row .col{flex:1;}
-.field{font-size:9px;line-height:1.5;white-space:pre-wrap;}
-.three-cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
-.three-col{border-top:2px solid #B07D4B;padding:8px 10px;background:#f9f7f3;border-radius:2px;}
-.two-cols{display:grid;grid-template-columns:1.2fr 0.8fr;gap:20px;}
-.footer{margin-top:20px;padding-top:8px;border-top:1px solid #ddd;display:flex;justify-content:center;align-items:center;gap:16px;}
-.footer svg{height:22px;width:auto;opacity:0.25;}
+.header .name{font-family:Georgia,serif;font-size:10px;color:#2B3F47;font-weight:bold;}
+.header .date{font-size:7px;color:#8A9AA0;}
+.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;height:calc(100vh - 90px);}
+.col{display:flex;flex-direction:column;gap:7px;overflow:hidden;}
+.sec{border-top:1.5px solid #B07D4B;padding-top:4px;}
+.sec-title{font-family:Georgia,serif;font-size:8px;font-weight:bold;color:#2B3F47;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;}
+.lbl{font-size:7px;color:#B07D4B;font-weight:bold;text-transform:uppercase;letter-spacing:.3px;margin-bottom:1px;margin-top:4px;}
+.lbl:first-of-type{margin-top:0;}
+.field{font-size:8px;color:#333;white-space:pre-wrap;line-height:1.4;min-height:10px;}
+.goal{display:flex;gap:4px;margin-bottom:2px;font-size:7.5px;}
+.goal-n{color:#B07D4B;font-weight:bold;flex-shrink:0;width:10px;}
+.goal-l{color:#2B3F47;font-weight:bold;flex-shrink:0;}
+.goal-v{color:#333;}
+.rock{margin-bottom:4px;}
+.rock-t{font-size:7.5px;display:flex;gap:4px;}
+.rock-n{color:#B07D4B;font-weight:bold;flex-shrink:0;width:10px;}
+.rock-ms{margin-left:14px;font-size:7px;color:#555;}
+.rock-ms span{color:#9EA67C;}
+.empty{color:#ccc;}
+.footer{margin-top:6px;padding-top:5px;border-top:1px solid #eee;display:flex;justify-content:center;align-items:center;gap:12px;}
+.footer svg{height:16px;width:auto;opacity:0.2;}
 </style></head><body>
 <div class="watermark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
   <defs>
@@ -245,34 +247,37 @@ h3{font-family:Georgia,serif;font-size:10px;color:#B07D4B;margin:8px 0 3px;}
   <text font-family="'Playfair Display', Georgia, serif" font-weight="700" font-size="82" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="288" y="200">B</text>
   <text font-family="'Playfair Display', Georgia, serif" font-weight="700" font-size="82" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="200" y="291">A</text>
 </svg></div>
-<div class="page">
 <div class="header">
-<div style="display:flex;align-items:center;gap:14px;">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" style="height:48px;width:48px;flex-shrink:0;"><defs><clipPath id="hrc"><circle cx="200" cy="200" r="163"/></clipPath></defs><circle cx="200" cy="200" r="178" fill="none" stroke="#B07D4B" stroke-width="3.5"/><circle cx="200" cy="200" r="163" fill="none" stroke="#B07D4B" stroke-width="1.8"/><line x1="200" y1="13" x2="200" y2="44" stroke="#B07D4B" stroke-width="2.5" stroke-linecap="square"/><line x1="200" y1="387" x2="200" y2="356" stroke="#B07D4B" stroke-width="2.5" stroke-linecap="square"/><line x1="13" y1="200" x2="44" y2="200" stroke="#B07D4B" stroke-width="2.5" stroke-linecap="square"/><line x1="387" y1="200" x2="356" y2="200" stroke="#B07D4B" stroke-width="2.5" stroke-linecap="square"/><g clip-path="url(#hrc)"><line x1="37" y1="37" x2="363" y2="363" stroke="#B07D4B" stroke-width="5"/><line x1="363" y1="37" x2="37" y2="363" stroke="#B07D4B" stroke-width="5"/></g><text font-family="'Barlow Condensed','Arial Narrow',sans-serif" font-weight="800" font-size="86" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="200" y="112">O</text><text font-family="'Barlow Condensed','Arial Narrow',sans-serif" font-weight="800" font-size="86" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="112" y="200">N</text><text font-family="'Barlow Condensed','Arial Narrow',sans-serif" font-weight="800" font-size="86" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="288" y="200">B</text><text font-family="'Barlow Condensed','Arial Narrow',sans-serif" font-weight="800" font-size="86" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="200" y="291">A</text></svg>
+<div style="display:flex;align-items:center;gap:10px;">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" style="height:32px;width:32px;flex-shrink:0;"><defs><clipPath id="hrc"><circle cx="200" cy="200" r="163"/></clipPath></defs><circle cx="200" cy="200" r="178" fill="none" stroke="#B07D4B" stroke-width="3.5"/><circle cx="200" cy="200" r="163" fill="none" stroke="#B07D4B" stroke-width="1.8"/><line x1="200" y1="13" x2="200" y2="44" stroke="#B07D4B" stroke-width="2.5" stroke-linecap="square"/><line x1="200" y1="387" x2="200" y2="356" stroke="#B07D4B" stroke-width="2.5" stroke-linecap="square"/><line x1="13" y1="200" x2="44" y2="200" stroke="#B07D4B" stroke-width="2.5" stroke-linecap="square"/><line x1="387" y1="200" x2="356" y2="200" stroke="#B07D4B" stroke-width="2.5" stroke-linecap="square"/><g clip-path="url(#hrc)"><line x1="37" y1="37" x2="363" y2="363" stroke="#B07D4B" stroke-width="5"/><line x1="363" y1="37" x2="37" y2="363" stroke="#B07D4B" stroke-width="5"/></g><text font-family="'Barlow Condensed','Arial Narrow',sans-serif" font-weight="800" font-size="86" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="200" y="112">O</text><text font-family="'Barlow Condensed','Arial Narrow',sans-serif" font-weight="800" font-size="86" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="112" y="200">N</text><text font-family="'Barlow Condensed','Arial Narrow',sans-serif" font-weight="800" font-size="86" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="288" y="200">B</text><text font-family="'Barlow Condensed','Arial Narrow',sans-serif" font-weight="800" font-size="86" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="200" y="291">A</text></svg>
 <div><h1>The Compass</h1><div class="sub">Individual Vision / Traction Organizer — NOBA 2026</div></div>
 </div>
-<div class="right"><div class="name">${e(nm)}</div><div class="date">${fd(dt)}</div></div>
+<div class="right"><div class="name">${e(nm)||'&nbsp;'}</div><div class="date">${fd(dt)||'&nbsp;'}</div></div>
 </div>
 
-<div class="row">
-<div class="col"><h3>Purpose</h3><div class="field">${f("purpose")||'<span style="color:#ccc;">—</span>'}</div></div>
-<div class="col"><h3>Tribe</h3><div class="field">${f("tribe")||'<span style="color:#ccc;">—</span>'}</div></div>
+<div class="grid">
+<div class="col">
+<div class="sec"><div class="sec-title">Foundation</div>
+<div class="lbl">Purpose</div><div class="field">${f("purpose")||'<span class="empty">—</span>'}</div>
+<div class="lbl">Tribe</div><div class="field">${f("tribe")||'<span class="empty">—</span>'}</div>
+</div>
+<div class="sec"><div class="sec-title">10-Year Target</div>
+<div class="field">${f("tenYear")||'<span class="empty">—</span>'}</div>
+</div>
 </div>
 
-<h2>10-Year Target</h2>
-<div class="field">${f("tenYear")||'<span style="color:#ccc;">—</span>'}</div>
-
-<h2>3-Year Picture</h2>
-<div class="three-cols">
-<div class="three-col"><h3>Health</h3><div class="field">${f("threeHealth")||'<span style="color:#ccc;">—</span>'}</div></div>
-<div class="three-col"><h3>Finance</h3><div class="field">${f("threeFinance")||'<span style="color:#ccc;">—</span>'}</div></div>
-<div class="three-col"><h3>Relationship / Spiritual</h3><div class="field">${f("threeRelationship")||'<span style="color:#ccc;">—</span>'}</div></div>
+<div class="col">
+<div class="sec"><div class="sec-title">3-Year Picture</div>
+<div class="lbl">Health</div><div class="field">${f("threeHealth")||'<span class="empty">—</span>'}</div>
+<div class="lbl">Finance</div><div class="field">${f("threeFinance")||'<span class="empty">—</span>'}</div>
+<div class="lbl">Relationship / Spiritual</div><div class="field">${f("threeRelationship")||'<span class="empty">—</span>'}</div>
+</div>
 </div>
 
-<h2>1-Year Plan & 90-Day Rocks</h2>
-<div class="two-cols">
-<div>${goalsH}</div>
-<div><h3 style="margin-top:0;">90-Day Rocks</h3>${rocksH}</div>
+<div class="col">
+<div class="sec"><div class="sec-title">1-Year Plan</div>${goalsH}</div>
+<div class="sec"><div class="sec-title">90-Day Rocks</div>${rocksH}</div>
+</div>
 </div>
 
 <div class="footer">
