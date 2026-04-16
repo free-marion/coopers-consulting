@@ -196,27 +196,61 @@ body {
 }
 .group-badge:hover .group-badge-name { color: var(--copper); }
 
-/* MOBILE GRID */
-.dome-grid {
+/* MOBILE CAROUSEL */
+.dome-carousel-wrap {
   display: none;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  position: relative;
 }
-@media (max-width: 580px) { .dome-grid { display: grid; } }
-.dome-grid-item {
+@media (max-width: 580px) { .dome-carousel-wrap { display: block; } }
+.dome-carousel-wrap::before,
+.dome-carousel-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 48px;
+  pointer-events: none;
+  z-index: 1;
+}
+.dome-carousel-wrap::before {
+  left: 0;
+  background: linear-gradient(to right, var(--bg), transparent);
+}
+.dome-carousel-wrap::after {
+  right: 0;
+  background: linear-gradient(to left, var(--bg), transparent);
+}
+.dome-carousel {
+  display: flex;
+  overflow-x: auto;
+  overflow-y: visible;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  gap: 8px;
+  padding: 16px 48px 24px;
+}
+.dome-carousel::-webkit-scrollbar { display: none; }
+.dome-carousel-item {
+  scroll-snap-align: center;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  padding: 20px 12px 16px;
-  background: var(--surface);
-  border-left: 3px solid var(--copper);
-  border-radius: 0 4px 4px 0;
   text-decoration: none;
-  transition: opacity 0.15s;
+  padding: 8px 12px;
+  transition: transform 0.15s;
 }
-.dome-grid-item:hover { opacity: 0.82; }
-.dome-grid-item svg { width: 48px; height: 56px; filter: drop-shadow(0 3px 8px rgba(0,0,0,0.5)); }
+.dome-carousel-item:active { transform: scale(0.93); }
+.dome-carousel-item svg {
+  width: 72px;
+  height: 84px;
+  filter: drop-shadow(0 6px 16px rgba(0,0,0,0.6));
+  transition: filter 0.2s;
+}
+.dome-carousel-item:hover svg {
+  filter: drop-shadow(0 8px 20px rgba(176,125,75,0.5));
+}
 
 /* FOOTER */
 .portal-footer {
@@ -270,7 +304,9 @@ body {
       <div class="dome-arc"></div>
       <div class="dome-base"></div>
     </div>
-    <div class="dome-grid" id="domeGrid"></div>
+    <div class="dome-carousel-wrap">
+      <div class="dome-carousel" id="domeCarousel"></div>
+    </div>
   </section>
 
 </main>
@@ -355,10 +391,10 @@ function buildDome() {
   });
 }
 
-function buildGrid() {
-  const grid = document.getElementById('domeGrid');
-  grid.innerHTML = GROUPS.map(g => `
-    <a href="./${g.id}/" class="dome-grid-item">
+function buildCarousel() {
+  const carousel = document.getElementById('domeCarousel');
+  carousel.innerHTML = GROUPS.map(g => `
+    <a href="./${g.id}/" class="dome-carousel-item">
       ${shieldSVG(g)}
       <span class="group-badge-name">${g.name}</span>
     </a>
@@ -366,7 +402,7 @@ function buildGrid() {
 }
 
 buildDome();
-buildGrid();
+buildCarousel();
 window.addEventListener('resize', () => {
   document.querySelectorAll('.group-badge').forEach(el => el.remove());
   buildDome();
