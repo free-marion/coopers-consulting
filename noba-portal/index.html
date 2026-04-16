@@ -325,7 +325,7 @@ body {
 const GROUPS = [
   { id: 'zeta',           name: 'Zeta Group',     initials: 'Z',  color: '#3d2a5c', stroke: '#6a4a90' },
   { id: 'bad-batch',      name: 'Bad Batch',       initials: 'BB', color: '#252e3a', stroke: '#4a5a6a' },
-  { id: 'crimson-aces',   name: 'Crimson Aces',    initials: 'CA', color: '#5c1e1e', stroke: '#8a3a3a' },
+  { id: 'crimson-aces',   name: 'Crimson Aces',    initials: 'CA', color: '#5c1e1e', stroke: '#8a3a3a', image: './shields/crimson-aces.png' },
   { id: 'dragon-shields', name: 'Dragon Shields',  initials: 'DS', color: '#1a3d2a', stroke: '#306a48' },
   { id: 'storm-wardens',  name: 'Storm Wardens',   initials: 'SW', color: '#1a2640', stroke: '#304a70' },
   { id: 'phoenix-wing',   name: 'Phoenix Wing',    initials: 'PW', color: '#4a2c0e', stroke: '#7a5028' },
@@ -333,6 +333,16 @@ const GROUPS = [
 ];
 
 function shieldSVG(g) {
+  const CLIP = "M4,2 L56,2 L56,40 C56,55 30,67 30,67 C30,67 4,55 4,40 Z";
+  if (g.image) {
+    return `<svg viewBox="0 0 60 70" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <defs>
+        <clipPath id="cp-${g.id}"><path d="${CLIP}"/></clipPath>
+      </defs>
+      <image href="${g.image}" x="0" y="0" width="60" height="70"
+             clip-path="url(#cp-${g.id})" preserveAspectRatio="xMidYMid meet"/>
+    </svg>`;
+  }
   const seed = g.id.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
   return `<svg viewBox="0 0 60 70" xmlns="http://www.w3.org/2000/svg">
     <defs>
@@ -351,22 +361,13 @@ function shieldSVG(g) {
         <stop offset="100%" stop-color="rgba(0,0,0,0.35)"/>
       </radialGradient>
     </defs>
-    <!-- Shield body -->
-    <path d="M4,2 L56,2 L56,40 C56,55 30,67 30,67 C30,67 4,55 4,40 Z"
-          fill="${g.color}" filter="url(#wx-${g.id})"/>
-    <!-- Vignette -->
-    <path d="M4,2 L56,2 L56,40 C56,55 30,67 30,67 C30,67 4,55 4,40 Z"
-          fill="url(#vg-${g.id})"/>
-    <!-- Outer border -->
-    <path d="M4,2 L56,2 L56,40 C56,55 30,67 30,67 C30,67 4,55 4,40 Z"
-          fill="none" stroke="${g.stroke}" stroke-width="1.5" opacity="0.7"/>
-    <!-- Inner inset border -->
+    <path d="${CLIP}" fill="${g.color}" filter="url(#wx-${g.id})"/>
+    <path d="${CLIP}" fill="url(#vg-${g.id})"/>
+    <path d="${CLIP}" fill="none" stroke="${g.stroke}" stroke-width="1.5" opacity="0.7"/>
     <path d="M9,6 L51,6 L51,39 C51,51 30,60 30,60 C30,60 9,51 9,39 Z"
           fill="none" stroke="${g.stroke}" stroke-width="0.75" opacity="0.4"/>
-    <!-- Horizontal dividing band (heraldic fess) -->
     <rect x="4" y="26" width="52" height="5"
           fill="rgba(255,255,255,0.04)" stroke="${g.stroke}" stroke-width="0.5" opacity="0.5"/>
-    <!-- Initials -->
     <text x="30" y="22" text-anchor="middle" dominant-baseline="central"
           font-family="'Barlow Condensed', sans-serif" font-weight="800"
           font-size="${g.initials.length > 1 ? '13' : '20'}"
