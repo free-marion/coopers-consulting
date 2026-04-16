@@ -371,12 +371,11 @@ function shieldSVG(g) {
   }
 
   if (g.shape === 'card') {
-    const RR = "M3,3 L57,3 Q57,3 57,9 L57,61 Q57,67 51,67 L9,67 Q3,67 3,61 L3,9 Q3,3 9,3 Z";
     if (g.image) {
-      return `<svg viewBox="0 0 60 70" xmlns="http://www.w3.org/2000/svg">
-        <defs><clipPath id="cp-${g.id}"><path d="${RR}"/></clipPath></defs>
-        <image href="${g.image}" x="0" y="0" width="60" height="70" clip-path="url(#cp-${g.id})" preserveAspectRatio="xMidYMid slice"/>
-        <path d="${RR}" fill="none" stroke="${g.stroke}" stroke-width="1.5" opacity="0.7"/>
+      return `<svg viewBox="0 0 50 70" xmlns="http://www.w3.org/2000/svg">
+        <defs><clipPath id="cp-${g.id}"><rect x="1" y="1" width="48" height="68" rx="5"/></clipPath></defs>
+        <image href="${g.image}" x="0" y="0" width="50" height="70" clip-path="url(#cp-${g.id})" preserveAspectRatio="xMidYMid slice"/>
+        <rect x="1" y="1" width="48" height="68" rx="5" fill="none" stroke="${g.stroke}" stroke-width="1.5" opacity="0.7"/>
       </svg>`;
     }
   }
