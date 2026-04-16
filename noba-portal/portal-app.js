@@ -1,7 +1,7 @@
 // ── NOBA Group Portal App ──────────────────────────────────────────────────
 // Config — replace with your Supabase credentials
-const SUPABASE_URL      = 'YOUR_SUPABASE_URL';
-const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+const SUPABASE_URL      = 'https://lujdurappgxkeedltifc.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_JteWrFxEYf8-XFEtgPtr1Q_fCRp5Vx_';
 
 const GROUP = window.NOBA_GROUP; // { id, name, color }
 const db    = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
