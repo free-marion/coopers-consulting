@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOBA Member Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #0f0d0a;
+  --surface:  #1c1a16;
+  --surface2: #252219;
+  --bronze:   #B07D4B;
+  --bronze-l: #d4a06a;
+  --cream:    #e8d5b7;
+  --dim:      #8a7560;
+  --ember:    #c4510a;
+  --forest:   #3d6b38;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: 'Barlow', sans-serif;
+  background: var(--bg);
+  color: var(--cream);
+  min-height: 100vh;
+}
+
+/* NAV */
+.portal-nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 32px;
+  border-bottom: 1px solid #2a2620;
+}
+.portal-nav img { width: 40px; height: 40px; }
+.portal-nav-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--bronze);
+}
+.portal-nav-sub {
+  font-size: 0.75rem;
+  color: var(--dim);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+/* MAIN */
+.portal-main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+}
+
+/* SECTION LABEL */
+.section-kicker {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--bronze);
+  margin-bottom: 6px;
+  display: block;
+}
+.section-heading {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--cream);
+  margin-bottom: 24px;
+}
+
+/* COMMON GROUND CARDS */
+.common-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 64px;
+}
+@media (max-width: 600px) { .common-cards { grid-template-columns: 1fr; } }
+
+.common-card {
+  background: var(--surface);
+  border: 1px solid #2e2b24;
+  border-radius: 8px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.common-card-icon { font-size: 2rem; }
+.common-card-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--cream);
+}
+.common-card-desc {
+  font-size: 0.85rem;
+  color: var(--dim);
+  line-height: 1.5;
+  flex: 1;
+}
+.btn-launch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bronze);
+  color: #0f0d0a;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  padding: 9px 18px;
+  border-radius: 4px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s;
+  width: fit-content;
+}
+.btn-launch:hover { background: var(--bronze-l); }
+.btn-launch--ghost {
+  background: transparent;
+  color: var(--bronze);
+  border: 1.5px solid var(--bronze);
+}
+.btn-launch--ghost:hover { background: #2a2218; }
+
+/* MATERIALS LIST */
+.materials-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+.materials-list li {
+  font-size: 0.85rem;
+  color: var(--dim);
+  font-style: italic;
+}
+.materials-coming { font-size: 0.8rem; color: #4a4438; font-style: italic; }
+
+/* DOME */
+.dome-section { margin-top: 0; }
+.dome-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 700px;
+  height: 340px;
+  margin: 0 auto;
+}
+.dome-arc {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 560px;
+  height: 280px;
+  border: 1.5px solid #2e2b24;
+  border-bottom: none;
+  border-radius: 280px 280px 0 0;
+  pointer-events: none;
+}
+.dome-base {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1.5px;
+  background: #2e2b24;
+}
+.group-badge {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.2s;
+}
+.group-badge:hover { transform: translate(-50%, -50%) scale(1.1); }
+.group-badge-circle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: .04em;
+  color: #fff;
+  border: 2px solid rgba(255,255,255,0.15);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+}
+.group-badge-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--dim);
+  text-align: center;
+  max-width: 80px;
+  line-height: 1.2;
+}
+
+/* FOOTER */
+.portal-footer {
+  text-align: center;
+  padding: 24px;
+  font-size: 0.75rem;
+  color: #3a3630;
+  border-top: 1px solid #1e1c18;
+}
+</style>
+</head>
+<body>
+
+<nav class="portal-nav">
+  <img src="../images/noba-logo.svg" alt="NOBA">
+  <div>
+    <div class="portal-nav-title">NOBA</div>
+    <div class="portal-nav-sub">Member Portal</div>
+  </div>
+</nav>
+
+<main class="portal-main">
+
+  <section style="margin-bottom:64px">
+    <span class="section-kicker">Common Ground</span>
+    <h2 class="section-heading">Shared Tools</h2>
+    <div class="common-cards">
+
+      <div class="common-card">
+        <div class="common-card-icon">🧭</div>
+        <div class="common-card-title">Compass VTO</div>
+        <p class="common-card-desc">Vision, Traction, Organizer. Build your 1-year, 3-year, and long-range plan with 90-day rocks.</p>
+        <a href="../compass/" class="btn-launch">Launch Compass</a>
+      </div>
+
+      <div class="common-card">
+        <div class="common-card-icon">📁</div>
+        <div class="common-card-title">Materials</div>
+        <p class="common-card-desc">Shared resources, documents, and references for NOBA members.</p>
+        <ul class="materials-list">
+          <li class="materials-coming">— Materials coming soon —</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="dome-section">
+    <span class="section-kicker">Your Pod</span>
+    <h2 class="section-heading">Select Your Group</h2>
+    <div class="dome-wrap" id="domeWrap">
+      <div class="dome-arc"></div>
+      <div class="dome-base"></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="portal-footer">
+  &copy; 2026 NOBA &nbsp;&middot;&nbsp; Member access only
+</footer>
+
+<script>
+const GROUPS = [
+  { id: 'zeta',           name: 'Zeta Group',     initials: 'Z',  color: '#6d28d9' },
+  { id: 'bad-batch',      name: 'Bad Batch',       initials: 'BB', color: '#475569' },
+  { id: 'crimson-aces',   name: 'Crimson Aces',    initials: 'CA', color: '#b91c1c' },
+  { id: 'dragon-shields', name: 'Dragon Shields',  initials: 'DS', color: '#047857' },
+  { id: 'storm-wardens',  name: 'Storm Wardens',   initials: 'SW', color: '#1d4ed8' },
+  { id: 'phoenix-wing',   name: 'Phoenix Wing',    initials: 'PW', color: '#b45309' },
+  { id: 'knights-raven',  name: "Knight's Raven",  initials: 'KR', color: '#1f2937' },
+];
+
+function buildDome() {
+  const wrap = document.getElementById('domeWrap');
+  const W = wrap.offsetWidth;
+  const H = wrap.offsetHeight;
+  const cx = W / 2;
+  const cy = H - 10;
+  const R  = Math.min(W * 0.38, 220);
+  const n  = GROUPS.length;
+
+  GROUPS.forEach((g, i) => {
+    const angle = Math.PI * (1 - i / (n - 1)); // 180° → 0°
+    // nudge endpoints slightly inward
+    const a = Math.PI * 0.92 - (Math.PI * 0.84 * i / (n - 1));
+    const x = cx + R * Math.cos(a);
+    const y = cy - R * Math.sin(a);
+
+    const link = document.createElement('a');
+    link.href = `./${g.id}/`;
+    link.className = 'group-badge';
+    link.style.left = x + 'px';
+    link.style.top  = y + 'px';
+
+    link.innerHTML = `
+      <div class="group-badge-circle" style="background:${g.color}">${g.initials}</div>
+      <span class="group-badge-name">${g.name}</span>
+    `;
+    wrap.appendChild(link);
+  });
+}
+
+buildDome();
+window.addEventListener('resize', () => {
+  document.querySelectorAll('.group-badge').forEach(el => el.remove());
+  buildDome();
+});
+</script>
+</body>
+</html>
