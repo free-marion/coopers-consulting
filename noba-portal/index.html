@@ -343,7 +343,7 @@ function shieldSVG(g) {
         <clipPath id="cp-${g.id}"><path d="${CLIP}"/></clipPath>
       </defs>
       <image href="${g.image}" x="0" y="0" width="60" height="70"
-             clip-path="url(#cp-${g.id})" preserveAspectRatio="xMidYMid meet"/>
+             clip-path="url(#cp-${g.id})" preserveAspectRatio="xMidYMid slice"/>
     </svg>`;
   }
   const seed = g.id.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
