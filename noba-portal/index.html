@@ -138,19 +138,20 @@ body {
   position: relative;
   width: 100%;
   max-width: 720px;
-  height: 360px;
+  height: 420px;
   margin: 0 auto;
 }
+@media (max-width: 580px) { .dome-wrap { display: none; } }
 .dome-arc {
   position: absolute;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 580px;
-  height: 290px;
+  width: 560px;
+  height: 280px;
   border: 1px solid #3a5060;
   border-bottom: none;
-  border-radius: 290px 290px 0 0;
+  border-radius: 280px 280px 0 0;
   pointer-events: none;
 }
 .dome-base {
@@ -172,8 +173,8 @@ body {
   text-decoration: none;
 }
 .group-badge svg {
-  width: 60px;
-  height: 70px;
+  width: 56px;
+  height: 65px;
   filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5));
   transition: filter 0.2s, transform 0.2s;
 }
@@ -183,17 +184,39 @@ body {
 }
 .group-badge-name {
   font-family: 'DM Sans', sans-serif;
-  font-size: 0.6rem;
+  font-size: 0.58rem;
   font-weight: 700;
   letter-spacing: .07em;
   text-transform: uppercase;
   color: var(--mid);
   text-align: center;
-  max-width: 80px;
+  max-width: 72px;
   line-height: 1.2;
   transition: color 0.15s;
 }
 .group-badge:hover .group-badge-name { color: var(--copper); }
+
+/* MOBILE GRID */
+.dome-grid {
+  display: none;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+@media (max-width: 580px) { .dome-grid { display: grid; } }
+.dome-grid-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 12px 16px;
+  background: var(--surface);
+  border-left: 3px solid var(--copper);
+  border-radius: 0 4px 4px 0;
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+.dome-grid-item:hover { opacity: 0.82; }
+.dome-grid-item svg { width: 48px; height: 56px; filter: drop-shadow(0 3px 8px rgba(0,0,0,0.5)); }
 
 /* FOOTER */
 .portal-footer {
@@ -247,6 +270,7 @@ body {
       <div class="dome-arc"></div>
       <div class="dome-base"></div>
     </div>
+    <div class="dome-grid" id="domeGrid"></div>
   </section>
 
 </main>
@@ -312,12 +336,12 @@ function buildDome() {
   const wrap = document.getElementById('domeWrap');
   const W = wrap.offsetWidth;
   const cx = W / 2;
-  const cy = wrap.offsetHeight - 10;
-  const R  = Math.min(W * 0.37, 215);
+  const cy = wrap.offsetHeight - 14;
+  const R  = Math.min(W * 0.43, 265);
   const n  = GROUPS.length;
 
   GROUPS.forEach((g, i) => {
-    const a = Math.PI * 0.92 - (Math.PI * 0.84 * i / (n - 1));
+    const a = Math.PI * 0.95 - (Math.PI * 0.90 * i / (n - 1));
     const x = cx + R * Math.cos(a);
     const y = cy - R * Math.sin(a);
 
@@ -331,7 +355,18 @@ function buildDome() {
   });
 }
 
+function buildGrid() {
+  const grid = document.getElementById('domeGrid');
+  grid.innerHTML = GROUPS.map(g => `
+    <a href="./${g.id}/" class="dome-grid-item">
+      ${shieldSVG(g)}
+      <span class="group-badge-name">${g.name}</span>
+    </a>
+  `).join('');
+}
+
 buildDome();
+buildGrid();
 window.addEventListener('resize', () => {
   document.querySelectorAll('.group-badge').forEach(el => el.remove());
   buildDome();
