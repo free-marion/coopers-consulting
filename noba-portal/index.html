@@ -254,13 +254,18 @@ body {
 
 /* FOOTER */
 .portal-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
   text-align: center;
-  padding: 20px;
+  padding: 24px 20px;
   font-size: 0.72rem;
   color: var(--lt);
   border-top: 1px solid #2B3F47;
   font-style: italic;
 }
+.footer-hex { width: 40px; height: auto; opacity: 0.35; }
 </style>
 </head>
 <body>
@@ -312,7 +317,8 @@ body {
 </main>
 
 <footer class="portal-footer">
-  &copy; 2026 NOBA &nbsp;&middot;&nbsp; Member access only
+  <img src="../images/mj-hex.svg" alt="Magus Jane" class="footer-hex">
+  <div>&copy; 2026 NOBA &nbsp;&middot;&nbsp; Member access only</div>
 </footer>
 
 <script>
