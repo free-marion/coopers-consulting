@@ -35,16 +35,16 @@ function loginHTML(path, error = false) {
 <title>NOBA Portal</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:system-ui,sans-serif;background:#0f0d0a;color:#e8d5b7;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
-  .card{background:#1c1a16;border:1px solid #2e2b24;border-radius:8px;padding:40px 36px;width:100%;max-width:340px;text-align:center}
-  .logo{font-size:2rem;font-weight:800;letter-spacing:.08em;color:#B07D4B;margin-bottom:4px}
-  .sub{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#8a7560;margin-bottom:32px}
-  label{display:block;text-align:left;font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#8a7560;margin-bottom:6px}
-  input[type=password]{width:100%;background:#0f0d0a;border:1px solid #3a3630;border-radius:4px;color:#e8d5b7;padding:10px 14px;font-size:.95rem;margin-bottom:16px;outline:none;-webkit-appearance:none}
+  body{font-family:'DM Sans',system-ui,sans-serif;background:#1E2D33;color:#F5F0E8;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+  .card{background:#2B3F47;border:1px solid #3A5560;border-radius:4px;padding:40px 36px;width:100%;max-width:340px;text-align:center;border-top:3px solid #B07D4B}
+  .logo{font-family:Georgia,serif;font-size:2rem;font-weight:700;letter-spacing:.08em;color:#B07D4B;margin-bottom:4px}
+  .sub{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:#8A9AA0;margin-bottom:32px;font-style:italic}
+  label{display:block;text-align:left;font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#8A9AA0;margin-bottom:6px}
+  input[type=password]{width:100%;background:#1E2D33;border:1px solid #3A5560;border-radius:3px;color:#F5F0E8;padding:10px 14px;font-size:.95rem;margin-bottom:16px;outline:none;-webkit-appearance:none;font-family:inherit}
   input:focus{border-color:#B07D4B}
-  button{width:100%;background:#B07D4B;color:#0f0d0a;border:none;border-radius:4px;padding:11px;font-weight:800;font-size:.85rem;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:background .15s}
-  button:hover{background:#d4a06a}
-  .err{color:#b91c1c;font-size:.78rem;margin-bottom:12px}
+  button{width:100%;background:#B07D4B;color:#F5F0E8;border:none;border-radius:3px;padding:11px;font-weight:800;font-size:.85rem;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:opacity .15s;font-family:inherit}
+  button:hover{opacity:.85}
+  .err{color:#c0392b;font-size:.78rem;margin-bottom:12px;font-style:italic}
 </style>
 </head>
 <body>
