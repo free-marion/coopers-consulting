@@ -126,7 +126,7 @@ function renderTimer(c) {
       ts.running = true;
       ts.interval = setInterval(() => {
         ts.secsLeft--;
-        if (ts.secsLeft < 0) {
+        if (ts.secsLeft <= 0) {
           if (ts.seg < SEGMENTS.length - 1) {
             ts.seg++;
             ts.secsLeft = SEGMENTS[ts.seg].duration;
@@ -159,6 +159,7 @@ function renderTimer(c) {
 let scWeekOffset = 0;
 let scMetrics = [];
 let scEntries = [];
+let scPendingMembers = new Set(); // members added locally but not yet in DB
 
 async function renderScorecard(c) {
   c.innerHTML = `<div class="loading">Loading scorecard…</div>`;
@@ -172,8 +173,8 @@ async function renderScorecard(c) {
   scMetrics  = metrics  || [];
   scEntries  = entries  || [];
 
-  // Get unique member names
-  const members = [...new Set(scEntries.map(e => e.member_name))].sort();
+  // Get unique member names — include pending (locally added, no DB entries yet)
+  const members = [...new Set([...scEntries.map(e => e.member_name), ...scPendingMembers])].sort();
 
   const weekLabel = new Date(week + 'T12:00:00').toLocaleDateString('en-US',
     { month: 'short', day: 'numeric', year: 'numeric' });
@@ -251,11 +252,8 @@ function renderScRow(member, week) {
 async function addScRow(c, week) {
   const name = document.getElementById('scNewMember').value.trim();
   if (!name) return;
-  if (!scEntries.find(e => e.member_name === name)) {
-    scEntries.push({ member_name: name, group_id: GROUP.id, week_start: week });
-  }
+  scPendingMembers.add(name);
   renderScorecard(c);
-  setTimeout(() => { if (document.getElementById('scNewMember')) document.getElementById('scNewMember').value = name; }, 50);
 }
 
 async function addMetricPrompt(c) {
@@ -452,7 +450,7 @@ async function renderIssues(c) {
     </div>
   `;
 
-  document.querySelectorAll('.filter-tab').forEach(t => {
+  c.querySelectorAll('.filter-tab').forEach(t => {
     t.addEventListener('click', () => { issueFilter = t.dataset.filter; renderIssues(c); });
   });
   document.getElementById('addIssueBtn').addEventListener('click', () => {
