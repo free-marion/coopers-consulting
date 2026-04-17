@@ -160,115 +160,132 @@ function renderTimer(c) {
 }
 
 // ── SCORECARD ────────────────────────────────────────────────────────────────
-let scWeekOffset = 0;
-let scMetrics = [];
-let scEntries = [];
-let scPendingMembers = new Set(); // members added locally but not yet in DB
+// scorecard state — no longer needed as module-level vars, kept for compat
+
 
 async function renderScorecard(c) {
-  c.innerHTML = `<div class="loading">Loading scorecard…</div>`;
-  const week = getWeekStart(scWeekOffset);
+  c.innerHTML = '<div class="loading">Loading scorecard…</div>';
+
+  // Rolling 6 weeks, most recent first
+  const weeks = [];
+  for (let i = 0; i < 6; i++) weeks.push(getWeekStart(-i));
 
   const [{ data: metrics }, { data: entries }] = await Promise.all([
-    db.from('scorecard_metrics').select('*').eq('group_id', GROUP.id).order('sort_order'),
-    db.from('scorecard_entries').select('*').eq('group_id', GROUP.id).eq('week_start', week),
+    db.from('scorecard_metrics').select('*').eq('group_id', GROUP.id).order('member_name').order('sort_order'),
+    db.from('scorecard_entries').select('*').eq('group_id', GROUP.id).in('week_start', weeks),
   ]);
 
-  scMetrics  = metrics  || [];
-  scEntries  = entries  || [];
+  const mlist = metrics || [];
+  const elist = entries || [];
 
-  // Get unique member names — include pending (locally added, no DB entries yet)
-  const members = [...new Set([...scEntries.map(e => e.member_name), ...scPendingMembers])].sort();
-
-  const weekLabel = new Date(week + 'T12:00:00').toLocaleDateString('en-US',
-    { month: 'short', day: 'numeric', year: 'numeric' });
+  const weekLabels = weeks.map(w => {
+    const d = new Date(w + 'T12:00:00');
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  });
 
   c.innerHTML = `
     <div class="sc-wrap">
       <div class="sc-toolbar">
-        <div class="sc-week-nav">
-          <button class="btn-sm" id="scPrev">← Prev</button>
-          <span class="sc-week-label">Week of ${weekLabel}</span>
-          <button class="btn-sm" id="scNext" ${scWeekOffset >= 0 ? 'disabled' : ''}>Next →</button>
+        <div>
+          <div class="list-section-title">Scorecard</div>
+          <div class="list-section-rule"></div>
         </div>
-        <button class="btn-sm btn-sm--bronze" id="scAddMetric">+ Metric</button>
+        <button class="btn-sm btn-sm--bronze" id="scAddMetric">+ Add Measurable</button>
+      </div>
+
+      <div class="add-form hidden" id="scAddForm">
+        <div class="form-row">
+          <input type="text" id="scOwner" placeholder="Your first name" class="g-input" style="max-width:140px">
+          <input type="text" id="scName" placeholder="Measurable (e.g. Workouts)" class="g-input">
+        </div>
+        <div class="form-row">
+          <input type="number" id="scTarget" placeholder="Target" class="g-input" style="max-width:100px">
+          <input type="text" id="scUnit" placeholder="Unit (optional, e.g. hrs)" class="g-input" style="max-width:130px">
+          <button class="btn-sm btn-sm--bronze" id="scSave">Save</button>
+          <button class="btn-sm" id="scCancel">Cancel</button>
+        </div>
       </div>
 
       <div class="sc-table-wrap">
         <table class="sc-table">
           <thead>
             <tr>
-              <th>Member</th>
-              ${scMetrics.map(m => `<th title="Target: ${m.target}${m.unit}">${m.name}<br><span class="sc-target">target: ${m.target}${m.unit}</span></th>`).join('')}
-              ${scMetrics.length === 0 ? '<th class="sc-empty-col">Add a metric to get started</th>' : ''}
+              <th class="sc-th-owner">Owner</th>
+              <th class="sc-th-name">Measurable</th>
+              <th class="sc-th-goal">Goal</th>
+              ${weekLabels.map((lbl, i) => `<th class="sc-th-week${i === 0 ? ' sc-this-week' : ''}">${lbl}</th>`).join('')}
+              <th></th>
             </tr>
           </thead>
-          <tbody id="scBody">
-            ${members.map(mem => renderScRow(mem, week)).join('')}
-            ${members.length === 0 ? `<tr><td colspan="${scMetrics.length + 1}" class="sc-empty">No entries yet this week.</td></tr>` : ''}
+          <tbody>
+            ${mlist.length === 0 ? `<tr><td colspan="10" class="sc-empty">No measurables yet — add one above.</td></tr>` : ''}
+            ${mlist.map(m => {
+              const cells = weeks.map((w, i) => {
+                const entry = elist.find(e => e.metric_id === m.id && e.week_start === w);
+                const val   = entry != null ? entry.value : '';
+                const hit   = val !== '' && parseFloat(val) >= parseFloat(m.target);
+                const miss  = val !== '' && parseFloat(val) < parseFloat(m.target);
+                const bg    = hit ? 'rgba(61,107,56,0.35)' : miss ? 'rgba(185,28,28,0.25)' : '';
+                return `<td style="background:${bg}" class="${i === 0 ? 'sc-this-week' : ''}">
+                  <input type="number" class="sc-cell" value="${val}"
+                    data-metricid="${m.id}" data-week="${w}"
+                    data-target="${m.target}" data-owner="${(m.member_name || '').replace(/"/g,'&quot;')}">
+                </td>`;
+              }).join('');
+              return `<tr>
+                <td class="sc-owner-cell">${m.member_name || ''}</td>
+                <td class="sc-name-cell">${m.name}${m.unit ? `<span class="sc-target"> · ${m.unit}</span>` : ''}</td>
+                <td class="sc-goal-cell">${m.target}${m.unit || ''}</td>
+                ${cells}
+                <td><button class="btn-icon sc-del" data-delmetric="${m.id}">✕</button></td>
+              </tr>`;
+            }).join('')}
           </tbody>
         </table>
-      </div>
-
-      <div class="sc-add-row">
-        <input type="text" id="scNewMember" placeholder="Your name" class="g-input" style="max-width:200px">
-        <button class="btn-sm btn-sm--bronze" id="scAddRow">+ Add Your Row</button>
       </div>
     </div>
   `;
 
-  document.getElementById('scPrev').addEventListener('click', () => { scWeekOffset--; renderScorecard(c); });
-  document.getElementById('scNext').addEventListener('click', () => { scWeekOffset++; renderScorecard(c); });
-  document.getElementById('scAddRow').addEventListener('click', () => addScRow(c, week));
-  document.getElementById('scAddMetric').addEventListener('click', () => addMetricPrompt(c));
+  c.querySelector('#scAddMetric').addEventListener('click', () => {
+    c.querySelector('#scAddForm').classList.toggle('hidden');
+  });
+  c.querySelector('#scCancel').addEventListener('click', () => {
+    c.querySelector('#scAddForm').classList.add('hidden');
+  });
+  c.querySelector('#scSave').addEventListener('click', async () => {
+    const owner  = c.querySelector('#scOwner').value.trim();
+    const name   = c.querySelector('#scName').value.trim();
+    const target = parseFloat(c.querySelector('#scTarget').value) || 1;
+    const unit   = c.querySelector('#scUnit').value.trim();
+    if (!owner || !name) return;
+    await db.from('scorecard_metrics').insert({
+      group_id: GROUP.id, member_name: owner, name, target, unit, sort_order: mlist.length
+    });
+    renderScorecard(c);
+  });
 
-  // Wire up cell inputs
   c.querySelectorAll('.sc-cell').forEach(input => {
     input.addEventListener('change', async (e) => {
-      const { membername, metricid } = e.target.dataset;
+      const { metricid, week, target, owner } = e.target.dataset;
       const val = parseFloat(e.target.value);
-      const metric = scMetrics.find(m => m.id === metricid);
-      e.target.parentElement.style.background = metric && val >= metric.target
+      const td  = e.target.parentElement;
+      if (isNaN(val)) { td.style.background = ''; return; }
+      td.style.background = val >= parseFloat(target)
         ? 'rgba(61,107,56,0.35)' : 'rgba(185,28,28,0.25)';
       await db.from('scorecard_entries').upsert({
-        group_id: GROUP.id, member_name: membername,
+        group_id: GROUP.id, member_name: owner,
         metric_id: metricid, week_start: week, value: val,
       }, { onConflict: 'group_id,member_name,metric_id,week_start' });
     });
   });
-}
 
-function renderScRow(member, week) {
-  return `<tr>
-    <td class="sc-member">${member}</td>
-    ${scMetrics.map(m => {
-      const entry = scEntries.find(e => e.member_name === member && e.metric_id === m.id);
-      const val   = entry ? entry.value : '';
-      const hit   = entry && val >= m.target;
-      const miss  = entry && val < m.target;
-      return `<td style="background:${hit ? 'rgba(61,107,56,0.35)' : miss ? 'rgba(185,28,28,0.25)' : ''}">
-        <input type="number" class="sc-cell" value="${val}" data-membername="${member}" data-metricid="${m.id}">
-      </td>`;
-    }).join('')}
-  </tr>`;
-}
-
-async function addScRow(c, week) {
-  const name = document.getElementById('scNewMember').value.trim();
-  if (!name) return;
-  scPendingMembers.add(name);
-  renderScorecard(c);
-}
-
-async function addMetricPrompt(c) {
-  const name   = prompt('Metric name (e.g. "Workouts"):');
-  if (!name) return;
-  const target = parseFloat(prompt('Target value (e.g. 3):') || '1');
-  const unit   = prompt('Unit (e.g. "x" or "hrs", leave blank if none):') || '';
-  await db.from('scorecard_metrics').insert({
-    group_id: GROUP.id, name, target, unit, sort_order: scMetrics.length
+  c.querySelectorAll('.sc-del').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      if (!confirm('Delete this measurable and all its history?')) return;
+      await db.from('scorecard_metrics').delete().eq('id', btn.dataset.delmetric);
+      renderScorecard(c);
+    });
   });
-  renderScorecard(c);
 }
 
 // ── ROCKS ────────────────────────────────────────────────────────────────────
@@ -822,20 +839,23 @@ style.textContent = `
 
   /* SCORECARD */
   .sc-wrap { display:flex; flex-direction:column; gap:16px; }
-  .sc-toolbar { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
-  .sc-week-nav { display:flex; align-items:center; gap:10px; }
-  .sc-week-label { font-size:.82rem; color:var(--cream); font-weight:700; font-family:'Playfair Display',serif; font-style:italic; }
+  .sc-toolbar { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:4px; }
   .sc-table-wrap { overflow-x:auto; }
-  .sc-table { width:100%; border-collapse:collapse; min-width:400px; }
-  .sc-table th { padding:8px 12px; text-align:center; font-size:.68rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--mid); border-bottom:2px solid var(--copper); }
-  .sc-table th:first-child { text-align:left; }
-  .sc-table td { padding:7px 8px; border-bottom:1px solid var(--lt); text-align:center; transition:background .2s; }
-  .sc-table td:first-child { text-align:left; }
-  .sc-member { font-weight:700; font-size:.85rem; white-space:nowrap; color:var(--cream); font-family:'Playfair Display',serif; }
-  .sc-target { font-size:.6rem; color:var(--mid); font-weight:400; text-transform:none; letter-spacing:0; font-style:italic; font-family:'DM Sans',sans-serif; }
-  .sc-cell { width:68px; background:transparent; border:1px solid var(--lt); border-radius:2px; color:var(--cream); padding:4px 6px; font-size:.88rem; text-align:center; font-family:'DM Sans',sans-serif; }
+  .sc-table { width:100%; border-collapse:collapse; min-width:500px; }
+  .sc-table th { padding:7px 10px; font-size:.62rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--mid); border-bottom:2px solid var(--copper); white-space:nowrap; }
+  .sc-th-owner { text-align:left; min-width:80px; }
+  .sc-th-name { text-align:left; min-width:160px; }
+  .sc-th-goal { text-align:center; min-width:60px; }
+  .sc-th-week { text-align:center; min-width:72px; }
+  .sc-this-week { border-left:1px solid var(--copper) !important; }
+  .sc-table td { padding:6px 8px; border-bottom:1px solid var(--lt); transition:background .2s; }
+  .sc-owner-cell { font-family:'Playfair Display',serif; font-weight:700; font-size:.82rem; color:var(--copper); white-space:nowrap; }
+  .sc-name-cell { font-size:.85rem; color:var(--cream); }
+  .sc-goal-cell { text-align:center; font-size:.78rem; color:var(--mid); white-space:nowrap; }
+  .sc-target { font-size:.7rem; color:var(--mid); font-style:italic; }
+  .sc-cell { width:60px; background:transparent; border:1px solid var(--lt); border-radius:2px; color:var(--cream); padding:4px 6px; font-size:.85rem; text-align:center; font-family:'DM Sans',sans-serif; }
   .sc-cell:focus { outline:none; border-color:var(--copper); }
-  .sc-empty { text-align:center; color:var(--mid); font-size:.85rem; padding:24px; font-style:italic; }
+  .sc-empty { text-align:center; color:var(--mid); font-size:.85rem; padding:32px; font-style:italic; }
   .sc-add-row { display:flex; align-items:center; gap:10px; padding-top:8px; flex-wrap:wrap; }
 
   /* ROCKS & ISSUES */
