@@ -1025,7 +1025,7 @@ style.textContent = `
   .vault-meta { font-size:.65rem; color:var(--mid); font-style:italic; }
 
   /* FLOATING TIMER */
-  #floatingTimer { position:fixed; bottom:20px; right:20px; background:var(--surface); border:2px solid var(--copper); border-radius:6px; padding:10px 14px; display:flex; align-items:center; gap:10px; z-index:999; cursor:pointer; box-shadow:0 4px 20px rgba(0,0,0,0.5); transition:border-color .3s; }
+  #floatingTimer { position:fixed; bottom:20px; right:20px; background:var(--surface); border:2px solid var(--copper); border-radius:6px; padding:10px 14px; display:none; align-items:center; gap:10px; z-index:999; cursor:pointer; box-shadow:0 4px 20px rgba(0,0,0,0.5); transition:border-color .3s; }
   #ftSeg { font-size:.65rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--mid); min-width:60px; }
   #ftTime { font-family:'Barlow Condensed',sans-serif; font-size:1.4rem; font-weight:800; color:var(--copper); letter-spacing:.02em; min-width:52px; }
   #ftPlay { background:transparent; border:1px solid var(--lt); border-radius:3px; color:var(--cream); font-size:.8rem; padding:4px 8px; cursor:pointer; transition:all .15s; }
