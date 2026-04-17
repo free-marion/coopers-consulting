@@ -63,19 +63,84 @@ function renderShell() {
   document.querySelectorAll('.g-tab').forEach(t => {
     t.addEventListener('click', () => switchTab(t.dataset.tab));
   });
-  switchTab('timer');
+  switchTab('vault');
+  initFloatingTimer();
 }
 
 function switchTab(tab) {
   document.querySelectorAll('.g-tab').forEach(t =>
     t.classList.toggle('active', t.dataset.tab === tab));
   const c = document.getElementById('gContent');
+  const ft = document.getElementById('floatingTimer');
+  if (ft) ft.style.display = tab === 'timer' ? 'none' : 'flex';
   if      (tab === 'timer')     renderTimer(c);
   else if (tab === 'scorecard') renderScorecard(c);
   else if (tab === 'rocks')     renderRocks(c);
   else if (tab === 'issues')    renderIssues(c);
   else if (tab === 'todos')     renderTodos(c);
   else if (tab === 'vault')     renderVault(c);
+}
+
+function initFloatingTimer() {
+  if (document.getElementById('floatingTimer')) return;
+  const ft = document.createElement('div');
+  ft.id = 'floatingTimer';
+  ft.innerHTML = `
+    <div id="ftSeg">—</div>
+    <div id="ftTime">00:00</div>
+    <button id="ftPlay">▶</button>
+  `;
+  ft.addEventListener('click', (e) => {
+    if (e.target.id === 'ftPlay') return;
+    switchTab('timer');
+    document.querySelectorAll('.g-tab').forEach(t =>
+      t.classList.toggle('active', t.dataset.tab === 'timer'));
+  });
+  ft.querySelector('#ftPlay').addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleTimerFromFloat();
+  });
+  document.body.appendChild(ft);
+  setInterval(updateFloatingTimer, 500);
+}
+
+function updateFloatingTimer() {
+  const ft = document.getElementById('floatingTimer');
+  if (!ft || ft.style.display === 'none') return;
+  const ts = timerState;
+  const seg = SEGMENTS[ts.seg];
+  document.getElementById('ftSeg').textContent = seg.name;
+  document.getElementById('ftTime').textContent = fmt(ts.secsLeft);
+  document.getElementById('ftPlay').textContent = ts.running ? '⏸' : '▶';
+  ft.style.borderColor = ts.secsLeft <= 30 && ts.running ? '#c0392b' : 'var(--copper)';
+}
+
+function toggleTimerFromFloat() {
+  if (timerState.running) {
+    clearInterval(timerState.interval);
+    timerState.running = false;
+  } else {
+    timerState.running = true;
+    timerState.interval = setInterval(() => {
+      if (timerState.secsLeft > 0) {
+        timerState.secsLeft--;
+        timerState.elapsed++;
+      } else {
+        if (timerState.seg < SEGMENTS.length - 1) {
+          timerState.seg++;
+          timerState.secsLeft = SEGMENTS[timerState.seg].duration;
+        } else {
+          clearInterval(timerState.interval);
+          timerState.running = false;
+        }
+      }
+      // If meeting tab is open, refresh it
+      if (document.querySelector('.g-tab[data-tab="timer"].active')) {
+        renderTimer(document.getElementById('gContent'));
+      }
+    }, 1000);
+  }
+  updateFloatingTimer();
 }
 
 // ── TIMER ────────────────────────────────────────────────────────────────────
@@ -571,10 +636,11 @@ async function renderIssues(c) {
 async function renderTodos(c) {
   c.innerHTML = '<p class="loading">Loading…</p>';
   const { data: todos } = await db.from('todos')
-    .select('*').eq('group_id', GROUP.id).order('done').order('created_at');
+    .select('*').eq('group_id', GROUP.id).order('created_at');
 
-  const open   = todos.filter(t => !t.done);
-  const done   = todos.filter(t => t.done);
+  const open    = (todos || []).filter(t => !t.done && !t.dropped);
+  const done    = (todos || []).filter(t => t.done);
+  const dropped = (todos || []).filter(t => t.dropped);
 
   c.innerHTML = `
     <div class="list-wrap">
@@ -599,7 +665,7 @@ async function renderTodos(c) {
         </div>
       </div>
 
-      ${open.length === 0 && done.length === 0 ? '<p class="empty-state">No to-dos yet.</p>' : ''}
+      ${open.length === 0 && done.length === 0 && dropped.length === 0 ? '<p class="empty-state">No to-dos yet.</p>' : ''}
 
       ${open.map(t => `
         <div class="list-item todo-item" data-id="${t.id}">
@@ -611,7 +677,10 @@ async function renderTodos(c) {
                 <div class="list-item-meta">${t.owner}${t.due_date ? ' · Due ' + t.due_date : ''}${t.issue_id ? ' · <span style="color:var(--sage)">from IDS</span>' : ''}</div>
               </div>
             </div>
-            <button class="btn-icon" data-del-todo="${t.id}">✕</button>
+            <div style="display:flex;gap:4px;align-items:center">
+              <button class="btn-sm" style="font-size:.68rem;padding:3px 8px" data-drop-todo="${t.id}">Drop</button>
+              <button class="btn-icon" data-del-todo="${t.id}">✕</button>
+            </div>
           </div>
         </div>
       `).join('')}
@@ -626,6 +695,23 @@ async function renderTodos(c) {
                 <div>
                   <div class="list-item-title" style="text-decoration:line-through;opacity:.5">${t.title}</div>
                   <div class="list-item-meta">${t.owner}${t.issue_id ? ' · <span style="color:var(--sage)">from IDS</span>' : ''}</div>
+                </div>
+              </div>
+              <button class="btn-icon" data-del-todo="${t.id}">✕</button>
+            </div>
+          </div>
+        `).join('')}
+      ` : ''}
+
+      ${dropped.length > 0 ? `
+        <div class="todo-done-label" style="color:var(--mid)">Dropped</div>
+        ${dropped.map(t => `
+          <div class="list-item todo-item todo-item--done" data-id="${t.id}">
+            <div class="list-item-header">
+              <div class="list-item-left">
+                <div>
+                  <div class="list-item-title" style="text-decoration:line-through;opacity:.4">${t.title}</div>
+                  <div class="list-item-meta">${t.owner}</div>
                 </div>
               </div>
               <button class="btn-icon" data-del-todo="${t.id}">✕</button>
@@ -667,6 +753,13 @@ async function renderTodos(c) {
   c.querySelectorAll('.todo-check').forEach(cb => {
     cb.addEventListener('change', async () => {
       await db.from('todos').update({ done: cb.checked }).eq('id', cb.dataset.id);
+      renderTodos(c);
+    });
+  });
+
+  c.querySelectorAll('[data-drop-todo]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      await db.from('todos').update({ dropped: true }).eq('id', btn.dataset.dropTodo);
       renderTodos(c);
     });
   });
@@ -955,6 +1048,13 @@ style.textContent = `
   .vault-card-body { padding:10px 12px; }
   .vault-title { font-family:'Playfair Display',serif; font-size:.82rem; font-weight:700; color:var(--cream); margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .vault-meta { font-size:.65rem; color:var(--mid); font-style:italic; }
+
+  /* FLOATING TIMER */
+  #floatingTimer { position:fixed; bottom:20px; right:20px; background:var(--surface); border:2px solid var(--copper); border-radius:6px; padding:10px 14px; display:flex; align-items:center; gap:10px; z-index:999; cursor:pointer; box-shadow:0 4px 20px rgba(0,0,0,0.5); transition:border-color .3s; }
+  #ftSeg { font-size:.65rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--mid); min-width:60px; }
+  #ftTime { font-family:'Barlow Condensed',sans-serif; font-size:1.4rem; font-weight:800; color:var(--copper); letter-spacing:.02em; min-width:52px; }
+  #ftPlay { background:transparent; border:1px solid var(--lt); border-radius:3px; color:var(--cream); font-size:.8rem; padding:4px 8px; cursor:pointer; transition:all .15s; }
+  #ftPlay:hover { border-color:var(--copper); color:var(--copper); }
 
   /* TO-DOS */
   .todo-done-label { font-size:.65rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--mid); margin:16px 0 8px; display:flex; align-items:center; gap:10px; }
