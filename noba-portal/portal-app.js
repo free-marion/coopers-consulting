@@ -238,7 +238,10 @@ async function renderScorecard(c) {
                 <td class="sc-name-cell">${m.name}${m.unit ? `<span class="sc-target"> · ${m.unit}</span>` : ''}</td>
                 <td class="sc-goal-cell">${m.target}${m.unit || ''}</td>
                 ${cells}
-                <td><button class="btn-icon sc-del" data-delmetric="${m.id}">✕</button></td>
+                <td style="white-space:nowrap">
+                  <button class="btn-icon sc-edit" data-editmetric="${m.id}" data-name="${m.name.replace(/"/g,'&quot;')}" data-owner="${(m.member_name||'').replace(/"/g,'&quot;')}" data-target="${m.target}" data-unit="${(m.unit||'').replace(/"/g,'&quot;')}">✎</button>
+                  <button class="btn-icon sc-del" data-delmetric="${m.id}">✕</button>
+                </td>
               </tr>`;
             }).join('')}
           </tbody>
@@ -281,6 +284,42 @@ async function renderScorecard(c) {
         metric_id: metricid, week_start: week, value: val,
       }, { onConflict: 'group_id,member_name,metric_id,week_start' });
       if (entryErr) alert('Save failed: ' + entryErr.message);
+    });
+  });
+
+  c.querySelectorAll('.sc-edit').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const { editmetric, name, owner, target, unit } = btn.dataset;
+      const row = btn.closest('tr');
+      row.insertAdjacentHTML('afterend', `
+        <tr class="sc-edit-row" data-editing="${editmetric}">
+          <td colspan="10">
+            <div class="sc-edit-form">
+              <input type="text" class="g-input sc-ei-owner" placeholder="Owner" value="${owner}" style="max-width:130px">
+              <input type="text" class="g-input sc-ei-name" placeholder="Measurable" value="${name}" style="flex:1">
+              <input type="number" class="g-input sc-ei-target" placeholder="Target" value="${target}" style="max-width:90px">
+              <input type="text" class="g-input sc-ei-unit" placeholder="Unit" value="${unit}" style="max-width:100px">
+              <button class="btn-sm btn-sm--bronze sc-ei-save" data-id="${editmetric}">Save</button>
+              <button class="btn-sm sc-ei-cancel">Cancel</button>
+            </div>
+          </td>
+        </tr>
+      `);
+      row.nextElementSibling.querySelector('.sc-ei-cancel').addEventListener('click', () => {
+        row.nextElementSibling.remove();
+      });
+      row.nextElementSibling.querySelector('.sc-ei-save').addEventListener('click', async (e) => {
+        const editRow = e.target.closest('tr');
+        const newOwner  = editRow.querySelector('.sc-ei-owner').value.trim();
+        const newName   = editRow.querySelector('.sc-ei-name').value.trim();
+        const newTarget = parseFloat(editRow.querySelector('.sc-ei-target').value) || 1;
+        const newUnit   = editRow.querySelector('.sc-ei-unit').value.trim();
+        if (!newOwner || !newName) return;
+        await db.from('scorecard_metrics').update({
+          member_name: newOwner, name: newName, target: newTarget, unit: newUnit
+        }).eq('id', e.target.dataset.id);
+        renderScorecard(c);
+      });
     });
   });
 
@@ -861,6 +900,7 @@ style.textContent = `
   .sc-cell { width:60px; background:transparent; border:1px solid var(--lt); border-radius:2px; color:var(--cream); padding:4px 6px; font-size:.85rem; text-align:center; font-family:'DM Sans',sans-serif; }
   .sc-cell:focus { outline:none; border-color:var(--copper); }
   .sc-empty { text-align:center; color:var(--mid); font-size:.85rem; padding:32px; font-style:italic; }
+  .sc-edit-form { display:flex; gap:8px; flex-wrap:wrap; align-items:center; padding:10px 12px; background:var(--surface2); border-left:3px solid var(--copper); }
   .sc-add-row { display:flex; align-items:center; gap:10px; padding-top:8px; flex-wrap:wrap; }
 
   /* ROCKS & ISSUES */
