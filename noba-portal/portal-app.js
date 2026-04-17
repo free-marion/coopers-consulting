@@ -11,10 +11,9 @@ const SEGMENTS = [
   { name: 'Segue',          duration: 300,  desc: 'Personal wins — what\'s good?' },
   { name: 'Scorecard',      duration: 300,  desc: 'Review numbers — no discussion.' },
   { name: 'Rock Review',    duration: 300,  desc: '90-day goals — on track or off?' },
-  { name: 'Headlines',      duration: 300,  desc: 'Personal & life updates.' },
   { name: 'Todo Review',    duration: 300,  desc: 'Done or not done?' },
-  { name: 'IDS',            duration: 1500, desc: 'Identify, Discuss, Solve.' },
-  { name: 'Conclude',       duration: 600,  desc: 'Rate the meeting. Close out.' },
+  { name: 'IDS',            duration: 2100, desc: 'Identify, Discuss, Solve.' },
+  { name: 'Conclude',       duration: 300,  desc: 'Rate the meeting. Close out.' },
 ];
 const TOTAL_SECS = SEGMENTS.reduce((s, x) => s + x.duration, 0);
 
@@ -51,12 +50,12 @@ function renderShell() {
       <div></div>
     </nav>
     <div class="g-tabs">
-      <button class="g-tab active" data-tab="timer">⏱ Meeting</button>
+      <button class="g-tab" data-tab="vault">🗄 Vault</button>
       <button class="g-tab" data-tab="scorecard">📊 Scorecard</button>
       <button class="g-tab" data-tab="rocks">🪨 Rocks</button>
-      <button class="g-tab" data-tab="issues">💡 Issues</button>
       <button class="g-tab" data-tab="todos">✅ To-Dos</button>
-      <button class="g-tab" data-tab="vault">🗄 Vault</button>
+      <button class="g-tab" data-tab="issues">💡 IDS</button>
+      <button class="g-tab" data-tab="timer">⏱ Meeting</button>
     </div>
     <div class="g-content" id="gContent"></div>
   `;
