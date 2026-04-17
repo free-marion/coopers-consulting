@@ -70,8 +70,7 @@ function switchTab(tab) {
   document.querySelectorAll('.g-tab').forEach(t =>
     t.classList.toggle('active', t.dataset.tab === tab));
   const c = document.getElementById('gContent');
-  const ft = document.getElementById('floatingTimer');
-  if (ft) ft.style.display = tab === 'timer' ? 'none' : 'flex';
+  updateFloatingTimer();
   if      (tab === 'timer')     renderTimer(c);
   else if (tab === 'scorecard') renderScorecard(c);
   else if (tab === 'rocks')     renderRocks(c);
@@ -99,19 +98,23 @@ function initFloatingTimer() {
     e.stopPropagation();
     toggleTimerFromFloat();
   });
+  ft.style.display = 'none';
   document.body.appendChild(ft);
   setInterval(updateFloatingTimer, 500);
 }
 
 function updateFloatingTimer() {
   const ft = document.getElementById('floatingTimer');
-  if (!ft || ft.style.display === 'none') return;
+  if (!ft) return;
   const ts = timerState;
+  const onTimerTab = !!document.querySelector('.g-tab[data-tab="timer"].active');
+  ft.style.display = (ts.running && !onTimerTab) ? 'flex' : 'none';
+  if (ft.style.display === 'none') return;
   const seg = SEGMENTS[ts.seg];
   document.getElementById('ftSeg').textContent = seg.name;
   document.getElementById('ftTime').textContent = fmt(ts.secsLeft);
-  document.getElementById('ftPlay').textContent = ts.running ? '⏸' : '▶';
-  ft.style.borderColor = ts.secsLeft <= 30 && ts.running ? '#c0392b' : 'var(--copper)';
+  document.getElementById('ftPlay').textContent = '⏸';
+  ft.style.borderColor = ts.secsLeft <= 30 ? '#c0392b' : 'var(--copper)';
 }
 
 function toggleTimerFromFloat() {
