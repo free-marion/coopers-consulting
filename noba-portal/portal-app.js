@@ -55,6 +55,7 @@ function renderShell() {
       <button class="g-tab" data-tab="scorecard">📊 Scorecard</button>
       <button class="g-tab" data-tab="rocks">🪨 Rocks</button>
       <button class="g-tab" data-tab="issues">💡 Issues</button>
+      <button class="g-tab" data-tab="todos">✅ To-Dos</button>
       <button class="g-tab" data-tab="vault">🗄 Vault</button>
     </div>
     <div class="g-content" id="gContent"></div>
@@ -73,6 +74,7 @@ function switchTab(tab) {
   else if (tab === 'scorecard') renderScorecard(c);
   else if (tab === 'rocks')     renderRocks(c);
   else if (tab === 'issues')    renderIssues(c);
+  else if (tab === 'todos')     renderTodos(c);
   else if (tab === 'vault')     renderVault(c);
 }
 
@@ -424,6 +426,7 @@ async function renderIssues(c) {
               <div class="list-item-right">
                 <span class="status-badge" style="background:${PRI_COLORS[issue.priority]}20;color:${PRI_COLORS[issue.priority]};border:1px solid ${PRI_COLORS[issue.priority]}40">${issue.priority}</span>
                 ${issue.status === 'open' ? `
+                  <button class="btn-sm btn-sm--todo" data-todo-from="${issue.id}" data-todo-title="${issue.title.replace(/"/g,'&quot;')}">→ To-Do</button>
                   <button class="btn-sm" data-solve="${issue.id}">Solve</button>
                   <button class="btn-sm" data-drop="${issue.id}">Drop</button>
                 ` : ''}
@@ -470,6 +473,21 @@ async function renderIssues(c) {
     renderIssues(c);
   });
 
+  c.querySelectorAll('[data-todo-from]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      // Switch to To-Dos tab with pre-filled issue
+      const issueId    = btn.dataset.todoFrom;
+      const issueTitle = btn.dataset.todoTitle;
+      // Store pending pre-fill
+      window._pendingTodoIssue = { id: issueId, title: issueTitle };
+      // Activate the to-dos tab
+      c.closest('[id]')?.querySelectorAll?.('.g-tab');
+      document.querySelectorAll('.g-tab').forEach(t => t.classList.remove('active'));
+      const todosTab = document.querySelector('.g-tab[data-tab="todos"]');
+      if (todosTab) { todosTab.classList.add('active'); switchTab('todos'); }
+    });
+  });
+
   c.querySelectorAll('[data-solve]').forEach(btn => {
     btn.addEventListener('click', async () => {
       const note = prompt('Resolution note (optional):') || '';
@@ -484,6 +502,118 @@ async function renderIssues(c) {
     btn.addEventListener('click', async () => {
       await db.from('issues').update({ status: 'dropped' }).eq('id', btn.dataset.drop);
       renderIssues(c);
+    });
+  });
+}
+
+// ── TO-DOS ────────────────────────────────────────────────────────────────────
+async function renderTodos(c) {
+  c.innerHTML = '<p class="loading">Loading…</p>';
+  const { data: todos } = await db.from('todos')
+    .select('*').eq('group_id', GROUP.id).order('done').order('created_at');
+
+  const open   = todos.filter(t => !t.done);
+  const done   = todos.filter(t => t.done);
+
+  c.innerHTML = `
+    <div class="list-wrap">
+      <div class="list-toolbar">
+        <div>
+          <div class="list-section-title">To-Dos</div>
+          <div class="list-section-rule"></div>
+        </div>
+        <button class="btn-sm btn-sm--bronze" id="addTodoBtn">+ Add To-Do</button>
+      </div>
+
+      <div class="add-form hidden" id="addTodoForm">
+        <div class="form-row">
+          <input type="text" id="todoTitle" placeholder="What needs to happen?" class="g-input">
+          <input type="text" id="todoOwner" placeholder="Owner" class="g-input" style="max-width:160px">
+        </div>
+        <div class="form-row">
+          <label style="color:var(--mid);font-size:.8rem">Due:</label>
+          <input type="date" id="todoDue" class="g-input" style="max-width:160px">
+          <button class="btn-sm btn-sm--bronze" id="saveTodoBtn">Save</button>
+          <button class="btn-sm" id="cancelTodoBtn">Cancel</button>
+        </div>
+      </div>
+
+      ${open.length === 0 && done.length === 0 ? '<p class="empty-state">No to-dos yet.</p>' : ''}
+
+      ${open.map(t => `
+        <div class="list-item todo-item" data-id="${t.id}">
+          <div class="list-item-header">
+            <div class="list-item-left">
+              <input type="checkbox" class="todo-check ms-check" data-id="${t.id}">
+              <div>
+                <div class="list-item-title">${t.title}</div>
+                <div class="list-item-meta">${t.owner}${t.due_date ? ' · Due ' + t.due_date : ''}${t.issue_id ? ' · <span style="color:var(--sage)">from IDS</span>' : ''}</div>
+              </div>
+            </div>
+            <button class="btn-icon" data-del-todo="${t.id}">✕</button>
+          </div>
+        </div>
+      `).join('')}
+
+      ${done.length > 0 ? `
+        <div class="todo-done-label">Done</div>
+        ${done.map(t => `
+          <div class="list-item todo-item todo-item--done" data-id="${t.id}">
+            <div class="list-item-header">
+              <div class="list-item-left">
+                <input type="checkbox" class="todo-check ms-check" data-id="${t.id}" checked>
+                <div>
+                  <div class="list-item-title" style="text-decoration:line-through;opacity:.5">${t.title}</div>
+                  <div class="list-item-meta">${t.owner}${t.issue_id ? ' · <span style="color:var(--sage)">from IDS</span>' : ''}</div>
+                </div>
+              </div>
+              <button class="btn-icon" data-del-todo="${t.id}">✕</button>
+            </div>
+          </div>
+        `).join('')}
+      ` : ''}
+    </div>
+  `;
+
+  // Pre-fill from IDS if navigated via → To-Do button
+  const pending = window._pendingTodoIssue;
+  if (pending) {
+    window._pendingTodoIssue = null;
+    c.querySelector('#addTodoForm').classList.remove('hidden');
+    c.querySelector('#todoTitle').value = pending.title;
+    c.querySelector('#todoTitle').dataset.issueId = pending.id;
+    c.querySelector('#todoOwner').focus();
+  }
+
+  c.querySelector('#addTodoBtn').addEventListener('click', () => {
+    c.querySelector('#addTodoForm').classList.toggle('hidden');
+  });
+  c.querySelector('#cancelTodoBtn').addEventListener('click', () => {
+    c.querySelector('#addTodoForm').classList.add('hidden');
+    delete c.querySelector('#todoTitle').dataset.issueId;
+  });
+  c.querySelector('#saveTodoBtn').addEventListener('click', async () => {
+    const titleEl  = c.querySelector('#todoTitle');
+    const title    = titleEl.value.trim();
+    const owner    = c.querySelector('#todoOwner').value.trim();
+    const due      = c.querySelector('#todoDue').value || null;
+    const issue_id = titleEl.dataset.issueId || null;
+    if (!title || !owner) return;
+    await db.from('todos').insert({ group_id: GROUP.id, title, owner, due_date: due, issue_id });
+    renderTodos(c);
+  });
+
+  c.querySelectorAll('.todo-check').forEach(cb => {
+    cb.addEventListener('change', async () => {
+      await db.from('todos').update({ done: cb.checked }).eq('id', cb.dataset.id);
+      renderTodos(c);
+    });
+  });
+
+  c.querySelectorAll('[data-del-todo]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      await db.from('todos').delete().eq('id', btn.dataset.delTodo);
+      renderTodos(c);
     });
   });
 }
@@ -760,6 +890,13 @@ style.textContent = `
   .vault-card-body { padding:10px 12px; }
   .vault-title { font-family:'Playfair Display',serif; font-size:.82rem; font-weight:700; color:var(--cream); margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .vault-meta { font-size:.65rem; color:var(--mid); font-style:italic; }
+
+  /* TO-DOS */
+  .todo-done-label { font-size:.65rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--mid); margin:16px 0 8px; display:flex; align-items:center; gap:10px; }
+  .todo-done-label::after { content:''; flex:1; height:1px; background:var(--lt); }
+  .todo-item--done { opacity:.55; }
+  .btn-sm--todo { border-color:var(--sage); color:var(--sage); }
+  .btn-sm--todo:hover { background:var(--sage); color:var(--bg); border-color:var(--sage); }
 
   /* FILTER TABS */
   .filter-tabs { display:flex; border:1px solid var(--lt); border-radius:3px; overflow:hidden; }
