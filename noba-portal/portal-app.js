@@ -55,6 +55,7 @@ function renderShell() {
       <button class="g-tab" data-tab="scorecard">📊 Scorecard</button>
       <button class="g-tab" data-tab="rocks">🪨 Rocks</button>
       <button class="g-tab" data-tab="issues">💡 Issues</button>
+      <button class="g-tab" data-tab="vault">🗄 Vault</button>
     </div>
     <div class="g-content" id="gContent"></div>
   `;
@@ -72,6 +73,7 @@ function switchTab(tab) {
   else if (tab === 'scorecard') renderScorecard(c);
   else if (tab === 'rocks')     renderRocks(c);
   else if (tab === 'issues')    renderIssues(c);
+  else if (tab === 'vault')     renderVault(c);
 }
 
 // ── TIMER ────────────────────────────────────────────────────────────────────
@@ -486,6 +488,148 @@ async function renderIssues(c) {
   });
 }
 
+// ── VAULT ─────────────────────────────────────────────────────────────────────
+const FILE_ICONS = {
+  pdf: '📄', image: '🖼', video: '🎬', audio: '🎵', sheet: '📊',
+  doc: '📝', zip: '📦', link: '🔗', other: '📁'
+};
+
+function fileCategory(name = '', type = '') {
+  if (type === 'link') return 'link';
+  const ext = name.split('.').pop().toLowerCase();
+  if (['jpg','jpeg','png','gif','webp','svg'].includes(ext)) return 'image';
+  if (ext === 'pdf') return 'pdf';
+  if (['mp4','mov','avi','webm'].includes(ext)) return 'video';
+  if (['mp3','wav','m4a'].includes(ext)) return 'audio';
+  if (['xls','xlsx','csv'].includes(ext)) return 'sheet';
+  if (['doc','docx','txt','pages'].includes(ext)) return 'doc';
+  if (['zip','rar','gz'].includes(ext)) return 'zip';
+  return 'other';
+}
+
+async function renderVault(c) {
+  c.innerHTML = '<p class="loading">Loading vault…</p>';
+  const { data: items } = await db.from('vault_items')
+    .select('*').eq('group_id', GROUP.id).order('created_at', { ascending: false });
+
+  c.innerHTML = `
+    <div class="list-wrap">
+      <div style="margin-bottom:8px">
+        <div class="list-section-title">Vault</div>
+        <div class="list-section-rule"></div>
+      </div>
+
+      <div class="vault-add-bar">
+        <button class="btn-sm btn-sm--bronze" id="vAddFileBtn">↑ Upload File</button>
+        <button class="btn-sm" id="vAddLinkBtn">+ Add Link</button>
+      </div>
+
+      <div class="add-form hidden" id="vFileForm">
+        <div class="form-row">
+          <input type="text" id="vFileName" placeholder="Title (optional)" class="g-input">
+          <input type="text" id="vFileBy" placeholder="Your name" class="g-input" style="max-width:160px">
+        </div>
+        <div class="form-row">
+          <input type="file" id="vFileInput" class="g-input" style="flex:2">
+          <button class="btn-sm btn-sm--bronze" id="vFileSubmit">Upload</button>
+          <button class="btn-sm" id="vFileCancelBtn">Cancel</button>
+        </div>
+        <p class="vault-note" id="vFileStatus"></p>
+      </div>
+
+      <div class="add-form hidden" id="vLinkForm">
+        <div class="form-row">
+          <input type="text" id="vLinkTitle" placeholder="Title" class="g-input">
+          <input type="text" id="vLinkBy" placeholder="Your name" class="g-input" style="max-width:160px">
+        </div>
+        <div class="form-row">
+          <input type="url" id="vLinkUrl" placeholder="https://…" class="g-input" style="flex:2">
+          <button class="btn-sm btn-sm--bronze" id="vLinkSubmit">Save Link</button>
+          <button class="btn-sm" id="vLinkCancelBtn">Cancel</button>
+        </div>
+      </div>
+
+      <div class="vault-grid" id="vaultGrid">
+        ${items.length === 0 ? '<p class="empty-state">Nothing here yet — upload a file or add a link.</p>' : ''}
+        ${items.map(item => {
+          const cat = fileCategory(item.file_name || '', item.type);
+          const icon = FILE_ICONS[cat] || FILE_ICONS.other;
+          const isImage = cat === 'image';
+          const url = item.type === 'link' ? item.link_url : item.file_url;
+          return `
+            <div class="vault-card">
+              <div class="vault-preview ${isImage ? 'vault-preview--img' : ''}">
+                ${isImage
+                  ? `<img src="${url}" alt="${item.title}" style="width:100%;height:100%;object-fit:cover">`
+                  : `<span class="vault-icon">${icon}</span>`}
+              </div>
+              <div class="vault-card-body">
+                <div class="vault-title">${item.title || item.file_name || 'Untitled'}</div>
+                <div class="vault-meta">${item.uploaded_by} · ${new Date(item.created_at).toLocaleDateString()}</div>
+                <div class="doc-actions" style="margin-top:8px">
+                  <a href="${url}" target="_blank" class="btn-sm btn-sm--bronze" style="text-align:center;text-decoration:none">View</a>
+                  ${item.type !== 'link' ? `<a href="${url}" download class="btn-sm" style="text-align:center;text-decoration:none">↓</a>` : ''}
+                  <button class="btn-sm" data-del="${item.id}">✕</button>
+                </div>
+              </div>
+            </div>`;
+        }).join('')}
+      </div>
+    </div>
+  `;
+
+  // Toggle forms
+  c.querySelector('#vAddFileBtn').addEventListener('click', () => {
+    c.querySelector('#vFileForm').classList.toggle('hidden');
+    c.querySelector('#vLinkForm').classList.add('hidden');
+  });
+  c.querySelector('#vAddLinkBtn').addEventListener('click', () => {
+    c.querySelector('#vLinkForm').classList.toggle('hidden');
+    c.querySelector('#vFileForm').classList.add('hidden');
+  });
+  c.querySelector('#vFileCancelBtn').addEventListener('click', () => c.querySelector('#vFileForm').classList.add('hidden'));
+  c.querySelector('#vLinkCancelBtn').addEventListener('click', () => c.querySelector('#vLinkForm').classList.add('hidden'));
+
+  // File upload
+  c.querySelector('#vFileSubmit').addEventListener('click', async () => {
+    const file      = c.querySelector('#vFileInput').files[0];
+    const title     = c.querySelector('#vFileName').value.trim();
+    const by        = c.querySelector('#vFileBy').value.trim();
+    const status    = c.querySelector('#vFileStatus');
+    if (!file || !by) { status.textContent = 'Choose a file and enter your name.'; return; }
+    status.textContent = 'Uploading…';
+    const path = `${GROUP.id}/${Date.now()}-${file.name}`;
+    const { error: upErr } = await db.storage.from('vault').upload(path, file);
+    if (upErr) { status.textContent = 'Upload failed: ' + upErr.message; return; }
+    const { data: { publicUrl } } = db.storage.from('vault').getPublicUrl(path);
+    await db.from('vault_items').insert({
+      group_id: GROUP.id, title: title || file.name, file_name: file.name,
+      file_url: publicUrl, uploaded_by: by, type: 'file'
+    });
+    renderVault(c);
+  });
+
+  // Link save
+  c.querySelector('#vLinkSubmit').addEventListener('click', async () => {
+    const title = c.querySelector('#vLinkTitle').value.trim();
+    const by    = c.querySelector('#vLinkBy').value.trim();
+    const url   = c.querySelector('#vLinkUrl').value.trim();
+    if (!title || !by || !url) return;
+    await db.from('vault_items').insert({
+      group_id: GROUP.id, title, link_url: url, uploaded_by: by, type: 'link'
+    });
+    renderVault(c);
+  });
+
+  // Delete
+  c.querySelectorAll('[data-del]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      await db.from('vault_items').delete().eq('id', btn.dataset.del);
+      renderVault(c);
+    });
+  });
+}
+
 // ── STYLES ───────────────────────────────────────────────────────────────────
 const style = document.createElement('style');
 style.textContent = `
@@ -602,6 +746,20 @@ style.textContent = `
   .btn-sm--bronze:hover { opacity:.85; }
   .btn-icon { background:transparent; border:none; color:var(--mid); cursor:pointer; font-size:1rem; padding:4px 8px; transition:color .15s; }
   .btn-icon:hover { color:var(--copper); }
+
+  /* VAULT */
+  .vault-add-bar { display:flex; gap:10px; margin-bottom:12px; flex-wrap:wrap; }
+  .vault-note { font-size:.72rem; color:var(--mid); font-style:italic; margin-top:4px; }
+  .vault-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:14px; margin-top:8px; }
+  @media(max-width:480px){ .vault-grid{ grid-template-columns:repeat(2,1fr); } }
+  .vault-card { background:var(--surface); border-radius:4px; overflow:hidden; border-top:3px solid var(--copper); display:flex; flex-direction:column; transition:transform .15s; }
+  .vault-card:hover { transform:translateY(-2px); }
+  .vault-preview { height:100px; background:var(--surface2); display:flex; align-items:center; justify-content:center; overflow:hidden; }
+  .vault-preview--img { height:100px; }
+  .vault-icon { font-size:2rem; opacity:.35; }
+  .vault-card-body { padding:10px 12px; }
+  .vault-title { font-family:'Playfair Display',serif; font-size:.82rem; font-weight:700; color:var(--cream); margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .vault-meta { font-size:.65rem; color:var(--mid); font-style:italic; }
 
   /* FILTER TABS */
   .filter-tabs { display:flex; border:1px solid var(--lt); border-radius:3px; overflow:hidden; }

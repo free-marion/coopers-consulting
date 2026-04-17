@@ -58,6 +58,19 @@ create table if not exists issues (
   created_at      timestamptz default now()
 );
 
+-- Vault: file uploads and links per group
+create table if not exists vault_items (
+  id          uuid default gen_random_uuid() primary key,
+  group_id    text not null,
+  title       text not null,
+  uploaded_by text not null,
+  type        text not null default 'file', -- file | link
+  file_name   text,
+  file_url    text,
+  link_url    text,
+  created_at  timestamptz default now()
+);
+
 -- Allow public read/write (Cloudflare Access handles auth at the page level)
 alter table scorecard_metrics enable row level security;
 alter table scorecard_entries  enable row level security;
@@ -70,3 +83,9 @@ create policy "public access" on scorecard_entries  for all using (true) with ch
 create policy "public access" on rocks               for all using (true) with check (true);
 create policy "public access" on milestones          for all using (true) with check (true);
 create policy "public access" on issues              for all using (true) with check (true);
+
+alter table vault_items enable row level security;
+create policy "public access" on vault_items for all using (true) with check (true);
+
+-- Storage bucket (run in Supabase Dashboard → Storage → New bucket)
+-- Name: vault, Public: true
