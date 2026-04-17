@@ -8,7 +8,7 @@ const db    = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ── SEGMENTS ────────────────────────────────────────────────────────────────
 const SEGMENTS = [
-  { name: 'Segue',          duration: 300,  desc: 'Personal wins — what\'s good?' },
+  { name: 'Good News',      duration: 300,  desc: 'Personal wins — what\'s good?' },
   { name: 'Scorecard',      duration: 300,  desc: 'Review numbers — no discussion.' },
   { name: 'Rock Review',    duration: 300,  desc: '90-day goals — on track or off?' },
   { name: 'Todo Review',    duration: 300,  desc: 'Done or not done?' },
@@ -637,9 +637,8 @@ async function renderTodos(c) {
   const { data: todos } = await db.from('todos')
     .select('*').eq('group_id', GROUP.id).order('created_at');
 
-  const open    = (todos || []).filter(t => !t.done && !t.dropped);
-  const done    = (todos || []).filter(t => t.done);
-  const dropped = (todos || []).filter(t => t.dropped);
+  const open = (todos || []).filter(t => !t.done);
+  const done = (todos || []).filter(t => t.done);
 
   c.innerHTML = `
     <div class="list-wrap">
@@ -664,7 +663,7 @@ async function renderTodos(c) {
         </div>
       </div>
 
-      ${open.length === 0 && done.length === 0 && dropped.length === 0 ? '<p class="empty-state">No to-dos yet.</p>' : ''}
+      ${open.length === 0 && done.length === 0 ? '<p class="empty-state">No to-dos yet.</p>' : ''}
 
       ${open.map(t => `
         <div class="list-item todo-item" data-id="${t.id}">
@@ -676,10 +675,7 @@ async function renderTodos(c) {
                 <div class="list-item-meta">${t.owner}${t.due_date ? ' · Due ' + t.due_date : ''}${t.issue_id ? ' · <span style="color:var(--sage)">from IDS</span>' : ''}</div>
               </div>
             </div>
-            <div style="display:flex;gap:4px;align-items:center">
-              <button class="btn-sm" style="font-size:.68rem;padding:3px 8px" data-drop-todo="${t.id}">Drop</button>
-              <button class="btn-icon" data-del-todo="${t.id}">✕</button>
-            </div>
+            <button class="btn-icon" data-del-todo="${t.id}">✕</button>
           </div>
         </div>
       `).join('')}
@@ -702,22 +698,6 @@ async function renderTodos(c) {
         `).join('')}
       ` : ''}
 
-      ${dropped.length > 0 ? `
-        <div class="todo-done-label" style="color:var(--mid)">Dropped</div>
-        ${dropped.map(t => `
-          <div class="list-item todo-item todo-item--done" data-id="${t.id}">
-            <div class="list-item-header">
-              <div class="list-item-left">
-                <div>
-                  <div class="list-item-title" style="text-decoration:line-through;opacity:.4">${t.title}</div>
-                  <div class="list-item-meta">${t.owner}</div>
-                </div>
-              </div>
-              <button class="btn-icon" data-del-todo="${t.id}">✕</button>
-            </div>
-          </div>
-        `).join('')}
-      ` : ''}
     </div>
   `;
 
@@ -752,13 +732,6 @@ async function renderTodos(c) {
   c.querySelectorAll('.todo-check').forEach(cb => {
     cb.addEventListener('change', async () => {
       await db.from('todos').update({ done: cb.checked }).eq('id', cb.dataset.id);
-      renderTodos(c);
-    });
-  });
-
-  c.querySelectorAll('[data-drop-todo]').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      await db.from('todos').update({ dropped: true }).eq('id', btn.dataset.dropTodo);
       renderTodos(c);
     });
   });
