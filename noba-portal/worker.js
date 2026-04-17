@@ -43,17 +43,12 @@ export default {
       );
     }
 
-    const podSlug = getSlug(pathname);
-
-    // Portal level — no auth required
-    if (!podSlug) return fetch(request);
-
-    // Auth POST for pod
+    // Auth POST must be handled before slug check (path has no pod slug)
     if (request.method === 'POST' && pathname === '/noba-portal/__auth') {
-      const form    = await request.formData();
-      const entered = (form.get('password') || '').trim().toLowerCase();
+      const form     = await request.formData();
+      const entered  = (form.get('password') || '').trim().toLowerCase();
       const redirect = form.get('redirect') || '/noba-portal/';
-      const slug    = getSlug(redirect);
+      const slug     = getSlug(redirect);
 
       if (!slug || entered !== POD_PASSWORDS[slug]) return loginPage(redirect, true);
       return new Response(null, {
@@ -61,6 +56,11 @@ export default {
         headers: { 'Location': redirect, 'Set-Cookie': COOKIE_NAME + '=pod:' + slug + ':' + entered + '; Path=/noba-portal; Max-Age=' + COOKIE_AGE + '; HttpOnly; SameSite=Lax; Secure' }
       });
     }
+
+    const podSlug = getSlug(pathname);
+
+    // Portal level — no auth required
+    if (!podSlug) return fetch(request);
 
     // Check pod cookie
     const parts = getCookie(request).split(':');
