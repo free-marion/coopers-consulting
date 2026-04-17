@@ -204,6 +204,7 @@ async function renderScorecard(c) {
           <button class="btn-sm btn-sm--bronze" id="scSave">Save</button>
           <button class="btn-sm" id="scCancel">Cancel</button>
         </div>
+        <div id="scStatus" style="font-size:.75rem;color:var(--copper);font-style:italic;min-height:1em"></div>
       </div>
 
       <div class="sc-table-wrap">
@@ -257,10 +258,13 @@ async function renderScorecard(c) {
     const name   = c.querySelector('#scName').value.trim();
     const target = parseFloat(c.querySelector('#scTarget').value) || 1;
     const unit   = c.querySelector('#scUnit').value.trim();
-    if (!owner || !name) return;
-    await db.from('scorecard_metrics').insert({
+    const status = c.querySelector('#scStatus');
+    if (!owner || !name) { status.textContent = 'Enter your name and measurable title.'; return; }
+    status.textContent = 'Saving…';
+    const { error } = await db.from('scorecard_metrics').insert({
       group_id: GROUP.id, member_name: owner, name, target, unit, sort_order: mlist.length
     });
+    if (error) { status.textContent = 'Error: ' + error.message; return; }
     renderScorecard(c);
   });
 
@@ -272,10 +276,11 @@ async function renderScorecard(c) {
       if (isNaN(val)) { td.style.background = ''; return; }
       td.style.background = val >= parseFloat(target)
         ? 'rgba(61,107,56,0.35)' : 'rgba(185,28,28,0.25)';
-      await db.from('scorecard_entries').upsert({
+      const { error: entryErr } = await db.from('scorecard_entries').upsert({
         group_id: GROUP.id, member_name: owner,
         metric_id: metricid, week_start: week, value: val,
       }, { onConflict: 'group_id,member_name,metric_id,week_start' });
+      if (entryErr) alert('Save failed: ' + entryErr.message);
     });
   });
 
