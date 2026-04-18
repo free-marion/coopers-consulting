@@ -894,11 +894,34 @@ async function renderVault(c) {
   const { data: items } = await db.from('vault_items')
     .select('*').eq('group_id', GROUP.id).order('created_at', { ascending: false });
 
+  const SHARED_MATERIALS = [
+    { title: 'Running an L10', url: 'https://free-marion.github.io/coopers-consulting/noba-portal/shared/running-an-l10.pdf', icon: '📄' },
+  ];
+
   c.innerHTML = `
     <div class="list-wrap">
       <div style="margin-bottom:8px">
         <div class="list-section-title">Vault</div>
         <div class="list-section-rule"></div>
+      </div>
+
+      <div class="shared-materials-section">
+        <div class="shared-materials-label">Shared Materials</div>
+        <div class="vault-grid">
+          ${SHARED_MATERIALS.map(m => `
+            <div class="vault-card">
+              <div class="vault-preview"><span class="vault-icon">${m.icon}</span></div>
+              <div class="vault-card-body">
+                <div class="vault-title">${m.title}</div>
+                <div class="vault-meta">NOBA</div>
+                <div class="doc-actions" style="margin-top:8px">
+                  <a href="${m.url}" target="_blank" class="btn-sm btn-sm--bronze" style="text-align:center;text-decoration:none">View</a>
+                  <a href="${m.url}" download class="btn-sm" style="text-align:center;text-decoration:none">↓</a>
+                </div>
+              </div>
+            </div>`).join('')}
+        </div>
+        <div class="shared-materials-divider"></div>
       </div>
 
       <div class="vault-add-bar">
@@ -1142,6 +1165,9 @@ style.textContent = `
   .btn-icon:hover { color:var(--copper); }
 
   /* VAULT */
+  .shared-materials-section { margin-bottom:4px; }
+  .shared-materials-label { font-size:.65rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--mid); margin-bottom:10px; }
+  .shared-materials-divider { border-top:1px solid var(--lt); margin:16px 0 12px; }
   .vault-add-bar { display:flex; gap:10px; margin-bottom:12px; flex-wrap:wrap; }
   .vault-note { font-size:.72rem; color:var(--mid); font-style:italic; margin-top:4px; }
   .vault-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:14px; margin-top:8px; }
