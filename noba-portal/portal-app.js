@@ -889,17 +889,34 @@ function fileCategory(name = '', type = '') {
   return 'other';
 }
 
+function vaultCard(title, url, icon, meta, isDeletable, itemId, isFile) {
+  return `<div class="vault-card">
+    <div class="vault-preview"><span class="vault-icon">${icon}</span></div>
+    <div class="vault-card-body">
+      <div class="vault-title">${title}</div>
+      <div class="vault-meta">${meta}</div>
+      <div class="doc-actions" style="margin-top:8px">
+        <a href="${url}" target="_blank" class="btn-sm btn-sm--bronze" style="text-align:center;text-decoration:none">Open</a>
+        ${isFile ? '<a href="' + url + '" download class="btn-sm" style="text-align:center;text-decoration:none">↓</a>' : ''}
+        ${isDeletable ? '<button class="btn-sm" data-del="' + itemId + '">✕</button>' : ''}
+      </div>
+    </div>
+  </div>`;
+}
+
 async function renderVault(c) {
   c.innerHTML = '<p class="loading">Loading vault…</p>';
   const { data: items } = await db.from('vault_items')
     .select('*').eq('group_id', GROUP.id).order('created_at', { ascending: false });
 
-  const SHARED_MATERIALS = [
-    { title: 'Running an L10', url: 'https://free-marion.github.io/coopers-consulting/noba-portal/shared/running-an-l10.pdf', icon: '📄' },
+  // ── Shared materials (all pods) ──────────────────────────────────────────
+  const SHARED = [
+    { title: 'Running an L10', url: 'https://free-marion.github.io/coopers-consulting/noba-portal/shared/running-an-l10.pdf', icon: '📄', isFile: true },
   ];
 
+  // ── Pod-specific pinned links ────────────────────────────────────────────
   const POD_LINKS = {
-    'zeta':           [{ title: 'WhatsApp Group', url: 'https://chat.whatsapp.com/F7ufIK4M8C29yKeMfi9lCC?mode=gi_t', icon: '💬' }],
+    'zeta':           [{ title: 'WhatsApp Group', url: 'https://chat.whatsapp.com/F7ufIK4M8C29yKeMfi9lCC?mode=gi_t', icon: '💬', isFile: false }],
     'bad-batch':      [],
     'crimson-aces':   [],
     'dragon-shields': [],
@@ -907,37 +924,50 @@ async function renderVault(c) {
     'phoenix-wing':   [],
     'knights-raven':  [],
   };
-  const podLinks = POD_LINKS[GROUP.id] || [];
+  const pinnedCards = [...SHARED, ...(POD_LINKS[GROUP.id] || [])]
+    .map(m => vaultCard(m.title, m.url, m.icon, 'NOBA', false, null, m.isFile))
+    .join('');
+
+  // ── Uploaded / linked items ──────────────────────────────────────────────
+  const uploadedCards = (items || []).map(item => {
+    const cat  = fileCategory(item.file_name || '', item.type);
+    const icon = FILE_ICONS[cat] || FILE_ICONS.other;
+    const url  = item.type === 'link' ? item.link_url : item.file_url;
+    const isImg = cat === 'image';
+    const cardHtml = isImg
+      ? `<div class="vault-card">
+          <div class="vault-preview vault-preview--img"><img src="${url}" alt="${item.title}" style="width:100%;height:100%;object-fit:cover"></div>
+          <div class="vault-card-body">
+            <div class="vault-title">${item.title || item.file_name || 'Untitled'}</div>
+            <div class="vault-meta">${item.uploaded_by} · ${new Date(item.created_at).toLocaleDateString()}</div>
+            <div class="doc-actions" style="margin-top:8px">
+              <a href="${url}" target="_blank" class="btn-sm btn-sm--bronze" style="text-align:center;text-decoration:none">Open</a>
+              <a href="${url}" download class="btn-sm" style="text-align:center;text-decoration:none">↓</a>
+              <button class="btn-sm" data-del="${item.id}">✕</button>
+            </div>
+          </div>
+        </div>`
+      : vaultCard(
+          item.title || item.file_name || 'Untitled',
+          url, icon,
+          item.uploaded_by + ' · ' + new Date(item.created_at).toLocaleDateString(),
+          true, item.id, item.type !== 'link'
+        );
+    return cardHtml;
+  }).join('');
 
   c.innerHTML = `
     <div class="list-wrap">
-      <div style="margin-bottom:8px">
-        <div class="list-section-title">Vault</div>
-        <div class="list-section-rule"></div>
-      </div>
 
-      <div class="shared-materials-section">
-        <div class="shared-materials-label">Shared Materials</div>
-        <div class="vault-grid">
-          ${[...SHARED_MATERIALS, ...podLinks].map(m => `
-            <div class="vault-card">
-              <div class="vault-preview"><span class="vault-icon">${m.icon}</span></div>
-              <div class="vault-card-body">
-                <div class="vault-title">${m.title}</div>
-                <div class="vault-meta">NOBA</div>
-                <div class="doc-actions" style="margin-top:8px">
-                  <a href="${m.url}" target="_blank" class="btn-sm btn-sm--bronze" style="text-align:center;text-decoration:none">Open</a>
-                  ${!m.url.includes('whatsapp') ? `<a href="${m.url}" download class="btn-sm" style="text-align:center;text-decoration:none">↓</a>` : ''}
-                </div>
-              </div>
-            </div>`).join('')}
+      <div class="vault-top-bar">
+        <div>
+          <div class="list-section-title">Vault</div>
+          <div class="list-section-rule"></div>
         </div>
-        <div class="shared-materials-divider"></div>
-      </div>
-
-      <div class="vault-add-bar">
-        <button class="btn-sm btn-sm--bronze" id="vAddFileBtn">↑ Upload File</button>
-        <button class="btn-sm" id="vAddLinkBtn">+ Add Link</button>
+        <div class="vault-add-bar">
+          <button class="btn-sm btn-sm--bronze" id="vAddFileBtn">↑ Upload File</button>
+          <button class="btn-sm" id="vAddLinkBtn">+ Add Link</button>
+        </div>
       </div>
 
       <div class="add-form hidden" id="vFileForm">
@@ -965,32 +995,17 @@ async function renderVault(c) {
         </div>
       </div>
 
-      <div class="vault-grid" id="vaultGrid">
-        ${items.length === 0 ? '<p class="empty-state">Nothing here yet — upload a file or add a link.</p>' : ''}
-        ${items.map(item => {
-          const cat = fileCategory(item.file_name || '', item.type);
-          const icon = FILE_ICONS[cat] || FILE_ICONS.other;
-          const isImage = cat === 'image';
-          const url = item.type === 'link' ? item.link_url : item.file_url;
-          return `
-            <div class="vault-card">
-              <div class="vault-preview ${isImage ? 'vault-preview--img' : ''}">
-                ${isImage
-                  ? `<img src="${url}" alt="${item.title}" style="width:100%;height:100%;object-fit:cover">`
-                  : `<span class="vault-icon">${icon}</span>`}
-              </div>
-              <div class="vault-card-body">
-                <div class="vault-title">${item.title || item.file_name || 'Untitled'}</div>
-                <div class="vault-meta">${item.uploaded_by} · ${new Date(item.created_at).toLocaleDateString()}</div>
-                <div class="doc-actions" style="margin-top:8px">
-                  <a href="${url}" target="_blank" class="btn-sm btn-sm--bronze" style="text-align:center;text-decoration:none">View</a>
-                  ${item.type !== 'link' ? `<a href="${url}" download class="btn-sm" style="text-align:center;text-decoration:none">↓</a>` : ''}
-                  <button class="btn-sm" data-del="${item.id}">✕</button>
-                </div>
-              </div>
-            </div>`;
-        }).join('')}
+      <div class="shared-materials-section">
+        <div class="shared-materials-label">Shared Materials</div>
+        <div class="vault-grid">${pinnedCards}</div>
+        <div class="shared-materials-divider"></div>
       </div>
+
+      <div class="vault-uploads-label">Uploads</div>
+      <div class="vault-grid">
+        ${uploadedCards || '<p class="empty-state">Nothing uploaded yet.</p>'}
+      </div>
+
     </div>
   `;
 
@@ -1008,13 +1023,13 @@ async function renderVault(c) {
 
   // File upload
   c.querySelector('#vFileSubmit').addEventListener('click', async () => {
-    const file      = c.querySelector('#vFileInput').files[0];
-    const title     = c.querySelector('#vFileName').value.trim();
-    const by        = c.querySelector('#vFileBy').value.trim();
-    const status    = c.querySelector('#vFileStatus');
+    const file   = c.querySelector('#vFileInput').files[0];
+    const title  = c.querySelector('#vFileName').value.trim();
+    const by     = c.querySelector('#vFileBy').value.trim();
+    const status = c.querySelector('#vFileStatus');
     if (!file || !by) { status.textContent = 'Choose a file and enter your name.'; return; }
     status.textContent = 'Uploading…';
-    const path = `${GROUP.id}/${Date.now()}-${file.name}`;
+    const path = GROUP.id + '/' + Date.now() + '-' + file.name;
     const { error: upErr } = await db.storage.from('vault').upload(path, file);
     if (upErr) { status.textContent = 'Upload failed: ' + upErr.message; return; }
     const { data: { publicUrl } } = db.storage.from('vault').getPublicUrl(path);
@@ -1177,10 +1192,12 @@ style.textContent = `
   .btn-icon:hover { color:var(--copper); }
 
   /* VAULT */
+  .vault-top-bar { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:14px; flex-wrap:wrap; }
+  .vault-add-bar { display:flex; gap:8px; flex-wrap:wrap; }
   .shared-materials-section { margin-bottom:4px; }
   .shared-materials-label { font-size:.65rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--mid); margin-bottom:10px; }
   .shared-materials-divider { border-top:1px solid var(--lt); margin:16px 0 12px; }
-  .vault-add-bar { display:flex; gap:10px; margin-bottom:12px; flex-wrap:wrap; }
+  .vault-uploads-label { font-size:.65rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--mid); margin-bottom:10px; }
   .vault-note { font-size:.72rem; color:var(--mid); font-style:italic; margin-top:4px; }
   .vault-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:14px; margin-top:8px; }
   @media(max-width:480px){ .vault-grid{ grid-template-columns:repeat(2,1fr); } }
