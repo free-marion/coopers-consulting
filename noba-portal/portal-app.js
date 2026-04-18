@@ -400,7 +400,9 @@ async function renderScorecard(c) {
 }
 
 // ── ROCKS ────────────────────────────────────────────────────────────────────
-let expandedRock = null;
+let expandedRock    = null;
+let addingMsForRock = null;
+let editingMs       = null;
 
 async function renderRocks(c) {
   c.innerHTML = `<div class="loading">Loading rocks…</div>`;
@@ -419,9 +421,11 @@ async function renderRocks(c) {
 
       <div id="rocksList">
         ${items.length === 0 ? '<p class="empty-state">No rocks yet. Add your first 90-day rock.</p>' : ''}
-        ${items.map(r => `
+        ${items.map(r => {
+          const milestones = (r.milestones || []).sort((a,b) => new Date(a.due_date||0) - new Date(b.due_date||0));
+          return `
           <div class="list-item" id="rock-${r.id}">
-            <div class="list-item-header" data-rockid="${r.id}">
+            <div class="list-item-header">
               <div class="list-item-left">
                 <span class="status-dot" style="background:${STATUS_COLORS[r.status]}"></span>
                 <div>
@@ -434,25 +438,52 @@ async function renderRocks(c) {
                 <button class="btn-icon rock-expand" data-rockid="${r.id}">▾</button>
               </div>
             </div>
-            <div class="rock-detail ${expandedRock === r.id ? '' : 'hidden'}" id="detail-${r.id}">
+            <div class="rock-detail ${expandedRock === r.id ? '' : 'hidden'}">
+
+              ${r.goal_statement ? `
+                <div class="rock-goal">
+                  <div class="rock-goal-label">End Goal</div>
+                  <p class="rock-goal-text">${r.goal_statement}</p>
+                </div>
+              ` : ''}
+
               <div class="rock-milestones">
-                ${(r.milestones || []).sort((a,b) => new Date(a.due_date) - new Date(b.due_date)).map(m => `
+                ${milestones.map(m => editingMs === m.id ? `
+                  <div class="milestone-row ms-edit-row">
+                    <input type="text" class="g-input ms-ei-title" value="${m.title.replace(/"/g,'&quot;')}" style="flex:1;min-width:0;padding:4px 8px;font-size:.82rem">
+                    <input type="date" class="g-input ms-ei-date" value="${m.due_date || ''}" style="max-width:130px;padding:4px 8px;font-size:.82rem">
+                    <button class="btn-sm btn-sm--bronze ms-ei-save" data-msid="${m.id}">Save</button>
+                    <button class="btn-sm ms-ei-cancel">✕</button>
+                  </div>
+                ` : `
                   <div class="milestone-row">
-                    <input type="checkbox" class="ms-check" data-msid="${m.id}" data-rockid="${r.id}" ${m.done ? 'checked' : ''}>
+                    <input type="checkbox" class="ms-check" data-msid="${m.id}" ${m.done ? 'checked' : ''}>
                     <span class="${m.done ? 'ms-done' : ''}">${m.title}</span>
                     <span class="ms-date">${m.due_date || ''}</span>
+                    <button class="btn-icon ms-edit-btn" data-editms="${m.id}">✎</button>
                   </div>
                 `).join('')}
               </div>
+
+              ${addingMsForRock === r.id ? `
+                <div class="ms-add-form">
+                  <input type="text" class="g-input ms-new-title" placeholder="Milestone title" style="flex:1;min-width:0">
+                  <input type="date" class="g-input ms-new-date" style="max-width:130px">
+                  <button class="btn-sm btn-sm--bronze ms-new-save" data-rockid="${r.id}">Add</button>
+                  <button class="btn-sm ms-new-cancel">✕</button>
+                </div>
+              ` : `
+                <button class="btn-sm ms-add-open" data-rockid="${r.id}" style="margin-bottom:4px">+ Milestone</button>
+              `}
+
               <div class="rock-actions">
-                <button class="btn-sm" data-addms="${r.id}">+ Milestone</button>
                 <select class="g-select rock-status-sel" data-rockid="${r.id}">
                   ${Object.entries(STATUS_LABELS).map(([k,v]) => `<option value="${k}" ${r.status===k?'selected':''}>${v}</option>`).join('')}
                 </select>
               </div>
             </div>
-          </div>
-        `).join('')}
+          </div>`;
+        }).join('')}
       </div>
 
       <div class="add-form hidden" id="addRockForm">
@@ -460,6 +491,9 @@ async function renderRocks(c) {
           <input type="text" id="rockTitle" placeholder="Rock title" class="g-input">
           <input type="text" id="rockOwner" placeholder="Owner" class="g-input" style="max-width:160px">
           <input type="date" id="rockDue" class="g-input" style="max-width:160px">
+        </div>
+        <div class="form-row" style="align-items:stretch">
+          <textarea id="rockGoal" placeholder="End goal — what does success look like?" class="g-input" rows="2" style="resize:vertical;min-height:58px;line-height:1.4"></textarea>
         </div>
         <div class="form-row">
           <button class="btn-sm btn-sm--bronze" id="saveRockBtn">Save Rock</button>
@@ -479,15 +513,18 @@ async function renderRocks(c) {
     const title = document.getElementById('rockTitle').value.trim();
     const owner = document.getElementById('rockOwner').value.trim();
     const due   = document.getElementById('rockDue').value;
+    const goal  = document.getElementById('rockGoal').value.trim();
     if (!title || !owner) return;
-    await db.from('rocks').insert({ group_id: GROUP.id, title, owner, due_date: due || null });
+    await db.from('rocks').insert({ group_id: GROUP.id, title, owner, due_date: due || null, goal_statement: goal || null });
     renderRocks(c);
   });
 
   c.querySelectorAll('.rock-expand').forEach(btn => {
     btn.addEventListener('click', () => {
       const id = btn.dataset.rockid;
-      expandedRock = expandedRock === id ? null : id;
+      expandedRock    = expandedRock === id ? null : id;
+      addingMsForRock = null;
+      editingMs       = null;
       renderRocks(c);
     });
   });
@@ -499,12 +536,48 @@ async function renderRocks(c) {
     });
   });
 
-  c.querySelectorAll('[data-addms]').forEach(btn => {
+  c.querySelectorAll('.ms-edit-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      editingMs = btn.dataset.editms;
+      renderRocks(c);
+    });
+  });
+
+  c.querySelectorAll('.ms-ei-cancel').forEach(btn => {
+    btn.addEventListener('click', () => { editingMs = null; renderRocks(c); });
+  });
+
+  c.querySelectorAll('.ms-ei-save').forEach(btn => {
     btn.addEventListener('click', async () => {
-      const title = prompt('Milestone title:');
+      const row   = btn.closest('.ms-edit-row');
+      const title = row.querySelector('.ms-ei-title').value.trim();
+      const due   = row.querySelector('.ms-ei-date').value || null;
       if (!title) return;
-      const due = prompt('Due date (YYYY-MM-DD, optional):') || null;
-      await db.from('milestones').insert({ rock_id: btn.dataset.addms, title, due_date: due });
+      await db.from('milestones').update({ title, due_date: due }).eq('id', btn.dataset.msid);
+      editingMs = null;
+      renderRocks(c);
+    });
+  });
+
+  c.querySelectorAll('.ms-add-open').forEach(btn => {
+    btn.addEventListener('click', () => {
+      addingMsForRock = btn.dataset.rockid;
+      renderRocks(c);
+    });
+  });
+
+  c.querySelectorAll('.ms-new-cancel').forEach(btn => {
+    btn.addEventListener('click', () => { addingMsForRock = null; renderRocks(c); });
+  });
+
+  c.querySelectorAll('.ms-new-save').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const form  = btn.closest('.ms-add-form');
+      const title = form.querySelector('.ms-new-title').value.trim();
+      const due   = form.querySelector('.ms-new-date').value || null;
+      if (!title) return;
+      await db.from('milestones').insert({ rock_id: btn.dataset.rockid, title, due_date: due });
+      addingMsForRock = null;
       renderRocks(c);
     });
   });
@@ -991,6 +1064,11 @@ style.textContent = `
   .ms-done { text-decoration:line-through; color:var(--mid); }
   .ms-date { margin-left:auto; font-size:.72rem; color:var(--mid); font-style:italic; }
   .rock-actions { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:4px; }
+  .rock-goal { margin:10px 0 4px; }
+  .rock-goal-label { font-size:.65rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--mid); margin-bottom:3px; }
+  .rock-goal-text { font-size:.82rem; color:var(--cream); font-style:italic; line-height:1.5; }
+  .ms-add-form { background:var(--surface2); border-left:2px solid var(--copper); border-radius:0 3px 3px 0; padding:10px 12px; margin-top:6px; display:flex; flex-direction:column; gap:8px; }
+  .ms-edit-row { background:var(--surface2); border-radius:3px; padding:6px 10px; flex-wrap:wrap; gap:6px; }
   .issue-resolution { font-size:.72rem; color:var(--sage); margin-top:4px; font-style:italic; }
   .empty-state { color:var(--mid); font-size:.85rem; font-style:italic; padding:32px; text-align:center; }
 

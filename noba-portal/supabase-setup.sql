@@ -26,14 +26,18 @@ create table if not exists scorecard_entries (
 
 -- Rocks: 90-day goals per group
 create table if not exists rocks (
-  id         uuid default gen_random_uuid() primary key,
-  group_id   text not null,
-  title      text not null,
-  owner      text not null,
-  due_date   date,
-  status     text default 'on_track', -- on_track | off_track | complete | dropped
-  created_at timestamptz default now()
+  id             uuid default gen_random_uuid() primary key,
+  group_id       text not null,
+  title          text not null,
+  owner          text not null,
+  due_date       date,
+  status         text default 'on_track', -- on_track | off_track | complete | dropped
+  goal_statement text,
+  created_at     timestamptz default now()
 );
+
+-- If upgrading an existing database, run:
+-- alter table rocks add column if not exists goal_statement text;
 
 -- Milestones: checkpoints under each rock
 create table if not exists milestones (
@@ -89,3 +93,17 @@ create policy "public access" on vault_items for all using (true) with check (tr
 
 -- Storage bucket (run in Supabase Dashboard → Storage → New bucket)
 -- Name: vault, Public: true
+
+-- Todos: action items per group, optionally linked to an issue
+create table if not exists todos (
+  id          uuid default gen_random_uuid() primary key,
+  group_id    text not null,
+  title       text not null,
+  owner       text not null,
+  due_date    date,
+  done        boolean default false,
+  issue_id    uuid references issues(id) on delete set null,
+  created_at  timestamptz default now()
+);
+alter table todos enable row level security;
+create policy "public access" on todos for all using (true) with check (true);
