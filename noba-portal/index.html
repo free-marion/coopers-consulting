@@ -336,7 +336,7 @@ body {
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" height="30" width="30"><polygon points="200,10 364.54,105 364.54,295 200,390 35.46,295 35.46,105" fill="#0a0a0a"/><polygon points="200,18 357.61,109 357.61,291 200,382 42.39,291 42.39,109" fill="#CC5428"/><path d="M302.19,141 L200,82 L97.81,141 L97.81,259 L200,318 L302.19,259 L302.19,239 L267.55,239 L200,278 L132.45,239 L132.45,161 L200,122 L267.55,161 L302.19,161 Z" fill="#235023"/></svg>
     </a>
     <a href="https://magusjane.com" target="_blank" rel="noopener" title="Magus Jane">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" height="30" width="30"><polygon points="60,6 108,33 108,87 60,114 12,87 12,33" fill="#8B1229" stroke="#8B1229" stroke-width="1.5" stroke-linejoin="round"/><text x="60" y="60" text-anchor="middle" dominant-baseline="central" font-family="UnifrakturMaguntia, cursive" font-size="68" fill="#0a0a0a">j</text></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" height="30" width="30"><polygon points="60,6 108,33 108,87 60,114 12,87 12,33" fill="#0a0a0a" stroke="#0a0a0a" stroke-width="1.5" stroke-linejoin="round"/><text x="60" y="60" text-anchor="middle" dominant-baseline="central" font-family="UnifrakturMaguntia, cursive" font-size="68" fill="#8B1229">j</text></svg>
     </a>
   </div>
 </footer>
@@ -352,32 +352,34 @@ const GROUPS = [
   { id: 'knights-raven',  name: 'Knights Raven',   initials: 'KR', color: '#181820', stroke: '#4a4a52', shape: 'circle', image: './shields/knights-raven.jpg' },
 ];
 
-function shieldSVG(g) {
+function shieldSVG(g, ns = '') {
+  const cpId = 'cp-' + (ns ? ns + '-' : '') + g.id;
   const seed = g.id.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
 
   if (g.shape === 'circle') {
     if (g.image) {
       return `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
-        <defs><clipPath id="cp-${g.id}"><circle cx="30" cy="30" r="29"/></clipPath></defs>
-        <image href="${g.image}" x="0" y="0" width="60" height="60" clip-path="url(#cp-${g.id})" preserveAspectRatio="xMidYMid slice"/>
+        <defs><clipPath id="${cpId}"><circle cx="30" cy="30" r="29"/></clipPath></defs>
+        <image href="${g.image}" x="0" y="0" width="60" height="60" clip-path="url(#${cpId})" preserveAspectRatio="xMidYMid slice"/>
         <circle cx="30" cy="30" r="29" fill="none" stroke="${g.stroke}" stroke-width="1.5" opacity="0.7"/>
       </svg>`;
     }
+    const pfx = ns ? ns + '-' : '';
     return `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <filter id="wx-${g.id}" x="-5%" y="-5%" width="110%" height="110%">
+        <filter id="wx-${pfx}${g.id}" x="-5%" y="-5%" width="110%" height="110%">
           <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" seed="${seed}" result="noise"/>
           <feColorMatrix type="matrix" in="noise" values="0 0 0 0 0.05 0 0 0 0 0.05 0 0 0 0 0.05 0 0 0 -1.5 1.2" result="maskedNoise"/>
           <feComposite in="SourceGraphic" in2="maskedNoise" operator="in" result="comp"/>
           <feBlend in="SourceGraphic" in2="comp" mode="multiply"/>
         </filter>
-        <radialGradient id="vg-${g.id}" cx="50%" cy="45%" r="60%">
+        <radialGradient id="vg-${pfx}${g.id}" cx="50%" cy="45%" r="60%">
           <stop offset="0%" stop-color="rgba(255,255,255,0.06)"/>
           <stop offset="100%" stop-color="rgba(0,0,0,0.35)"/>
         </radialGradient>
       </defs>
-      <circle cx="30" cy="30" r="29" fill="${g.color}" filter="url(#wx-${g.id})"/>
-      <circle cx="30" cy="30" r="29" fill="url(#vg-${g.id})"/>
+      <circle cx="30" cy="30" r="29" fill="${g.color}" filter="url(#wx-${pfx}${g.id})"/>
+      <circle cx="30" cy="30" r="29" fill="url(#vg-${pfx}${g.id})"/>
       <circle cx="30" cy="30" r="29" fill="none" stroke="${g.stroke}" stroke-width="1.5" opacity="0.7"/>
       <circle cx="30" cy="30" r="24" fill="none" stroke="${g.stroke}" stroke-width="0.75" opacity="0.4"/>
       <text x="30" y="30" text-anchor="middle" dominant-baseline="central"
@@ -390,11 +392,20 @@ function shieldSVG(g) {
   if (g.shape === 'card') {
     if (g.image) {
       return `<svg viewBox="0 0 50 70" xmlns="http://www.w3.org/2000/svg">
-        <defs><clipPath id="cp-${g.id}"><rect x="1" y="1" width="48" height="68" rx="5"/></clipPath></defs>
-        <image href="${g.image}" x="0" y="0" width="50" height="70" clip-path="url(#cp-${g.id})" preserveAspectRatio="xMidYMid slice"/>
+        <defs><clipPath id="${cpId}"><rect x="1" y="1" width="48" height="68" rx="5"/></clipPath></defs>
+        <image href="${g.image}" x="0" y="0" width="50" height="70" clip-path="url(#${cpId})" preserveAspectRatio="xMidYMid slice"/>
         <rect x="1" y="1" width="48" height="68" rx="5" fill="none" stroke="${g.stroke}" stroke-width="1.5" opacity="0.7"/>
       </svg>`;
     }
+    // Fallback: text-only card (no image)
+    return `<svg viewBox="0 0 50 70" xmlns="http://www.w3.org/2000/svg">
+      <rect x="1" y="1" width="48" height="68" rx="5" fill="${g.color}"/>
+      <rect x="1" y="1" width="48" height="68" rx="5" fill="none" stroke="${g.stroke}" stroke-width="1.5" opacity="0.7"/>
+      <text x="25" y="35" text-anchor="middle" dominant-baseline="central"
+            font-family="'Barlow Condensed', sans-serif" font-weight="800"
+            font-size="${g.initials.length > 1 ? '14' : '22'}"
+            fill="rgba(245,240,232,0.8)" letter-spacing="1">${g.initials}</text>
+    </svg>`;
   }
 
   // Default: heraldic shield
@@ -402,27 +413,28 @@ function shieldSVG(g) {
   const INNER = "M9,6 L51,6 L51,39 C51,51 30,60 30,60 C30,60 9,51 9,39 Z";
   if (g.image) {
     return `<svg viewBox="0 0 60 70" xmlns="http://www.w3.org/2000/svg">
-      <defs><clipPath id="cp-${g.id}"><path d="${CLIP}"/></clipPath></defs>
-      <image href="${g.image}" x="0" y="0" width="60" height="70" clip-path="url(#cp-${g.id})" preserveAspectRatio="xMidYMid slice"/>
+      <defs><clipPath id="${cpId}"><path d="${CLIP}"/></clipPath></defs>
+      <image href="${g.image}" x="0" y="0" width="60" height="70" clip-path="url(#${cpId})" preserveAspectRatio="xMidYMid slice"/>
       <path d="${CLIP}" fill="none" stroke="${g.stroke}" stroke-width="1.5" opacity="0.7"/>
       <path d="${INNER}" fill="none" stroke="${g.stroke}" stroke-width="0.75" opacity="0.4"/>
     </svg>`;
   }
+  const pfx = ns ? ns + '-' : '';
   return `<svg viewBox="0 0 60 70" xmlns="http://www.w3.org/2000/svg">
     <defs>
-      <filter id="wx-${g.id}" x="-5%" y="-5%" width="110%" height="110%">
+      <filter id="wx-${pfx}${g.id}" x="-5%" y="-5%" width="110%" height="110%">
         <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" seed="${seed}" result="noise"/>
         <feColorMatrix type="matrix" in="noise" values="0 0 0 0 0.05 0 0 0 0 0.05 0 0 0 0 0.05 0 0 0 -1.5 1.2" result="maskedNoise"/>
         <feComposite in="SourceGraphic" in2="maskedNoise" operator="in" result="comp"/>
         <feBlend in="SourceGraphic" in2="comp" mode="multiply"/>
       </filter>
-      <radialGradient id="vg-${g.id}" cx="50%" cy="35%" r="65%">
+      <radialGradient id="vg-${pfx}${g.id}" cx="50%" cy="35%" r="65%">
         <stop offset="0%" stop-color="rgba(255,255,255,0.06)"/>
         <stop offset="100%" stop-color="rgba(0,0,0,0.35)"/>
       </radialGradient>
     </defs>
-    <path d="${CLIP}" fill="${g.color}" filter="url(#wx-${g.id})"/>
-    <path d="${CLIP}" fill="url(#vg-${g.id})"/>
+    <path d="${CLIP}" fill="${g.color}" filter="url(#wx-${pfx}${g.id})"/>
+    <path d="${CLIP}" fill="url(#vg-${pfx}${g.id})"/>
     <path d="${CLIP}" fill="none" stroke="${g.stroke}" stroke-width="1.5" opacity="0.7"/>
     <path d="M9,6 L51,6 L51,39 C51,51 30,60 30,60 C30,60 9,51 9,39 Z" fill="none" stroke="${g.stroke}" stroke-width="0.75" opacity="0.4"/>
     <rect x="4" y="26" width="52" height="5" fill="rgba(255,255,255,0.04)" stroke="${g.stroke}" stroke-width="0.5" opacity="0.5"/>
@@ -451,7 +463,7 @@ function buildDome() {
     link.className = 'group-badge';
     link.style.left = x + 'px';
     link.style.top  = y + 'px';
-    link.innerHTML  = `${shieldSVG(g)}<span class="group-badge-name">${g.name}</span>`;
+    link.innerHTML  = `${shieldSVG(g, 'd')}<span class="group-badge-name">${g.name}</span>`;
     wrap.appendChild(link);
   });
 }
@@ -460,7 +472,7 @@ function buildCarousel() {
   const carousel = document.getElementById('domeCarousel');
   carousel.innerHTML = GROUPS.map(g => `
     <a href="./${g.id}/" class="dome-carousel-item">
-      ${shieldSVG(g)}
+      ${shieldSVG(g, 'c')}
       <span class="group-badge-name">${g.name}</span>
     </a>
   `).join('');

@@ -5,6 +5,11 @@ export default {
 
     if (!pathname.startsWith('/noba-portal')) return fetch(request);
 
+    // ─── POD PASSWORDS ────────────────────────────────────────────────────────
+    // To change a password: edit the value below, then run `npx wrangler deploy`
+    // from the noba-portal/ directory. Each pod is fully independent — changing
+    // one invalidates only that pod's sessions, leaving all others untouched.
+    // ──────────────────────────────────────────────────────────────────────────
     const POD_PASSWORDS = {
       'zeta':           '1',
       'bad-batch':      '2',
