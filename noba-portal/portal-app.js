@@ -404,9 +404,10 @@ async function renderScorecard(c) {
 }
 
 // ── ROCKS ────────────────────────────────────────────────────────────────────
-let expandedRock     = null;
-let addingMsForRock  = null;
-let editingMs        = null;
+let expandedRock      = null;
+let addingMsForRock   = null;
+let editingMs         = null;
+let editingRock       = null;
 let pendingMilestones = [];
 
 function renderPendingMs() {
@@ -463,52 +464,70 @@ async function renderRocks(c) {
               </div>
               <div class="list-item-right">
                 <span class="status-badge" style="background:${STATUS_COLORS[r.status]}20;color:${STATUS_COLORS[r.status]};border:1px solid ${STATUS_COLORS[r.status]}40">${STATUS_LABELS[r.status]}</span>
+                <button class="btn-icon rock-edit-btn" data-rockid="${r.id}" title="Edit rock">✎</button>
                 <button class="btn-icon rock-expand" data-rockid="${r.id}">▾</button>
               </div>
             </div>
-            <div class="rock-detail ${expandedRock === r.id ? '' : 'hidden'}">
+            <div class="rock-detail ${(expandedRock === r.id || editingRock === r.id) ? '' : 'hidden'}">
 
-              ${r.goal_statement ? `
-                <div class="rock-goal">
-                  <div class="rock-goal-label">End Goal</div>
-                  <p class="rock-goal-text">${r.goal_statement}</p>
-                </div>
-              ` : ''}
-
-              <div class="rock-milestones">
-                ${milestones.map(m => editingMs === m.id ? `
-                  <div class="milestone-row ms-edit-row">
-                    <input type="text" class="g-input ms-ei-title" value="${m.title.replace(/"/g,'&quot;')}" style="flex:1;min-width:0;padding:4px 8px;font-size:.82rem">
-                    <input type="date" class="g-input ms-ei-date" value="${m.due_date || ''}" style="max-width:130px;padding:4px 8px;font-size:.82rem">
-                    <button class="btn-sm btn-sm--bronze ms-ei-save" data-msid="${m.id}">Save</button>
-                    <button class="btn-sm ms-ei-cancel">✕</button>
+              ${editingRock === r.id ? `
+                <div class="rock-edit-form">
+                  <div class="form-row">
+                    <input type="text" class="g-input re-title" value="${r.title.replace(/"/g,'&quot;')}" placeholder="Rock title">
+                    <input type="text" class="g-input re-owner" value="${(r.owner||'').replace(/"/g,'&quot;')}" placeholder="Owner" style="max-width:160px">
+                    <input type="date" class="g-input re-due" value="${r.due_date||''}" style="max-width:160px">
                   </div>
-                ` : `
-                  <div class="milestone-row">
-                    <input type="checkbox" class="ms-check" data-msid="${m.id}" ${m.done ? 'checked' : ''}>
-                    <span class="${m.done ? 'ms-done' : ''}">${m.title}</span>
-                    <span class="ms-date">${m.due_date || ''}</span>
-                    <button class="btn-icon ms-edit-btn" data-editms="${m.id}">✎</button>
+                  <div class="form-row">
+                    <textarea class="g-input re-goal" rows="2" placeholder="End goal — what does success look like?" style="resize:vertical;min-height:52px;line-height:1.4">${(r.goal_statement||'').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</textarea>
                   </div>
-                `).join('')}
-              </div>
-
-              ${addingMsForRock === r.id ? `
-                <div class="ms-add-form">
-                  <input type="text" class="g-input ms-new-title" placeholder="Milestone title" style="flex:1;min-width:0">
-                  <input type="date" class="g-input ms-new-date" style="max-width:130px">
-                  <button class="btn-sm btn-sm--bronze ms-new-save" data-rockid="${r.id}">Add</button>
-                  <button class="btn-sm ms-new-cancel">✕</button>
+                  <div class="form-row">
+                    <button class="btn-sm btn-sm--bronze re-save" data-rockid="${r.id}">Save Changes</button>
+                    <button class="btn-sm re-cancel">Cancel</button>
+                  </div>
                 </div>
               ` : `
-                <button class="btn-sm ms-add-open" data-rockid="${r.id}" style="margin-bottom:4px">+ Milestone</button>
-              `}
+                ${r.goal_statement ? `
+                  <div class="rock-goal">
+                    <div class="rock-goal-label">End Goal</div>
+                    <p class="rock-goal-text">${r.goal_statement}</p>
+                  </div>
+                ` : ''}
 
-              <div class="rock-actions">
-                <select class="g-select rock-status-sel" data-rockid="${r.id}">
-                  ${Object.entries(STATUS_LABELS).map(([k,v]) => `<option value="${k}" ${r.status===k?'selected':''}>${v}</option>`).join('')}
-                </select>
-              </div>
+                <div class="rock-milestones">
+                  ${milestones.map(m => editingMs === m.id ? `
+                    <div class="milestone-row ms-edit-row">
+                      <input type="text" class="g-input ms-ei-title" value="${m.title.replace(/"/g,'&quot;')}" style="flex:1;min-width:0;padding:4px 8px;font-size:.82rem">
+                      <input type="date" class="g-input ms-ei-date" value="${m.due_date || ''}" style="max-width:130px;padding:4px 8px;font-size:.82rem">
+                      <button class="btn-sm btn-sm--bronze ms-ei-save" data-msid="${m.id}">Save</button>
+                      <button class="btn-sm ms-ei-cancel">✕</button>
+                    </div>
+                  ` : `
+                    <div class="milestone-row">
+                      <input type="checkbox" class="ms-check" data-msid="${m.id}" ${m.done ? 'checked' : ''}>
+                      <span class="${m.done ? 'ms-done' : ''}">${m.title}</span>
+                      <span class="ms-date">${m.due_date || ''}</span>
+                      <button class="btn-icon ms-edit-btn" data-editms="${m.id}">✎</button>
+                    </div>
+                  `).join('')}
+                </div>
+
+                ${addingMsForRock === r.id ? `
+                  <div class="ms-add-form">
+                    <input type="text" class="g-input ms-new-title" placeholder="Milestone title" style="flex:1;min-width:0">
+                    <input type="date" class="g-input ms-new-date" style="max-width:130px">
+                    <button class="btn-sm btn-sm--bronze ms-new-save" data-rockid="${r.id}">Add</button>
+                    <button class="btn-sm ms-new-cancel">✕</button>
+                  </div>
+                ` : `
+                  <button class="btn-sm ms-add-open" data-rockid="${r.id}" style="margin-bottom:4px">+ Milestone</button>
+                `}
+
+                <div class="rock-actions">
+                  <select class="g-select rock-status-sel" data-rockid="${r.id}">
+                    ${Object.entries(STATUS_LABELS).map(([k,v]) => `<option value="${k}" ${r.status===k?'selected':''}>${v}</option>`).join('')}
+                  </select>
+                </div>
+              `}
             </div>
           </div>`;
         }).join('')}
@@ -575,6 +594,36 @@ async function renderRocks(c) {
       expandedRock    = expandedRock === id ? null : id;
       addingMsForRock = null;
       editingMs       = null;
+      editingRock     = null;
+      renderRocks(c);
+    });
+  });
+
+  c.querySelectorAll('.rock-edit-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      editingRock     = btn.dataset.rockid;
+      expandedRock    = null;
+      addingMsForRock = null;
+      editingMs       = null;
+      renderRocks(c);
+    });
+  });
+
+  c.querySelectorAll('.re-cancel').forEach(btn => {
+    btn.addEventListener('click', () => { editingRock = null; renderRocks(c); });
+  });
+
+  c.querySelectorAll('.re-save').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const row   = btn.closest('.rock-edit-form');
+      const title = row.querySelector('.re-title').value.trim();
+      const owner = row.querySelector('.re-owner').value.trim();
+      const due   = row.querySelector('.re-due').value || null;
+      const goal  = row.querySelector('.re-goal').value.trim() || null;
+      if (!title || !owner) return;
+      await db.from('rocks').update({ title, owner, due_date: due, goal_statement: goal }).eq('id', btn.dataset.rockid);
+      expandedRock = btn.dataset.rockid;
+      editingRock  = null;
       renderRocks(c);
     });
   });
@@ -626,7 +675,7 @@ async function renderRocks(c) {
       const title = form.querySelector('.ms-new-title').value.trim();
       const due   = form.querySelector('.ms-new-date').value || null;
       if (!title) return;
-      await db.from('milestones').insert({ rock_id: btn.dataset.rockid, title, due_date: due });
+      await db.from('milestones').insert({ rock_id: btn.dataset.rockid, title, due_date: due, done: false });
       addingMsForRock = null;
       renderRocks(c);
     });
@@ -1164,6 +1213,7 @@ style.textContent = `
   .ms-done { text-decoration:line-through; color:var(--mid); }
   .ms-date { margin-left:auto; font-size:.72rem; color:var(--mid); font-style:italic; }
   .rock-actions { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:4px; }
+  .rock-edit-form { display:flex; flex-direction:column; gap:10px; padding:12px 0 4px; }
   .rock-goal { margin:10px 0 4px; }
   .rock-goal-label { font-size:.65rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--mid); margin-bottom:3px; }
   .rock-goal-text { font-size:.82rem; color:var(--cream); font-style:italic; line-height:1.5; }
