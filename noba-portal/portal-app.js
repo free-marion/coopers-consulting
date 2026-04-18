@@ -404,9 +404,29 @@ async function renderScorecard(c) {
 }
 
 // ── ROCKS ────────────────────────────────────────────────────────────────────
-let expandedRock    = null;
-let addingMsForRock = null;
-let editingMs       = null;
+let expandedRock     = null;
+let addingMsForRock  = null;
+let editingMs        = null;
+let pendingMilestones = [];
+
+function renderPendingMs() {
+  const el = document.getElementById('pendingMsList');
+  if (!el) return;
+  el.innerHTML = pendingMilestones.length === 0
+    ? `<div class="pm-empty">No milestones yet.</div>`
+    : pendingMilestones.map((ms, i) => `
+        <div class="ms-add-form" style="flex-direction:row;align-items:center;gap:8px;margin-bottom:6px">
+          <input type="text" class="g-input pm-title" data-idx="${i}" placeholder="Milestone title" value="${(ms.title||'').replace(/"/g,'&quot;')}" style="flex:1;min-width:0;padding:5px 10px;font-size:.82rem">
+          <input type="date" class="g-input pm-date" data-idx="${i}" value="${ms.due_date||''}" style="max-width:130px;padding:5px 10px;font-size:.82rem">
+          <button class="btn-icon pm-remove" data-idx="${i}" type="button">✕</button>
+        </div>`).join('');
+  el.querySelectorAll('.pm-title').forEach(inp =>
+    inp.addEventListener('input', e => { pendingMilestones[+e.target.dataset.idx].title = e.target.value; }));
+  el.querySelectorAll('.pm-date').forEach(inp =>
+    inp.addEventListener('input', e => { pendingMilestones[+e.target.dataset.idx].due_date = e.target.value; }));
+  el.querySelectorAll('.pm-remove').forEach(btn =>
+    btn.addEventListener('click', e => { pendingMilestones.splice(+e.currentTarget.dataset.idx, 1); renderPendingMs(); }));
+}
 
 async function renderRocks(c) {
   c.innerHTML = `<div class="loading">Loading rocks…</div>`;
@@ -503,6 +523,11 @@ async function renderRocks(c) {
         <div class="form-row" style="align-items:stretch">
           <textarea id="rockGoal" placeholder="End goal — what does success look like?" class="g-input" rows="2" style="resize:vertical;min-height:58px;line-height:1.4"></textarea>
         </div>
+        <div class="rock-add-ms-section">
+          <div class="rock-add-ms-label">Milestones</div>
+          <div id="pendingMsList"><div class="pm-empty">No milestones yet.</div></div>
+          <button class="btn-sm" id="addPendingMsBtn" type="button" style="margin-top:6px">+ Add Milestone</button>
+        </div>
         <div class="form-row">
           <button class="btn-sm btn-sm--bronze" id="saveRockBtn">Save Rock</button>
           <button class="btn-sm" id="cancelRockBtn">Cancel</button>
@@ -514,7 +539,12 @@ async function renderRocks(c) {
   document.getElementById('addRockBtn').addEventListener('click', () => {
     document.getElementById('addRockForm').classList.toggle('hidden');
   });
+  document.getElementById('addPendingMsBtn')?.addEventListener('click', () => {
+    pendingMilestones.push({ title: '', due_date: '' });
+    renderPendingMs();
+  });
   document.getElementById('cancelRockBtn')?.addEventListener('click', () => {
+    pendingMilestones = [];
     document.getElementById('addRockForm').classList.add('hidden');
   });
   document.getElementById('saveRockBtn')?.addEventListener('click', async () => {
@@ -526,7 +556,16 @@ async function renderRocks(c) {
     const { data: newRock } = await db.from('rocks')
       .insert({ group_id: GROUP.id, title, owner, due_date: due || null, goal_statement: goal || null })
       .select('id').single();
-    if (newRock) expandedRock = newRock.id;
+    if (newRock) {
+      expandedRock = newRock.id;
+      const validMs = pendingMilestones.filter(ms => ms.title.trim());
+      if (validMs.length > 0) {
+        await db.from('milestones').insert(validMs.map(ms => ({
+          rock_id: newRock.id, title: ms.title.trim(), due_date: ms.due_date || null, done: false
+        })));
+      }
+    }
+    pendingMilestones = [];
     renderRocks(c);
   });
 
@@ -1080,6 +1119,9 @@ style.textContent = `
   .rock-goal-text { font-size:.82rem; color:var(--cream); font-style:italic; line-height:1.5; }
   .ms-add-form { background:var(--surface2); border-left:2px solid var(--copper); border-radius:0 3px 3px 0; padding:10px 12px; margin-top:6px; display:flex; flex-direction:column; gap:8px; }
   .ms-edit-row { background:var(--surface2); border-radius:3px; padding:6px 10px; flex-wrap:wrap; gap:6px; }
+  .rock-add-ms-section { border-top:1px solid var(--lt); margin-top:4px; padding-top:10px; }
+  .rock-add-ms-label { font-size:.65rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--mid); margin-bottom:8px; }
+  .pm-empty { font-size:.78rem; color:var(--mid); font-style:italic; padding:2px 0 6px; }
   .issue-resolution { font-size:.72rem; color:var(--sage); margin-top:4px; font-style:italic; }
   .empty-state { color:var(--mid); font-size:.85rem; font-style:italic; padding:32px; text-align:center; }
 
