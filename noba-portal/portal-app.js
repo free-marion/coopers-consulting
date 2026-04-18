@@ -898,6 +898,17 @@ async function renderVault(c) {
     { title: 'Running an L10', url: 'https://free-marion.github.io/coopers-consulting/noba-portal/shared/running-an-l10.pdf', icon: '📄' },
   ];
 
+  const POD_LINKS = {
+    'zeta':           [{ title: 'WhatsApp Group', url: 'https://chat.whatsapp.com/F7ufIK4M8C29yKeMfi9lCC?mode=gi_t', icon: '💬' }],
+    'bad-batch':      [],
+    'crimson-aces':   [],
+    'dragon-shields': [],
+    'storm-wardens':  [],
+    'phoenix-wing':   [],
+    'knights-raven':  [],
+  };
+  const podLinks = POD_LINKS[GROUP.id] || [];
+
   c.innerHTML = `
     <div class="list-wrap">
       <div style="margin-bottom:8px">
@@ -908,15 +919,15 @@ async function renderVault(c) {
       <div class="shared-materials-section">
         <div class="shared-materials-label">Shared Materials</div>
         <div class="vault-grid">
-          ${SHARED_MATERIALS.map(m => `
+          ${[...SHARED_MATERIALS, ...podLinks].map(m => `
             <div class="vault-card">
               <div class="vault-preview"><span class="vault-icon">${m.icon}</span></div>
               <div class="vault-card-body">
                 <div class="vault-title">${m.title}</div>
                 <div class="vault-meta">NOBA</div>
                 <div class="doc-actions" style="margin-top:8px">
-                  <a href="${m.url}" target="_blank" class="btn-sm btn-sm--bronze" style="text-align:center;text-decoration:none">View</a>
-                  <a href="${m.url}" download class="btn-sm" style="text-align:center;text-decoration:none">↓</a>
+                  <a href="${m.url}" target="_blank" class="btn-sm btn-sm--bronze" style="text-align:center;text-decoration:none">Open</a>
+                  ${!m.url.includes('whatsapp') ? `<a href="${m.url}" download class="btn-sm" style="text-align:center;text-decoration:none">↓</a>` : ''}
                 </div>
               </div>
             </div>`).join('')}
