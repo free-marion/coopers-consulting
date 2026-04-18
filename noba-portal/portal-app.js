@@ -1040,6 +1040,7 @@ async function renderVault(c) {
   // Delete
   c.querySelectorAll('[data-del]').forEach(btn => {
     btn.addEventListener('click', async () => {
+      if (!confirm('Delete this item from the vault? This cannot be undone.')) return;
       await db.from('vault_items').delete().eq('id', btn.dataset.del);
       renderVault(c);
     });

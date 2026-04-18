@@ -132,6 +132,28 @@ body {
   color: var(--lt);
   font-style: italic;
 }
+.materials-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+.materials-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.82rem;
+  color: var(--cream);
+  text-decoration: none;
+  padding: 7px 10px;
+  border-radius: 3px;
+  background: var(--surface2);
+  transition: background 0.15s;
+}
+.materials-item:hover { background: var(--lt); }
+.materials-item-icon { font-size: 1rem; flex-shrink: 0; }
+.materials-item-title { flex: 1; font-weight: 500; }
+.materials-item-action { font-size: 0.7rem; color: var(--copper); font-weight: 700; letter-spacing: .05em; }
 
 /* DOME */
 .dome-wrap {
@@ -308,7 +330,13 @@ body {
       <div class="common-card" style="border-left-color:var(--sage)">
         <div class="common-card-title" style="color:var(--sage)">Materials</div>
         <p class="common-card-desc">Shared resources, documents, and references for NOBA members.</p>
-        <p class="materials-coming">— Coming soon —</p>
+        <div class="materials-list">
+          <a href="./shared/running-an-l10.pdf" target="_blank" class="materials-item">
+            <span class="materials-item-icon">📄</span>
+            <span class="materials-item-title">Running an L10</span>
+            <span class="materials-item-action">View →</span>
+          </a>
+        </div>
       </div>
 
     </div>
