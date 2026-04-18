@@ -242,7 +242,11 @@ async function renderScorecard(c) {
     db.from('scorecard_entries').select('*').eq('group_id', GROUP.id).in('week_start', weeks),
   ]);
 
-  const mlist = metrics || [];
+  const mlist = (metrics || []).sort((a, b) => {
+    const af = (a.member_name || '').trim().split(/\s+/)[0].toLowerCase();
+    const bf = (b.member_name || '').trim().split(/\s+/)[0].toLowerCase();
+    return af.localeCompare(bf);
+  });
   const elist = entries || [];
 
   const weekLabels = weeks.map(w => {
@@ -406,8 +410,12 @@ let editingMs       = null;
 
 async function renderRocks(c) {
   c.innerHTML = `<div class="loading">Loading rocks…</div>`;
-  const { data: rocks } = await db.from('rocks').select('*, milestones(*)').eq('group_id', GROUP.id).order('created_at');
-  const items = rocks || [];
+  const { data: rocks } = await db.from('rocks').select('*, milestones(*)').eq('group_id', GROUP.id);
+  const items = (rocks || []).sort((a, b) => {
+    const af = (a.owner || '').trim().split(/\s+/)[0].toLowerCase();
+    const bf = (b.owner || '').trim().split(/\s+/)[0].toLowerCase();
+    return af.localeCompare(bf);
+  });
 
   const STATUS_COLORS = { on_track: '#3d6b38', off_track: '#b45309', complete: '#1d4ed8', dropped: '#4b5563' };
   const STATUS_LABELS = { on_track: 'On Track', off_track: 'Off Track', complete: 'Complete', dropped: 'Dropped' };
@@ -515,7 +523,10 @@ async function renderRocks(c) {
     const due   = document.getElementById('rockDue').value;
     const goal  = document.getElementById('rockGoal').value.trim();
     if (!title || !owner) return;
-    await db.from('rocks').insert({ group_id: GROUP.id, title, owner, due_date: due || null, goal_statement: goal || null });
+    const { data: newRock } = await db.from('rocks')
+      .insert({ group_id: GROUP.id, title, owner, due_date: due || null, goal_statement: goal || null })
+      .select('id').single();
+    if (newRock) expandedRock = newRock.id;
     renderRocks(c);
   });
 
