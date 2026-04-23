@@ -71,7 +71,7 @@ function switchTab(tab) {
     t.classList.toggle('active', t.dataset.tab === tab));
   const c = document.getElementById('gContent');
   updateFloatingTimer();
-  if      (tab === 'timer')     renderTimer(c);
+  if      (tab === 'timer')     { loadMeetingRatings(); renderTimer(c); }
   else if (tab === 'scorecard') renderScorecard(c);
   else if (tab === 'rocks')     renderRocks(c);
   else if (tab === 'issues')    renderIssues(c);
@@ -145,6 +145,20 @@ function toggleTimerFromFloat() {
   updateFloatingTimer();
 }
 
+// ── MEETING RATINGS ──────────────────────────────────────────────────────────
+let meetingRating  = null;
+let meetingRatings = [];
+
+async function loadMeetingRatings() {
+  const weeks = [];
+  for (let i = 0; i < 6; i++) weeks.push(getWeekStart(-i));
+  const { data } = await db.from('meeting_ratings')
+    .select('week_start, rating').eq('group_id', GROUP.id)
+    .in('week_start', weeks).order('week_start', { ascending: false });
+  meetingRatings = data || [];
+  meetingRating = (meetingRatings.find(r => r.week_start === getWeekStart()) || {}).rating ?? null;
+}
+
 // ── TIMER ────────────────────────────────────────────────────────────────────
 function renderTimer(c) {
   const ts = timerState;
@@ -187,6 +201,32 @@ function renderTimer(c) {
         `).join('')}
       </div>
     </div>
+
+    ${ts.seg === SEGMENTS.length - 1 ? `
+      <div class="rating-section">
+        <div class="rating-section-label">Rate this meeting</div>
+        <div class="rating-buttons">
+          ${[1,2,3,4,5,6,7,8,9,10].map(n => `<button class="rating-btn ${meetingRating === n ? 'rating-btn--active' : ''}" data-rate="${n}">${n}</button>`).join('')}
+        </div>
+        <div class="rating-saved">${meetingRating !== null ? `✓ Saved ${meetingRating}/10 this week` : ''}</div>
+      </div>
+    ` : ''}
+
+    ${meetingRatings.length > 0 ? `
+      <div class="rating-history-section">
+        <div class="rating-history-label">Meeting Ratings — Last 6 Weeks</div>
+        ${meetingRatings.map(r => {
+          const d = new Date(r.week_start + 'T12:00:00');
+          const lbl = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+          const isCurrent = r.week_start === getWeekStart();
+          return `<div class="rating-hist-row${isCurrent ? ' rating-hist-row--current' : ''}">
+            <span class="rating-hist-date">${lbl}</span>
+            <div class="rating-hist-bar-wrap"><div class="rating-hist-bar" style="width:${r.rating * 10}%"></div></div>
+            <span class="rating-hist-val">${r.rating}/10</span>
+          </div>`;
+        }).join('')}
+      </div>
+    ` : ''}
   `;
 
   document.getElementById('tPlay').addEventListener('click', () => {
@@ -207,7 +247,9 @@ function renderTimer(c) {
             ts.secsLeft = 0;
           }
         }
-        renderTimer(document.getElementById('gContent'));
+        if (document.querySelector('.g-tab[data-tab="timer"].active')) {
+          renderTimer(document.getElementById('gContent'));
+        }
       }, 1000);
     }
     renderTimer(document.getElementById('gContent'));
@@ -223,6 +265,17 @@ function renderTimer(c) {
     clearInterval(ts.interval); ts.running = false;
     if (ts.seg < SEGMENTS.length - 1) { ts.seg++; ts.secsLeft = SEGMENTS[ts.seg].duration; }
     renderTimer(document.getElementById('gContent'));
+  });
+
+  c.querySelectorAll('.rating-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      meetingRating = parseInt(btn.dataset.rate);
+      await db.from('meeting_ratings').upsert({
+        group_id: GROUP.id, week_start: getWeekStart(), rating: meetingRating
+      }, { onConflict: 'group_id,week_start' });
+      await loadMeetingRatings();
+      renderTimer(c);
+    });
   });
 }
 
@@ -637,7 +690,8 @@ async function renderRocks(c) {
 
   c.querySelectorAll('.ms-edit-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      editingMs = btn.dataset.editms;
+      editingMs       = btn.dataset.editms;
+      addingMsForRock = null;
       renderRocks(c);
     });
   });
@@ -728,7 +782,6 @@ async function renderIssues(c) {
                 ${issue.status === 'open' ? `
                   <button class="btn-sm btn-sm--todo" data-todo-from="${issue.id}" data-todo-title="${issue.title.replace(/"/g,'&quot;')}">→ To-Do</button>
                   <button class="btn-sm" data-solve="${issue.id}">Solve</button>
-                  <button class="btn-sm" data-drop="${issue.id}">Drop</button>
                 ` : ''}
               </div>
             </div>
@@ -798,12 +851,6 @@ async function renderIssues(c) {
     });
   });
 
-  c.querySelectorAll('[data-drop]').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      await db.from('issues').update({ status: 'dropped' }).eq('id', btn.dataset.drop);
-      renderIssues(c);
-    });
-  });
 }
 
 // ── TO-DOS ────────────────────────────────────────────────────────────────────
@@ -812,8 +859,9 @@ async function renderTodos(c) {
   const { data: todos } = await db.from('todos')
     .select('*').eq('group_id', GROUP.id).order('created_at');
 
-  const open = (todos || []).filter(t => !t.done);
-  const done = (todos || []).filter(t => t.done);
+  const open    = (todos || []).filter(t => !t.done && !t.dropped);
+  const done    = (todos || []).filter(t => t.done  && !t.dropped);
+  const dropped = (todos || []).filter(t => t.dropped);
 
   c.innerHTML = `
     <div class="list-wrap">
@@ -850,7 +898,10 @@ async function renderTodos(c) {
                 <div class="list-item-meta">${t.owner}${t.due_date ? ' · Due ' + t.due_date : ''}${t.issue_id ? ' · <span style="color:var(--sage)">from IDS</span>' : ''}</div>
               </div>
             </div>
-            <button class="btn-icon" data-del-todo="${t.id}">✕</button>
+            <div style="display:flex;align-items:center;gap:6px">
+              <button class="btn-sm todo-drop-btn" data-drop-todo="${t.id}">Drop</button>
+              <button class="btn-icon" data-del-todo="${t.id}">✕</button>
+            </div>
           </div>
         </div>
       `).join('')}
@@ -864,6 +915,23 @@ async function renderTodos(c) {
                 <input type="checkbox" class="todo-check ms-check" data-id="${t.id}" checked>
                 <div>
                   <div class="list-item-title" style="text-decoration:line-through;opacity:.5">${t.title}</div>
+                  <div class="list-item-meta">${t.owner}${t.issue_id ? ' · <span style="color:var(--sage)">from IDS</span>' : ''}</div>
+                </div>
+              </div>
+              <button class="btn-icon" data-del-todo="${t.id}">✕</button>
+            </div>
+          </div>
+        `).join('')}
+      ` : ''}
+
+      ${dropped.length > 0 ? `
+        <div class="todo-done-label">Dropped</div>
+        ${dropped.map(t => `
+          <div class="list-item todo-item todo-item--done" data-id="${t.id}">
+            <div class="list-item-header">
+              <div class="list-item-left">
+                <div>
+                  <div class="list-item-title" style="text-decoration:line-through;opacity:.4">${t.title}</div>
                   <div class="list-item-meta">${t.owner}${t.issue_id ? ' · <span style="color:var(--sage)">from IDS</span>' : ''}</div>
                 </div>
               </div>
@@ -914,6 +982,13 @@ async function renderTodos(c) {
   c.querySelectorAll('[data-del-todo]').forEach(btn => {
     btn.addEventListener('click', async () => {
       await db.from('todos').delete().eq('id', btn.dataset.delTodo);
+      renderTodos(c);
+    });
+  });
+
+  c.querySelectorAll('[data-drop-todo]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      await db.from('todos').update({ dropped: true }).eq('id', btn.dataset.dropTodo);
       renderTodos(c);
     });
   });
@@ -1273,6 +1348,25 @@ style.textContent = `
   .todo-item--done { opacity:.55; }
   .btn-sm--todo { border-color:var(--sage); color:var(--sage); }
   .btn-sm--todo:hover { background:var(--sage); color:var(--bg); border-color:var(--sage); }
+  .todo-drop-btn { border-color:var(--mid); color:var(--mid); font-size:.72rem; padding:4px 10px; }
+  .todo-drop-btn:hover { border-color:var(--copper); color:var(--copper); }
+
+  /* MEETING RATING */
+  .rating-section { margin-top:28px; padding:20px; background:var(--surface); border-left:3px solid var(--copper); border-radius:0 4px 4px 0; }
+  .rating-section-label { font-size:.65rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--mid); margin-bottom:12px; }
+  .rating-buttons { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px; }
+  .rating-btn { width:38px; height:38px; border-radius:3px; border:1px solid var(--lt); background:transparent; color:var(--cream); font-size:.88rem; font-weight:700; cursor:pointer; transition:all .15s; font-family:'DM Sans',sans-serif; }
+  .rating-btn:hover { border-color:var(--copper); color:var(--copper); }
+  .rating-btn--active { background:var(--copper); border-color:var(--copper); color:var(--cream); }
+  .rating-saved { font-size:.75rem; color:var(--sage); font-style:italic; min-height:1.2em; }
+  .rating-history-section { margin-top:24px; padding-top:16px; border-top:1px solid var(--lt); }
+  .rating-history-label { font-size:.65rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--mid); margin-bottom:12px; }
+  .rating-hist-row { display:flex; align-items:center; gap:12px; padding:7px 0; border-bottom:1px solid var(--lt); }
+  .rating-hist-row--current .rating-hist-date { color:var(--cream); font-weight:700; }
+  .rating-hist-date { font-size:.78rem; color:var(--mid); min-width:68px; }
+  .rating-hist-bar-wrap { flex:1; background:var(--lt); border-radius:2px; height:8px; overflow:hidden; }
+  .rating-hist-bar { height:100%; background:var(--copper); border-radius:2px; }
+  .rating-hist-val { font-family:'Barlow Condensed',sans-serif; font-size:.88rem; font-weight:700; color:var(--copper); min-width:36px; text-align:right; }
 
   /* FILTER TABS */
   .filter-tabs { display:flex; border:1px solid var(--lt); border-radius:3px; overflow:hidden; }
