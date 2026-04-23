@@ -127,14 +127,11 @@ function toggleTimerFromFloat() {
       if (timerState.secsLeft > 0) {
         timerState.secsLeft--;
         timerState.elapsed++;
-      } else {
-        if (timerState.seg < SEGMENTS.length - 1) {
-          timerState.seg++;
-          timerState.secsLeft = SEGMENTS[timerState.seg].duration;
-        } else {
-          clearInterval(timerState.interval);
-          timerState.running = false;
-        }
+      }
+      if (timerState.secsLeft <= 0) {
+        timerState.secsLeft = 0;
+        clearInterval(timerState.interval);
+        timerState.running = false;
       }
       // If meeting tab is open, refresh it
       if (document.querySelector('.g-tab[data-tab="timer"].active')) {
@@ -146,17 +143,22 @@ function toggleTimerFromFloat() {
 }
 
 // ── MEETING RATINGS ──────────────────────────────────────────────────────────
-let meetingRating  = null;
-let meetingRatings = [];
+let memberRatings = {}; // { memberName: rating } for current week
+let ratingHistory = []; // [{ week_start, member_name, rating }]
 
 async function loadMeetingRatings() {
   const weeks = [];
   for (let i = 0; i < 6; i++) weeks.push(getWeekStart(-i));
   const { data } = await db.from('meeting_ratings')
-    .select('week_start, rating').eq('group_id', GROUP.id)
-    .in('week_start', weeks).order('week_start', { ascending: false });
-  meetingRatings = data || [];
-  meetingRating = (meetingRatings.find(r => r.week_start === getWeekStart()) || {}).rating ?? null;
+    .select('week_start, member_name, rating')
+    .eq('group_id', GROUP.id)
+    .in('week_start', weeks)
+    .order('week_start', { ascending: false });
+  ratingHistory = data || [];
+  memberRatings = {};
+  ratingHistory.filter(r => r.week_start === getWeekStart()).forEach(r => {
+    memberRatings[r.member_name] = r.rating;
+  });
 }
 
 // ── TIMER ────────────────────────────────────────────────────────────────────
@@ -168,13 +170,14 @@ function renderTimer(c) {
                      + (seg.duration - ts.secsLeft);
   const totalPct = (totalElapsed / TOTAL_SECS) * 100;
   const warn = ts.secsLeft <= 30 && ts.running;
+  const overtime = ts.seg === ts.seg && ts.secsLeft === 0 && !ts.running;
 
   c.innerHTML = `
     <div class="timer-wrap">
       <div class="timer-left">
         <div class="timer-seg-name">${seg.name}</div>
         <div class="timer-seg-desc">${seg.desc}</div>
-        <div class="timer-display ${warn ? 'timer-warn' : ''}">${fmt(ts.secsLeft)}</div>
+        <div class="timer-display ${warn || (ts.secsLeft === 0 && !ts.running) ? 'timer-warn' : ''}">${fmt(ts.secsLeft)}</div>
         <div class="timer-seg-bar-wrap">
           <div class="timer-seg-bar" style="width:${pct}%"></div>
         </div>
@@ -192,39 +195,74 @@ function renderTimer(c) {
         </div>
       </div>
       <div class="timer-right">
-        ${SEGMENTS.map((s, i) => `
-          <div class="seg-row ${i === ts.seg ? 'seg-row--active' : i < ts.seg ? 'seg-row--done' : ''}">
+        ${SEGMENTS.map((s, i) => {
+          const isOvertime = i === ts.seg && ts.secsLeft === 0 && !ts.running;
+          const rowClass = i === ts.seg
+            ? (isOvertime ? 'seg-row--overtime' : 'seg-row--active')
+            : i < ts.seg ? 'seg-row--done' : '';
+          return `
+          <div class="seg-row ${rowClass}">
             <span class="seg-row-dot">${i < ts.seg ? '✓' : i === ts.seg ? '▶' : String(i+1)}</span>
             <span class="seg-row-name">${s.name}</span>
             <span class="seg-row-dur">${fmt(s.duration)}</span>
-          </div>
-        `).join('')}
+          </div>`;
+        }).join('')}
       </div>
     </div>
 
     ${ts.seg === SEGMENTS.length - 1 ? `
       <div class="rating-section">
         <div class="rating-section-label">Rate this meeting</div>
-        <div class="rating-buttons">
-          ${[1,2,3,4,5,6,7,8,9,10].map(n => `<button class="rating-btn ${meetingRating === n ? 'rating-btn--active' : ''}" data-rate="${n}">${n}</button>`).join('')}
-        </div>
-        <div class="rating-saved">${meetingRating !== null ? `✓ Saved ${meetingRating}/10 this week` : ''}</div>
+        ${(GROUP.members || []).map(name => `
+          <div class="member-rating-row">
+            <span class="member-rating-name">${name.split(' ')[0]}</span>
+            <div class="rating-buttons">
+              ${[1,2,3,4,5,6,7,8,9,10].map(n => `
+                <button class="rating-btn ${memberRatings[name] === n ? 'rating-btn--active' : ''}"
+                        data-rate="${n}" data-member="${name}">${n}</button>
+              `).join('')}
+            </div>
+          </div>
+        `).join('')}
+        ${(GROUP.members || []).length > 0 && (GROUP.members || []).every(m => memberRatings[m] != null)
+          ? `<button class="btn-conclude" id="concludeBtn">✓ Conclude Meeting</button>`
+          : `<div class="conclude-hint">${Object.keys(memberRatings).length} of ${(GROUP.members||[]).length} rated</div>`
+        }
       </div>
     ` : ''}
 
-    ${meetingRatings.length > 0 ? `
+    ${ratingHistory.length > 0 ? `
       <div class="rating-history-section">
         <div class="rating-history-label">Meeting Ratings — Last 6 Weeks</div>
-        ${meetingRatings.map(r => {
-          const d = new Date(r.week_start + 'T12:00:00');
-          const lbl = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-          const isCurrent = r.week_start === getWeekStart();
-          return `<div class="rating-hist-row${isCurrent ? ' rating-hist-row--current' : ''}">
-            <span class="rating-hist-date">${lbl}</span>
-            <div class="rating-hist-bar-wrap"><div class="rating-hist-bar" style="width:${r.rating * 10}%"></div></div>
-            <span class="rating-hist-val">${r.rating}/10</span>
-          </div>`;
-        }).join('')}
+        <div class="rating-hist-table-wrap">
+          <table class="rating-hist-table">
+            <thead>
+              <tr>
+                <th>Week</th>
+                ${(GROUP.members || []).map(m => `<th>${m.split(' ')[0]}</th>`).join('')}
+                <th>Avg</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${[...new Set(ratingHistory.map(r => r.week_start))].map(week => {
+                const weekRows = ratingHistory.filter(r => r.week_start === week);
+                const vals = (GROUP.members || []).map(m => (weekRows.find(r => r.member_name === m) || {}).rating ?? null);
+                const filled = vals.filter(v => v !== null);
+                const avg = filled.length ? (filled.reduce((a,b)=>a+b,0)/filled.length).toFixed(1) : '—';
+                const lbl = new Date(week+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
+                const isCurrent = week === getWeekStart();
+                return `<tr${isCurrent ? ' class="hist-row-current"' : ''}>
+                  <td class="hist-week-lbl">${lbl}</td>
+                  ${vals.map(v => v !== null
+                    ? `<td class="hist-val" style="color:${v>=8?'#9EA67C':v>=5?'#B07D4B':'#c0392b'}">${v}</td>`
+                    : `<td class="hist-val hist-val--empty">—</td>`
+                  ).join('')}
+                  <td class="hist-avg">${avg}</td>
+                </tr>`;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
       </div>
     ` : ''}
   `;
@@ -236,16 +274,14 @@ function renderTimer(c) {
     } else {
       ts.running = true;
       ts.interval = setInterval(() => {
-        ts.secsLeft--;
+        if (ts.secsLeft > 0) {
+          ts.secsLeft--;
+          ts.elapsed++;
+        }
         if (ts.secsLeft <= 0) {
-          if (ts.seg < SEGMENTS.length - 1) {
-            ts.seg++;
-            ts.secsLeft = SEGMENTS[ts.seg].duration;
-          } else {
-            clearInterval(ts.interval);
-            ts.running = false;
-            ts.secsLeft = 0;
-          }
+          ts.secsLeft = 0;
+          clearInterval(ts.interval);
+          ts.running = false;
         }
         if (document.querySelector('.g-tab[data-tab="timer"].active')) {
           renderTimer(document.getElementById('gContent'));
@@ -263,19 +299,37 @@ function renderTimer(c) {
 
   document.getElementById('tNext').addEventListener('click', () => {
     clearInterval(ts.interval); ts.running = false;
-    if (ts.seg < SEGMENTS.length - 1) { ts.seg++; ts.secsLeft = SEGMENTS[ts.seg].duration; }
+    if (ts.seg < SEGMENTS.length - 1) {
+      ts.seg++;
+      ts.secsLeft = SEGMENTS[ts.seg].duration;
+      ts.running = true;
+      ts.interval = setInterval(() => {
+        if (ts.secsLeft > 0) { ts.secsLeft--; ts.elapsed++; }
+        if (ts.secsLeft <= 0) { ts.secsLeft = 0; clearInterval(ts.interval); ts.running = false; }
+        if (document.querySelector('.g-tab[data-tab="timer"].active')) renderTimer(document.getElementById('gContent'));
+        updateFloatingTimer();
+      }, 1000);
+    }
     renderTimer(document.getElementById('gContent'));
   });
 
   c.querySelectorAll('.rating-btn').forEach(btn => {
     btn.addEventListener('click', async () => {
-      meetingRating = parseInt(btn.dataset.rate);
+      const memberName = btn.dataset.member;
+      const rating = parseInt(btn.dataset.rate);
+      memberRatings[memberName] = rating;
       await db.from('meeting_ratings').upsert({
-        group_id: GROUP.id, week_start: getWeekStart(), rating: meetingRating
-      }, { onConflict: 'group_id,week_start' });
+        group_id: GROUP.id, week_start: getWeekStart(), member_name: memberName, rating
+      }, { onConflict: 'group_id,week_start,member_name' });
       await loadMeetingRatings();
       renderTimer(c);
     });
+  });
+
+  c.querySelector('#concludeBtn')?.addEventListener('click', () => {
+    alert(`Meeting concluded! Average rating: ${
+      (() => { const vals = Object.values(memberRatings); return vals.length ? (vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1) : '—'; })()
+    }/10`);
   });
 }
 
@@ -319,7 +373,10 @@ async function renderScorecard(c) {
 
       <div class="add-form hidden" id="scAddForm">
         <div class="form-row">
-          <input type="text" id="scOwner" placeholder="Your first name" class="g-input" style="max-width:140px">
+          <select id="scOwner" class="g-input g-select" style="max-width:160px">
+            <option value="">Your name…</option>
+            ${(GROUP.members || []).map(m => `<option value="${m.split(' ')[0]}">${m.split(' ')[0]}</option>`).join('')}
+          </select>
           <input type="text" id="scName" placeholder="Measurable (e.g. Workouts)" class="g-input">
         </div>
         <div class="form-row">
@@ -589,7 +646,10 @@ async function renderRocks(c) {
       <div class="add-form hidden" id="addRockForm">
         <div class="form-row">
           <input type="text" id="rockTitle" placeholder="Rock title" class="g-input">
-          <input type="text" id="rockOwner" placeholder="Owner" class="g-input" style="max-width:160px">
+          <select id="rockOwner" class="g-input g-select" style="max-width:160px">
+            <option value="">Owner…</option>
+            ${(GROUP.members || []).map(m => `<option value="${m.split(' ')[0]}">${m.split(' ')[0]}</option>`).join('')}
+          </select>
           <input type="date" id="rockDue" class="g-input" style="max-width:160px">
         </div>
         <div class="form-row" style="align-items:stretch">
@@ -1246,6 +1306,11 @@ style.textContent = `
   .seg-row-name { flex:1; font-weight:500; }
   .seg-row-dur { font-family:'Barlow Condensed',sans-serif; font-size:.78rem; color:var(--mid); }
 
+  /* OVERTIME */
+  .seg-row--overtime { background:rgba(192,57,43,0.15); color:#c0392b; border-left:2px solid #c0392b; }
+  .seg-row--overtime .seg-row-dot { color:#c0392b; }
+  .seg-row--overtime .seg-row-dur { color:#c0392b; }
+
   /* SCORECARD */
   .sc-wrap { display:flex; flex-direction:column; gap:16px; }
   .sc-toolbar { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:4px; }
@@ -1361,12 +1426,25 @@ style.textContent = `
   .rating-saved { font-size:.75rem; color:var(--sage); font-style:italic; min-height:1.2em; }
   .rating-history-section { margin-top:24px; padding-top:16px; border-top:1px solid var(--lt); }
   .rating-history-label { font-size:.65rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--mid); margin-bottom:12px; }
-  .rating-hist-row { display:flex; align-items:center; gap:12px; padding:7px 0; border-bottom:1px solid var(--lt); }
-  .rating-hist-row--current .rating-hist-date { color:var(--cream); font-weight:700; }
-  .rating-hist-date { font-size:.78rem; color:var(--mid); min-width:68px; }
-  .rating-hist-bar-wrap { flex:1; background:var(--lt); border-radius:2px; height:8px; overflow:hidden; }
-  .rating-hist-bar { height:100%; background:var(--copper); border-radius:2px; }
-  .rating-hist-val { font-family:'Barlow Condensed',sans-serif; font-size:.88rem; font-weight:700; color:var(--copper); min-width:36px; text-align:right; }
+
+  /* PER-MEMBER RATINGS */
+  .member-rating-row { display:flex; align-items:center; gap:12px; margin-bottom:10px; flex-wrap:wrap; }
+  .member-rating-name { font-family:'Barlow Condensed',sans-serif; font-size:.85rem; font-weight:700; color:var(--cream); min-width:72px; text-transform:uppercase; letter-spacing:.04em; }
+  .conclude-hint { font-size:.75rem; color:var(--mid); font-style:italic; margin-top:8px; }
+  .btn-conclude { margin-top:14px; padding:10px 28px; background:var(--sage); color:var(--bg); border:none; border-radius:3px; font-family:'DM Sans',sans-serif; font-size:.88rem; font-weight:700; cursor:pointer; transition:opacity .15s; letter-spacing:.04em; text-transform:uppercase; }
+  .btn-conclude:hover { opacity:.85; }
+
+  /* RATING HISTORY TABLE */
+  .rating-hist-table-wrap { overflow-x:auto; margin-top:8px; }
+  .rating-hist-table { width:100%; border-collapse:collapse; font-size:.78rem; min-width:320px; }
+  .rating-hist-table th { padding:5px 10px; font-size:.62rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--mid); border-bottom:2px solid var(--copper); text-align:center; white-space:nowrap; }
+  .rating-hist-table th:first-child { text-align:left; }
+  .rating-hist-table td { padding:6px 10px; border-bottom:1px solid var(--lt); text-align:center; }
+  .hist-week-lbl { text-align:left !important; color:var(--mid); font-size:.75rem; white-space:nowrap; }
+  .hist-row-current .hist-week-lbl { color:var(--cream); font-weight:700; }
+  .hist-val { font-family:'Barlow Condensed',sans-serif; font-size:.9rem; font-weight:700; }
+  .hist-val--empty { color:var(--lt) !important; }
+  .hist-avg { font-family:'Barlow Condensed',sans-serif; font-size:.88rem; font-weight:700; color:var(--copper); }
 
   /* FILTER TABS */
   .filter-tabs { display:flex; border:1px solid var(--lt); border-radius:3px; overflow:hidden; }
