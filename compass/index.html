@@ -34,6 +34,13 @@ input[type=date].mi{width:150px;color-scheme:dark}
 .pb{margin-top:10px}.pbr{height:3px;background:var(--lt);border-radius:2px;overflow:hidden}
 .pbf{height:100%;background:var(--copper);transition:width .3s;border-radius:2px}
 .pbl{font-size:10px;color:var(--mid);margin-top:3px}
+.compass-guide{background:var(--teal);border-left:3px solid var(--copper);padding:12px 16px 12px 18px;display:flex;align-items:flex-start;gap:16px;flex-shrink:0}
+.compass-guide ul{list-style:none;display:flex;flex-direction:column;gap:5px;flex:1}
+.compass-guide ul li{font-size:11px;color:var(--mid);line-height:1.5;padding-left:14px;position:relative}
+.compass-guide ul li::before{content:'›';position:absolute;left:0;color:var(--copper);font-weight:700}
+.compass-guide ul li strong{color:var(--cream);font-weight:700}
+.compass-guide-dismiss{background:transparent;border:1px solid var(--lt);color:var(--mid);font-size:10px;font-family:'DM Sans',sans-serif;font-weight:700;padding:4px 10px;border-radius:3px;cursor:pointer;white-space:nowrap;letter-spacing:.04em;align-self:center;flex-shrink:0}
+.compass-guide-dismiss:hover{border-color:var(--copper);color:var(--copper)}
 .tabs{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;background:var(--teal);border-bottom:1px solid var(--lt);padding:0 4px;flex-shrink:0}
 .tabs::-webkit-scrollbar{display:none}
 .tb{background:transparent;border:none;border-bottom:2px solid transparent;color:var(--mid);padding:10px 12px;font-size:11px;font-family:'DM Sans',sans-serif;cursor:pointer;white-space:nowrap;transition:all .2s}
@@ -92,6 +99,14 @@ textarea:focus,.ti:focus{border-color:var(--copper)}
 <div class="meta-field"><label for="uD">Date</label><input type="date" class="mi" id="uD" oninput="sv()"></div>
 </div>
 <div class="pb"><div class="pbr"><div class="pbf" id="pf"></div></div><div class="pbl" id="pl">0%</div></div>
+</div>
+<div class="compass-guide" id="compassGuide">
+  <ul>
+    <li>Fill out each section using the tabs below — your progress saves automatically</li>
+    <li>When finished, tap <strong>Export ↓</strong> in the top right and choose <strong>Export as PDF</strong></li>
+    <li>Upload the PDF to your group's <strong>Vault</strong> to share it with your pod</li>
+  </ul>
+  <button class="compass-guide-dismiss" onclick="this.parentElement.style.display='none'">Got it</button>
 </div>
 <div class="tabs" id="tabs"></div>
 <div class="ct" id="ct"></div>
