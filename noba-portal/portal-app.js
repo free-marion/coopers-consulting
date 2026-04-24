@@ -936,7 +936,10 @@ async function renderTodos(c) {
       <div class="add-form hidden" id="addTodoForm">
         <div class="form-row">
           <input type="text" id="todoTitle" placeholder="What needs to happen?" class="g-input">
-          <input type="text" id="todoOwner" placeholder="Owner" class="g-input" style="max-width:160px">
+          <select id="todoOwner" class="g-input g-select" style="max-width:160px">
+            <option value="">Owner…</option>
+            ${(GROUP.members || []).map(m => `<option value="${m.split(' ')[0]}">${m.split(' ')[0]}</option>`).join('')}
+          </select>
         </div>
         <div class="form-row">
           <label style="color:var(--mid);font-size:.8rem">Due:</label>
