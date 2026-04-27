@@ -575,6 +575,7 @@ async function renderRocks(c) {
               <div class="list-item-right">
                 <span class="status-badge" style="background:${STATUS_COLORS[r.status]}20;color:${STATUS_COLORS[r.status]};border:1px solid ${STATUS_COLORS[r.status]}40">${STATUS_LABELS[r.status]}</span>
                 <button class="btn-icon rock-edit-btn" data-rockid="${r.id}" title="Edit rock">✎</button>
+                <button class="btn-icon rock-delete-btn" data-rockid="${r.id}" data-rocktitle="${r.title.replace(/"/g,'&quot;')}" title="Delete rock" style="color:#a00;">✕</button>
                 <button class="btn-icon rock-expand" data-rockid="${r.id}">▾</button>
               </div>
             </div>
@@ -718,6 +719,15 @@ async function renderRocks(c) {
       expandedRock    = null;
       addingMsForRock = null;
       editingMs       = null;
+      renderRocks(c);
+    });
+  });
+
+  c.querySelectorAll('.rock-delete-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      if (!confirm(`Delete rock "${btn.dataset.rocktitle}"? This will also delete all its milestones.`)) return;
+      await db.from('rocks').delete().eq('id', btn.dataset.rockid);
+      expandedRock = null; editingRock = null; addingMsForRock = null; editingMs = null;
       renderRocks(c);
     });
   });
