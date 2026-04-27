@@ -618,6 +618,7 @@ async function renderRocks(c) {
                       <span class="${m.done ? 'ms-done' : ''}">${m.title}</span>
                       <span class="ms-date">${m.due_date || ''}</span>
                       <button class="btn-icon ms-edit-btn" data-editms="${m.id}">✎</button>
+                      <button class="btn-icon ms-delete-btn" data-msid="${m.id}" data-mstitle="${m.title.replace(/"/g,'&quot;')}" title="Delete milestone" style="color:#a00;">✕</button>
                     </div>
                   `).join('')}
                 </div>
@@ -762,6 +763,14 @@ async function renderRocks(c) {
     btn.addEventListener('click', () => {
       editingMs       = btn.dataset.editms;
       addingMsForRock = null;
+      renderRocks(c);
+    });
+  });
+
+  c.querySelectorAll('.ms-delete-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      if (!confirm(`Delete milestone "${btn.dataset.mstitle}"?`)) return;
+      await db.from('milestones').delete().eq('id', btn.dataset.msid);
       renderRocks(c);
     });
   });
