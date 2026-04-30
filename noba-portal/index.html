@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NOBA Member Portal</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@400;500;700&family=Barlow+Condensed:wght@600;800&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@400;500;700&family=Barlow+Condensed:wght@600;800&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg:      #1E2D33;
@@ -221,6 +221,36 @@ body {
   transition: color 0.15s;
 }
 .group-badge:hover .group-badge-name { color: var(--copper); }
+.group-badge--shuttered { opacity: 0.28; filter: grayscale(0.6); }
+.group-badge--shuttered:hover svg { filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5)); transform: none; }
+.group-badge--shuttered:hover .group-badge-name { color: var(--mid); }
+.dome-carousel-item--shuttered { opacity: 0.28; filter: grayscale(0.6); }
+.dome-carousel-item--shuttered:hover svg { filter: drop-shadow(0 6px 16px rgba(0,0,0,0.6)); }
+
+#lostOverlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.72);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+#lostOverlay.visible { display: flex; }
+#lostOverlay.faded { opacity: 1; }
+#lostMessage {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: clamp(1.3rem, 3.5vw, 2.2rem);
+  letter-spacing: .1em;
+  color: var(--cream);
+  text-align: center;
+  line-height: 1.5;
+  padding: 0 32px;
+  text-shadow: 0 2px 24px rgba(0,0,0,0.8);
+}
 
 /* MOBILE CAROUSEL */
 .dome-carousel-wrap {
@@ -357,6 +387,10 @@ body {
 
 </main>
 
+<div id="lostOverlay">
+  <div id="lostMessage">This legion was lost.<br>Stay vigilant!</div>
+</div>
+
 <footer class="portal-footer">
   <div>&copy; 2026 NOBA &nbsp;&middot;&nbsp; Member access only</div>
   <div class="footer-links">
@@ -375,7 +409,7 @@ const GROUPS = [
   { id: 'bad-batch',      name: 'Bad Batch',       initials: 'BB', color: '#252e3a', stroke: '#4a5a6a', shape: 'circle', image: './shields/bad-batch.png' },
   { id: 'crimson-aces',   name: 'Crimson Aces',    initials: 'CA', color: '#5c1e1e', stroke: '#8a3a3a', image: './shields/crimson-aces.png', shape: 'card' },
   { id: 'dragon-shields', name: 'Dragon Shields',  initials: 'DS', color: '#1a3d2a', stroke: '#c8a84b', image: './shields/dragon-shields.jpg' },
-  { id: 'storm-wardens',  name: 'Storm Wardens',   initials: 'SW', color: '#1a2640', stroke: '#304a70', shape: 'card', image: './shields/storm-wardens.jpg' },
+  { id: 'storm-wardens',  name: 'Storm Wardens',   initials: 'SW', color: '#1a2640', stroke: '#304a70', shape: 'card', image: './shields/storm-wardens.jpg', shuttered: true },
   { id: 'phoenix-wing',   name: 'Phoenix Wing',    initials: 'PW', color: '#4a2c0e', stroke: '#c8620a', image: './shields/phoenix-wing.jpg' },
   { id: 'knights-raven',  name: 'Knights Raven',   initials: 'KR', color: '#181820', stroke: '#4a4a52', shape: 'circle', image: './shields/knights-raven.jpg' },
 ];
@@ -486,24 +520,38 @@ function buildDome() {
     const x = cx + R * Math.cos(a);
     const y = cy - R * Math.sin(a);
 
-    const link = document.createElement('a');
-    link.href = `./${g.id}/`;
-    link.className = 'group-badge';
-    link.style.left = x + 'px';
-    link.style.top  = y + 'px';
-    link.innerHTML  = `${shieldSVG(g, 'd')}<span class="group-badge-name">${g.name}</span>`;
-    wrap.appendChild(link);
+    const el = g.shuttered ? document.createElement('div') : document.createElement('a');
+    if (!g.shuttered) el.href = `./${g.id}/`;
+    el.className = 'group-badge' + (g.shuttered ? ' group-badge--shuttered' : '');
+    el.style.left = x + 'px';
+    el.style.top  = y + 'px';
+    el.innerHTML  = `${shieldSVG(g, 'd')}<span class="group-badge-name">${g.name}</span>`;
+    if (g.shuttered) el.addEventListener('click', showLostMessage);
+    wrap.appendChild(el);
   });
 }
 
 function buildCarousel() {
   const carousel = document.getElementById('domeCarousel');
-  carousel.innerHTML = GROUPS.map(g => `
-    <a href="./${g.id}/" class="dome-carousel-item">
-      ${shieldSVG(g, 'c')}
-      <span class="group-badge-name">${g.name}</span>
-    </a>
-  `).join('');
+  carousel.innerHTML = '';
+  GROUPS.forEach(g => {
+    const el = document.createElement(g.shuttered ? 'div' : 'a');
+    if (!g.shuttered) el.href = `./${g.id}/`;
+    el.className = 'dome-carousel-item' + (g.shuttered ? ' dome-carousel-item--shuttered' : '');
+    el.innerHTML = `${shieldSVG(g, 'c')}<span class="group-badge-name">${g.name}</span>`;
+    if (g.shuttered) el.addEventListener('click', showLostMessage);
+    carousel.appendChild(el);
+  });
+}
+
+function showLostMessage() {
+  const overlay = document.getElementById('lostOverlay');
+  overlay.style.display = 'flex';
+  requestAnimationFrame(() => requestAnimationFrame(() => overlay.classList.add('faded')));
+  overlay.onclick = () => {
+    overlay.classList.remove('faded');
+    overlay.addEventListener('transitionend', () => { overlay.style.display = 'none'; }, { once: true });
+  };
 }
 
 buildDome();
