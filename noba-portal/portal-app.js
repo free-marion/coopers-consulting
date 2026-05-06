@@ -590,6 +590,16 @@ let pendingMilestones = [];
 let rockReviewMode    = false;
 let reviewIndex       = 0;
 
+function msUrgency(dueDate, done) {
+  if (done || !dueDate) return '';
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const due   = new Date(dueDate + 'T00:00:00');
+  const diff  = (due - today) / 86400000;
+  if (diff < 0)  return 'overdue';
+  if (diff <= 7) return 'warn';
+  return '';
+}
+
 function renderPendingMs() {
   const el = document.getElementById('pendingMsList');
   if (!el) return;
@@ -649,13 +659,15 @@ async function renderRocks(c) {
           ${mlist.length > 0 ? `
             <div class="rr-ms-section">
               <div class="rr-ms-label">Milestones</div>
-              ${mlist.map(m => `
-                <div class="rr-ms-row">
+              ${mlist.map(m => {
+                const urg = msUrgency(m.due_date, m.done);
+                return `
+                <div class="rr-ms-row${urg ? ' ms-' + urg : ''}">
                   <input type="checkbox" class="ms-check rr-ms-check" data-msid="${m.id}" ${m.done ? 'checked' : ''}>
                   <span class="${m.done ? 'ms-done' : ''}">${m.title}</span>
-                  ${m.due_date ? `<span class="ms-date">${m.due_date}</span>` : ''}
-                </div>
-              `).join('')}
+                  ${m.due_date ? `<span class="ms-date${urg ? ' ms-date--' + urg : ''}">${urg === 'overdue' ? '⚠ ' : urg === 'warn' ? '◑ ' : ''}${m.due_date}</span>` : ''}
+                </div>`;
+              }).join('')}
             </div>
           ` : ''}
 
@@ -761,10 +773,10 @@ async function renderRocks(c) {
                       <button class="btn-sm ms-ei-cancel">✕</button>
                     </div>
                   ` : `
-                    <div class="milestone-row">
+                    <div class="milestone-row${msUrgency(m.due_date, m.done) ? ' ms-' + msUrgency(m.due_date, m.done) : ''}">
                       <input type="checkbox" class="ms-check" data-msid="${m.id}" ${m.done ? 'checked' : ''}>
                       <span class="${m.done ? 'ms-done' : ''}">${m.title}</span>
-                      <span class="ms-date">${m.due_date || ''}</span>
+                      <span class="ms-date${msUrgency(m.due_date, m.done) ? ' ms-date--' + msUrgency(m.due_date, m.done) : ''}">${msUrgency(m.due_date, m.done) === 'overdue' ? '⚠ ' : msUrgency(m.due_date, m.done) === 'warn' ? '◑ ' : ''}${m.due_date || ''}</span>
                       <button class="btn-icon ms-edit-btn" data-editms="${m.id}">✎</button>
                       <button class="btn-icon ms-delete-btn" data-msid="${m.id}" data-mstitle="${m.title.replace(/"/g,'&quot;')}" title="Delete milestone" style="color:#a00;">✕</button>
                     </div>
@@ -1644,6 +1656,10 @@ style.textContent = `
   .ms-check { accent-color:var(--copper); width:14px; height:14px; flex-shrink:0; }
   .ms-done { text-decoration:line-through; color:var(--mid); }
   .ms-date { margin-left:auto; font-size:.72rem; color:var(--mid); font-style:italic; }
+  .ms-date--warn    { color:#d97706 !important; font-weight:700; font-style:normal; }
+  .ms-date--overdue { color:#c0392b !important; font-weight:700; font-style:normal; }
+  .ms-warn    > span:not(.ms-done):not(.ms-date) { color:#d97706; }
+  .ms-overdue > span:not(.ms-done):not(.ms-date) { color:#c0392b; }
   .rock-actions { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:4px; }
   .rock-edit-form { display:flex; flex-direction:column; gap:10px; padding:12px 0 4px; }
   .rock-goal { margin:10px 0 4px; }
