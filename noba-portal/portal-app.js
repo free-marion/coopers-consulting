@@ -587,6 +587,8 @@ let addingMsForRock   = null;
 let editingMs         = null;
 let editingRock       = null;
 let pendingMilestones = [];
+let rockReviewMode    = false;
+let reviewIndex       = 0;
 
 function renderPendingMs() {
   const el = document.getElementById('pendingMsList');
@@ -608,6 +610,7 @@ function renderPendingMs() {
 }
 
 async function renderRocks(c) {
+  const savedScrollY = window.scrollY;
   c.innerHTML = `<div class="loading">Loading rocks…</div>`;
   const { data: rocks } = await db.from('rocks').select('*, milestones(*)').eq('group_id', GROUP.id);
   const items = (rocks || []).sort((a, b) => {
@@ -619,11 +622,88 @@ async function renderRocks(c) {
   const STATUS_COLORS = { on_track: '#3d6b38', off_track: '#b45309', complete: '#1d4ed8', dropped: '#4b5563' };
   const STATUS_LABELS = { on_track: 'On Track', off_track: 'Off Track', complete: 'Complete', dropped: 'Dropped' };
 
+  // ── REVIEW MODE ────────────────────────────────────────────────────────────
+  const reviewRocks = items.filter(r => r.status !== 'complete' && r.status !== 'dropped');
+  if (rockReviewMode && reviewRocks.length > 0) {
+    reviewIndex = Math.min(reviewIndex, reviewRocks.length - 1);
+    const rock  = reviewRocks[reviewIndex];
+    const mlist = (rock.milestones || []).sort((a, b) => new Date(a.due_date||0) - new Date(b.due_date||0));
+    const isLast = reviewIndex === reviewRocks.length - 1;
+
+    c.innerHTML = `
+      <div class="rr-wrap">
+        <div class="rr-topbar">
+          <span class="rr-counter">Rock ${reviewIndex + 1} of ${reviewRocks.length}</span>
+          <button class="btn-sm" id="exitReviewBtn">✕ Exit Review</button>
+        </div>
+        <div class="rr-prog-wrap"><div class="rr-prog-bar" style="width:${((reviewIndex + 1) / reviewRocks.length) * 100}%"></div></div>
+
+        <div class="rr-card">
+          <div class="rr-card-top">
+            <span class="status-badge" style="background:${STATUS_COLORS[rock.status]}20;color:${STATUS_COLORS[rock.status]};border:1px solid ${STATUS_COLORS[rock.status]}40">${STATUS_LABELS[rock.status]}</span>
+            <div class="rr-title">${rock.title}</div>
+            <div class="rr-meta">${rock.owner} · Due ${rock.due_date || 'TBD'}</div>
+            ${rock.goal_statement ? `<div class="rr-goal">${rock.goal_statement}</div>` : ''}
+          </div>
+
+          ${mlist.length > 0 ? `
+            <div class="rr-ms-section">
+              <div class="rr-ms-label">Milestones</div>
+              ${mlist.map(m => `
+                <div class="rr-ms-row">
+                  <input type="checkbox" class="ms-check rr-ms-check" data-msid="${m.id}" ${m.done ? 'checked' : ''}>
+                  <span class="${m.done ? 'ms-done' : ''}">${m.title}</span>
+                  ${m.due_date ? `<span class="ms-date">${m.due_date}</span>` : ''}
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+
+          <div class="rr-status-row">
+            <span class="rr-status-label">Update Status</span>
+            <select class="g-select rr-status-sel" data-rockid="${rock.id}">
+              ${Object.entries(STATUS_LABELS).map(([k, v]) => `<option value="${k}" ${rock.status === k ? 'selected' : ''}>${v}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+
+        <div class="rr-nav">
+          <button class="btn-t" id="rrPrev" ${reviewIndex === 0 ? 'disabled' : ''}>← Prev</button>
+          <div class="rr-dots">
+            ${reviewRocks.map((_, i) => `<span class="rr-dot${i === reviewIndex ? ' rr-dot--active' : ''}"></span>`).join('')}
+          </div>
+          <button class="btn-t ${isLast ? '' : 'btn-t--primary'}" id="rrNext" ${isLast ? 'disabled' : ''}>Next →</button>
+        </div>
+        ${isLast ? `<div class="rr-done-msg">All rocks reviewed ✓</div>` : ''}
+      </div>
+    `;
+
+    c.querySelector('#exitReviewBtn').addEventListener('click', () => { rockReviewMode = false; renderRocks(c); });
+    c.querySelector('#rrPrev').addEventListener('click', () => { reviewIndex--; renderRocks(c); });
+    c.querySelector('#rrNext').addEventListener('click', () => { reviewIndex++; renderRocks(c); });
+    c.querySelector('.rr-status-sel').addEventListener('change', async (e) => {
+      await db.from('rocks').update({ status: e.target.value }).eq('id', rock.id);
+      renderRocks(c);
+    });
+    c.querySelectorAll('.rr-ms-check').forEach(cb => {
+      cb.addEventListener('change', async () => {
+        await db.from('milestones').update({ done: cb.checked }).eq('id', cb.dataset.msid);
+        renderRocks(c);
+      });
+    });
+    window.scrollTo(0, 0);
+    return;
+  }
+  // ── END REVIEW MODE ────────────────────────────────────────────────────────
+
   c.innerHTML = `
     <div class="list-wrap">
       <div class="list-toolbar">
         <span class="list-count">${items.filter(r => r.status !== 'complete' && r.status !== 'dropped').length} active rocks</span>
-        <button class="btn-sm btn-sm--bronze" id="addRockBtn">+ Add Rock</button>
+        <div style="display:flex;gap:8px">
+          ${reviewRocks.length > 0 ? `<button class="btn-sm btn-sm--review" id="startReviewBtn">▶ Review Mode</button>` : ''}
+          <button class="btn-sm btn-sm--bronze" id="addRockBtn">+ Add Rock</button>
+        </div>
       </div>
 
       <div id="rocksList">
@@ -738,6 +818,11 @@ async function renderRocks(c) {
     </div>
   `;
 
+  window.scrollTo(0, savedScrollY);
+
+  document.getElementById('startReviewBtn')?.addEventListener('click', () => {
+    rockReviewMode = true; reviewIndex = 0; renderRocks(c);
+  });
   document.getElementById('addRockBtn').addEventListener('click', () => {
     document.getElementById('addRockForm').classList.toggle('hidden');
   });
@@ -1673,6 +1758,30 @@ style.textContent = `
   /* SCORECARD YES/NO */
   .sc-yesno { width:44px; height:28px; border:1px solid var(--lt); border-radius:2px; background:transparent; color:var(--mid); font-size:.85rem; font-weight:700; cursor:pointer; transition:all .15s; font-family:'DM Sans',sans-serif; }
   .sc-yesno:hover { border-color:var(--copper); color:var(--cream); }
+
+  /* ROCK REVIEW MODE */
+  .btn-sm--review { border-color:var(--sage); color:var(--sage); }
+  .btn-sm--review:hover { background:var(--sage); color:var(--bg); border-color:var(--sage); }
+  .rr-wrap { display:flex; flex-direction:column; gap:16px; max-width:580px; margin:0 auto; }
+  .rr-topbar { display:flex; align-items:center; justify-content:space-between; }
+  .rr-counter { font-size:.68rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--mid); }
+  .rr-prog-wrap { background:var(--lt); border-radius:2px; height:3px; overflow:hidden; }
+  .rr-prog-bar { height:100%; background:var(--copper); border-radius:2px; transition:width .35s; }
+  .rr-card { background:var(--surface); border-left:4px solid var(--copper); border-radius:0 6px 6px 0; padding:28px 24px; display:flex; flex-direction:column; gap:16px; }
+  .rr-card-top { display:flex; flex-direction:column; gap:8px; }
+  .rr-title { font-family:'Playfair Display',serif; font-size:1.55rem; font-weight:700; color:var(--cream); line-height:1.2; }
+  .rr-meta { font-size:.78rem; color:var(--mid); font-style:italic; }
+  .rr-goal { font-size:.85rem; color:var(--cream); font-style:italic; line-height:1.55; border-left:2px solid var(--sage); padding-left:12px; }
+  .rr-ms-section { display:flex; flex-direction:column; gap:10px; border-top:1px solid var(--lt); padding-top:14px; }
+  .rr-ms-label { font-size:.62rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--mid); }
+  .rr-ms-row { display:flex; align-items:center; gap:10px; font-size:.9rem; }
+  .rr-status-row { display:flex; align-items:center; gap:12px; border-top:1px solid var(--lt); padding-top:14px; flex-wrap:wrap; }
+  .rr-status-label { font-size:.68rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--mid); white-space:nowrap; }
+  .rr-nav { display:flex; align-items:center; justify-content:space-between; gap:12px; padding-top:4px; }
+  .rr-dots { display:flex; gap:7px; align-items:center; flex-wrap:wrap; justify-content:center; flex:1; }
+  .rr-dot { width:8px; height:8px; border-radius:50%; background:var(--lt); flex-shrink:0; }
+  .rr-dot--active { background:var(--copper); }
+  .rr-done-msg { text-align:center; font-size:.78rem; color:var(--sage); font-style:italic; padding:4px; }
 `;
 document.head.appendChild(style);
 document.head.insertAdjacentHTML('beforeend', `<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@400;500;700&family=Barlow+Condensed:wght@600;800&display=swap" rel="stylesheet">`);
