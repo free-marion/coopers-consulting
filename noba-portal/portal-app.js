@@ -55,6 +55,7 @@ function renderShell() {
       <button class="g-tab" data-tab="rocks">🪨 Rocks</button>
       <button class="g-tab" data-tab="todos">✅ To-Dos</button>
       <button class="g-tab" data-tab="issues">💡 IDS</button>
+      <button class="g-tab" data-tab="prayer">🙏 Prayer</button>
       <button class="g-tab" data-tab="timer">⏱ Meeting</button>
     </div>
     <div class="g-content" id="gContent"></div>
@@ -76,6 +77,7 @@ function switchTab(tab) {
   else if (tab === 'rocks')     renderRocks(c);
   else if (tab === 'issues')    renderIssues(c);
   else if (tab === 'todos')     renderTodos(c);
+  else if (tab === 'prayer')    renderPrayer(c);
   else if (tab === 'vault')     renderVault(c);
 }
 
@@ -378,12 +380,20 @@ async function renderScorecard(c) {
             ${(GROUP.members || []).map(m => `<option value="${m.split(' ')[0]}">${m.split(' ')[0]}</option>`).join('')}
           </select>
           <input type="text" id="scName" placeholder="Measurable (e.g. Workouts)" class="g-input">
+          <select id="scType" class="g-input g-select" style="max-width:120px">
+            <option value="number">Number</option>
+            <option value="yesno">Yes / No</option>
+          </select>
         </div>
-        <div class="form-row">
+        <div class="form-row" id="scTargetRow">
           <input type="number" id="scTarget" placeholder="Target" class="g-input" style="max-width:100px">
           <input type="text" id="scUnit" placeholder="Unit (optional, e.g. hrs)" class="g-input" style="max-width:130px">
           <button class="btn-sm btn-sm--bronze" id="scSave">Save</button>
           <button class="btn-sm" id="scCancel">Cancel</button>
+        </div>
+        <div class="form-row sc-yesno-save-row hidden" id="scYesNoSaveRow">
+          <button class="btn-sm btn-sm--bronze" id="scSaveYN">Save</button>
+          <button class="btn-sm" id="scCancelYN">Cancel</button>
         </div>
         <div id="scStatus" style="font-size:.75rem;color:var(--copper);font-style:italic;min-height:1em"></div>
       </div>
@@ -402,8 +412,18 @@ async function renderScorecard(c) {
           <tbody>
             ${mlist.length === 0 ? `<tr><td colspan="10" class="sc-empty">No measurables yet — add one above.</td></tr>` : ''}
             ${mlist.map(m => {
+              const isYN  = (m.metric_type || 'number') === 'yesno';
               const cells = weeks.map((w, i) => {
                 const entry = elist.find(e => e.metric_id === m.id && e.week_start === w);
+                if (isYN) {
+                  const state = entry == null ? '' : entry.value >= 1 ? 'yes' : 'no';
+                  const bg    = state === 'yes' ? 'rgba(61,107,56,0.35)' : state === 'no' ? 'rgba(185,28,28,0.25)' : '';
+                  const lbl   = state === 'yes' ? '✓' : state === 'no' ? '✕' : '—';
+                  return `<td style="background:${bg}" class="${i === 0 ? 'sc-this-week' : ''}">
+                    <button class="sc-yesno" data-metricid="${m.id}" data-week="${w}"
+                      data-state="${state}" data-owner="${(m.member_name || '').replace(/"/g,'&quot;')}">${lbl}</button>
+                  </td>`;
+                }
                 const val   = entry != null ? entry.value : '';
                 const hit   = val !== '' && parseFloat(val) >= parseFloat(m.target);
                 const miss  = val !== '' && parseFloat(val) < parseFloat(m.target);
@@ -417,10 +437,10 @@ async function renderScorecard(c) {
               return `<tr>
                 <td class="sc-owner-cell">${m.member_name || ''}</td>
                 <td class="sc-name-cell">${m.name}${m.unit ? `<span class="sc-target"> · ${m.unit}</span>` : ''}</td>
-                <td class="sc-goal-cell">${m.target}${m.unit || ''}</td>
+                <td class="sc-goal-cell">${isYN ? 'Yes/No' : m.target + (m.unit || '')}</td>
                 ${cells}
                 <td style="white-space:nowrap">
-                  <button class="btn-icon sc-edit" data-editmetric="${m.id}" data-name="${m.name.replace(/"/g,'&quot;')}" data-owner="${(m.member_name||'').replace(/"/g,'&quot;')}" data-target="${m.target}" data-unit="${(m.unit||'').replace(/"/g,'&quot;')}">✎</button>
+                  <button class="btn-icon sc-edit" data-editmetric="${m.id}" data-name="${m.name.replace(/"/g,'&quot;')}" data-owner="${(m.member_name||'').replace(/"/g,'&quot;')}" data-target="${m.target}" data-unit="${(m.unit||'').replace(/"/g,'&quot;')}" data-type="${m.metric_type || 'number'}">✎</button>
                   <button class="btn-icon sc-del" data-delmetric="${m.id}">✕</button>
                 </td>
               </tr>`;
@@ -434,23 +454,34 @@ async function renderScorecard(c) {
   c.querySelector('#scAddMetric').addEventListener('click', () => {
     c.querySelector('#scAddForm').classList.toggle('hidden');
   });
-  c.querySelector('#scCancel').addEventListener('click', () => {
-    c.querySelector('#scAddForm').classList.add('hidden');
+  c.querySelector('#scType').addEventListener('change', (e) => {
+    const isYN = e.target.value === 'yesno';
+    c.querySelector('#scTargetRow').classList.toggle('hidden', isYN);
+    c.querySelector('#scYesNoSaveRow').classList.toggle('hidden', !isYN);
   });
-  c.querySelector('#scSave').addEventListener('click', async () => {
+  const _doScSave = async () => {
     const owner  = c.querySelector('#scOwner').value.trim();
     const name   = c.querySelector('#scName').value.trim();
-    const target = parseFloat(c.querySelector('#scTarget').value) || 1;
-    const unit   = c.querySelector('#scUnit').value.trim();
+    const type   = c.querySelector('#scType').value || 'number';
+    const target = type === 'yesno' ? 1 : (parseFloat(c.querySelector('#scTarget').value) || 1);
+    const unit   = type === 'yesno' ? '' : c.querySelector('#scUnit').value.trim();
     const status = c.querySelector('#scStatus');
     if (!owner || !name) { status.textContent = 'Enter your name and measurable title.'; return; }
     status.textContent = 'Saving…';
     const { error } = await db.from('scorecard_metrics').insert({
-      group_id: GROUP.id, member_name: owner, name, target, unit, sort_order: mlist.length
+      group_id: GROUP.id, member_name: owner, name, target, unit, sort_order: mlist.length, metric_type: type
     });
     if (error) { status.textContent = 'Error: ' + error.message; return; }
     renderScorecard(c);
+  };
+  c.querySelector('#scCancel').addEventListener('click', () => {
+    c.querySelector('#scAddForm').classList.add('hidden');
   });
+  c.querySelector('#scCancelYN').addEventListener('click', () => {
+    c.querySelector('#scAddForm').classList.add('hidden');
+  });
+  c.querySelector('#scSave').addEventListener('click', _doScSave);
+  c.querySelector('#scSaveYN').addEventListener('click', _doScSave);
 
   c.querySelectorAll('.sc-cell').forEach(input => {
     input.addEventListener('change', async (e) => {
@@ -468,9 +499,35 @@ async function renderScorecard(c) {
     });
   });
 
+  c.querySelectorAll('.sc-yesno').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const { metricid, week, state, owner } = btn.dataset;
+      const td = btn.parentElement;
+      if (!state) {
+        btn.dataset.state = 'yes'; btn.textContent = '✓';
+        td.style.background = 'rgba(61,107,56,0.35)';
+        await db.from('scorecard_entries').upsert({
+          group_id: GROUP.id, member_name: owner, metric_id: metricid, week_start: week, value: 1,
+        }, { onConflict: 'group_id,member_name,metric_id,week_start' });
+      } else if (state === 'yes') {
+        btn.dataset.state = 'no'; btn.textContent = '✕';
+        td.style.background = 'rgba(185,28,28,0.25)';
+        await db.from('scorecard_entries').upsert({
+          group_id: GROUP.id, member_name: owner, metric_id: metricid, week_start: week, value: 0,
+        }, { onConflict: 'group_id,member_name,metric_id,week_start' });
+      } else {
+        btn.dataset.state = ''; btn.textContent = '—';
+        td.style.background = '';
+        await db.from('scorecard_entries').delete()
+          .eq('group_id', GROUP.id).eq('metric_id', metricid).eq('week_start', week);
+      }
+    });
+  });
+
   c.querySelectorAll('.sc-edit').forEach(btn => {
     btn.addEventListener('click', () => {
-      const { editmetric, name, owner, target, unit } = btn.dataset;
+      const { editmetric, name, owner, target, unit, type } = btn.dataset;
+      const isYN = type === 'yesno';
       const row = btn.closest('tr');
       row.insertAdjacentHTML('afterend', `
         <tr class="sc-edit-row" data-editing="${editmetric}">
@@ -478,14 +535,24 @@ async function renderScorecard(c) {
             <div class="sc-edit-form">
               <input type="text" class="g-input sc-ei-owner" placeholder="Owner" value="${owner}" style="max-width:130px">
               <input type="text" class="g-input sc-ei-name" placeholder="Measurable" value="${name}" style="flex:1">
-              <input type="number" class="g-input sc-ei-target" placeholder="Target" value="${target}" style="max-width:90px">
-              <input type="text" class="g-input sc-ei-unit" placeholder="Unit" value="${unit}" style="max-width:100px">
+              <select class="g-input g-select sc-ei-type" style="max-width:110px">
+                <option value="number" ${!isYN ? 'selected' : ''}>Number</option>
+                <option value="yesno" ${isYN ? 'selected' : ''}>Yes / No</option>
+              </select>
+              <input type="number" class="g-input sc-ei-target" placeholder="Target" value="${target}" style="max-width:90px${isYN ? ';display:none' : ''}">
+              <input type="text" class="g-input sc-ei-unit" placeholder="Unit" value="${unit}" style="max-width:100px${isYN ? ';display:none' : ''}">
               <button class="btn-sm btn-sm--bronze sc-ei-save" data-id="${editmetric}">Save</button>
               <button class="btn-sm sc-ei-cancel">Cancel</button>
             </div>
           </td>
         </tr>
       `);
+      row.nextElementSibling.querySelector('.sc-ei-type').addEventListener('change', (e) => {
+        const editRow = e.target.closest('tr');
+        const yn = e.target.value === 'yesno';
+        editRow.querySelector('.sc-ei-target').style.display = yn ? 'none' : '';
+        editRow.querySelector('.sc-ei-unit').style.display = yn ? 'none' : '';
+      });
       row.nextElementSibling.querySelector('.sc-ei-cancel').addEventListener('click', () => {
         row.nextElementSibling.remove();
       });
@@ -493,11 +560,12 @@ async function renderScorecard(c) {
         const editRow = e.target.closest('tr');
         const newOwner  = editRow.querySelector('.sc-ei-owner').value.trim();
         const newName   = editRow.querySelector('.sc-ei-name').value.trim();
-        const newTarget = parseFloat(editRow.querySelector('.sc-ei-target').value) || 1;
-        const newUnit   = editRow.querySelector('.sc-ei-unit').value.trim();
+        const newType   = editRow.querySelector('.sc-ei-type').value;
+        const newTarget = newType === 'yesno' ? 1 : (parseFloat(editRow.querySelector('.sc-ei-target').value) || 1);
+        const newUnit   = newType === 'yesno' ? '' : editRow.querySelector('.sc-ei-unit').value.trim();
         if (!newOwner || !newName) return;
         await db.from('scorecard_metrics').update({
-          member_name: newOwner, name: newName, target: newTarget, unit: newUnit
+          member_name: newOwner, name: newName, target: newTarget, unit: newUnit, metric_type: newType
         }).eq('id', e.target.dataset.id);
         renderScorecard(c);
       });
@@ -1076,11 +1144,119 @@ async function renderTodos(c) {
   });
 }
 
+// ── PRAYER LIST ───────────────────────────────────────────────────────────────
+let prayerFilter = 'active';
+
+async function renderPrayer(c) {
+  c.innerHTML = '<div class="loading">Loading prayer list…</div>';
+
+  let query = db.from('prayer_items').select('*').eq('group_id', GROUP.id).order('created_at', { ascending: false });
+  if (prayerFilter === 'active')   query = query.eq('answered', false);
+  if (prayerFilter === 'answered') query = query.eq('answered', true);
+  const { data: items } = await query;
+  const list = items || [];
+
+  c.innerHTML = `
+    <div class="list-wrap">
+      <div class="list-toolbar">
+        <div>
+          <div class="list-section-title">Prayer List</div>
+          <div class="list-section-rule"></div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <div class="filter-tabs">
+            ${['active','answered','all'].map(f => `<button class="filter-tab ${prayerFilter===f?'active':''}" data-pfilter="${f}">${f.charAt(0).toUpperCase()+f.slice(1)}</button>`).join('')}
+          </div>
+          <button class="btn-sm btn-sm--bronze" id="addPrayerBtn">+ Add Request</button>
+        </div>
+      </div>
+
+      <div class="add-form hidden" id="addPrayerForm">
+        <div class="form-row">
+          <input type="text" id="prayerTitle" placeholder="Person or request…" class="g-input">
+          <select id="prayerBy" class="g-input g-select" style="max-width:160px">
+            <option value="">Added by…</option>
+            ${(GROUP.members || []).map(m => `<option value="${m.split(' ')[0]}">${m.split(' ')[0]}</option>`).join('')}
+          </select>
+        </div>
+        <div class="form-row">
+          <input type="text" id="prayerNotes" placeholder="Notes (optional)" class="g-input">
+          <button class="btn-sm btn-sm--bronze" id="savePrayerBtn">Save</button>
+          <button class="btn-sm" id="cancelPrayerBtn">Cancel</button>
+        </div>
+      </div>
+
+      ${list.length === 0 ? `<p class="empty-state">No ${prayerFilter === 'all' ? '' : prayerFilter + ' '}prayer requests.</p>` : ''}
+
+      ${list.map(item => `
+        <div class="list-item prayer-item${item.answered ? ' prayer-item--answered' : ''}">
+          <div class="list-item-header">
+            <div class="list-item-left">
+              <span class="prayer-cross${item.answered ? ' prayer-cross--answered' : ''}">✝</span>
+              <div>
+                <div class="list-item-title${item.answered ? ' prayer-title--answered' : ''}">${item.title}</div>
+                ${item.notes ? `<div class="prayer-notes">${item.notes}</div>` : ''}
+                <div class="list-item-meta">Added by ${item.added_by} · ${new Date(item.created_at).toLocaleDateString()}</div>
+              </div>
+            </div>
+            <div class="list-item-right">
+              ${!item.answered
+                ? `<button class="btn-sm btn-sm--prayer-ans" data-ans-prayer="${item.id}">✓ Answered</button>`
+                : `<span class="prayer-answered-badge">Answered</span>`
+              }
+              <button class="btn-icon" data-del-prayer="${item.id}" style="color:#888">✕</button>
+            </div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  c.querySelectorAll('[data-pfilter]').forEach(btn => {
+    btn.addEventListener('click', () => { prayerFilter = btn.dataset.pfilter; renderPrayer(c); });
+  });
+  c.querySelector('#addPrayerBtn').addEventListener('click', () => {
+    c.querySelector('#addPrayerForm').classList.toggle('hidden');
+  });
+  c.querySelector('#cancelPrayerBtn').addEventListener('click', () => {
+    c.querySelector('#addPrayerForm').classList.add('hidden');
+  });
+  c.querySelector('#savePrayerBtn').addEventListener('click', async () => {
+    const title = c.querySelector('#prayerTitle').value.trim();
+    const by    = c.querySelector('#prayerBy').value.trim();
+    const notes = c.querySelector('#prayerNotes').value.trim();
+    if (!title || !by) return;
+    await db.from('prayer_items').insert({
+      group_id: GROUP.id, title, added_by: by, notes: notes || null, answered: false
+    });
+    renderPrayer(c);
+  });
+  c.querySelectorAll('[data-ans-prayer]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      await db.from('prayer_items').update({ answered: true, answered_at: new Date().toISOString() }).eq('id', btn.dataset.ansPrayer);
+      renderPrayer(c);
+    });
+  });
+  c.querySelectorAll('[data-del-prayer]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      if (!confirm('Remove this prayer request?')) return;
+      await db.from('prayer_items').delete().eq('id', btn.dataset.delPrayer);
+      renderPrayer(c);
+    });
+  });
+}
+
 // ── VAULT ─────────────────────────────────────────────────────────────────────
 const FILE_ICONS = {
   pdf: '📄', image: '🖼', video: '🎬', audio: '🎵', sheet: '📊',
   doc: '📝', zip: '📦', link: '🔗', other: '📁'
 };
+
+function linkIcon(url = '') {
+  if (/drive\.google|docs\.google|sheets\.google|slides\.google/.test(url)) return '🗂';
+  if (/youtube\.com|youtu\.be/.test(url)) return '🎬';
+  return '🔗';
+}
 
 function fileCategory(name = '', type = '') {
   if (type === 'link') return 'link';
@@ -1135,11 +1311,14 @@ async function renderVault(c) {
     .join('');
 
   // ── Uploaded / linked items ──────────────────────────────────────────────
-  const uploadedCards = (items || []).map(item => {
-    const cat  = fileCategory(item.file_name || '', item.type);
-    const icon = FILE_ICONS[cat] || FILE_ICONS.other;
-    const url  = item.type === 'link' ? item.link_url : item.file_url;
-    const isImg = cat === 'image';
+  const uploadedLinks = [];
+  const uploadedFiles = [];
+  (items || []).forEach(item => {
+    const cat    = fileCategory(item.file_name || '', item.type);
+    const isLink = item.type === 'link';
+    const icon   = isLink ? linkIcon(item.link_url) : (FILE_ICONS[cat] || FILE_ICONS.other);
+    const url    = isLink ? item.link_url : item.file_url;
+    const isImg  = cat === 'image';
     const cardHtml = isImg
       ? `<div class="vault-card">
           <div class="vault-preview vault-preview--img"><img src="${url}" alt="${item.title}" style="width:100%;height:100%;object-fit:cover"></div>
@@ -1157,10 +1336,11 @@ async function renderVault(c) {
           item.title || item.file_name || 'Untitled',
           url, icon,
           item.uploaded_by + ' · ' + new Date(item.created_at).toLocaleDateString(),
-          true, item.id, item.type !== 'link'
+          true, item.id, !isLink
         );
-    return cardHtml;
-  }).join('');
+    if (isLink) uploadedLinks.push(cardHtml);
+    else uploadedFiles.push(cardHtml);
+  });
 
   c.innerHTML = `
     <div class="list-wrap">
@@ -1207,10 +1387,15 @@ async function renderVault(c) {
         <div class="shared-materials-divider"></div>
       </div>
 
-      <div class="vault-uploads-label">Uploads</div>
-      <div class="vault-grid">
-        ${uploadedCards || '<p class="empty-state">Nothing uploaded yet.</p>'}
-      </div>
+      ${uploadedLinks.length > 0 ? `
+        <div class="vault-uploads-label">Links</div>
+        <div class="vault-grid">${uploadedLinks.join('')}</div>
+      ` : ''}
+      ${uploadedFiles.length > 0 ? `
+        <div class="vault-uploads-label" style="${uploadedLinks.length ? 'margin-top:20px' : ''}">Files</div>
+        <div class="vault-grid">${uploadedFiles.join('')}</div>
+      ` : ''}
+      ${!uploadedLinks.length && !uploadedFiles.length ? '<p class="empty-state">Nothing added yet — upload a file or add a link above.</p>' : ''}
 
     </div>
   `;
@@ -1474,6 +1659,20 @@ style.textContent = `
   .filter-tab:last-child { border-right:none; }
   .filter-tab.active { background:var(--surface2); color:var(--cream); }
   .filter-tab:hover { color:var(--cream); }
+
+  /* PRAYER LIST */
+  .prayer-item--answered { opacity:.65; border-left-color:var(--sage) !important; }
+  .prayer-cross { color:var(--copper); font-size:.95rem; flex-shrink:0; margin-right:2px; }
+  .prayer-cross--answered { color:var(--sage); }
+  .prayer-notes { font-size:.74rem; color:var(--mid); margin-top:2px; font-style:italic; }
+  .prayer-title--answered { text-decoration:line-through; opacity:.65; }
+  .prayer-answered-badge { font-size:.62rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--sage); background:rgba(158,166,124,0.15); border:1px solid rgba(158,166,124,0.3); padding:2px 8px; border-radius:2px; }
+  .btn-sm--prayer-ans { border-color:var(--sage); color:var(--sage); }
+  .btn-sm--prayer-ans:hover { background:var(--sage); color:var(--bg); border-color:var(--sage); }
+
+  /* SCORECARD YES/NO */
+  .sc-yesno { width:44px; height:28px; border:1px solid var(--lt); border-radius:2px; background:transparent; color:var(--mid); font-size:.85rem; font-weight:700; cursor:pointer; transition:all .15s; font-family:'DM Sans',sans-serif; }
+  .sc-yesno:hover { border-color:var(--copper); color:var(--cream); }
 `;
 document.head.appendChild(style);
 document.head.insertAdjacentHTML('beforeend', `<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@400;500;700&family=Barlow+Condensed:wght@600;800&display=swap" rel="stylesheet">`);

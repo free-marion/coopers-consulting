@@ -3,14 +3,20 @@
 
 -- Scorecard: metric definitions per group
 create table if not exists scorecard_metrics (
-  id         uuid    default gen_random_uuid() primary key,
-  group_id   text    not null,
-  name       text    not null,
-  target     numeric not null default 1,
-  unit       text    default '',
-  sort_order int     default 0,
-  created_at timestamptz default now()
+  id          uuid    default gen_random_uuid() primary key,
+  group_id    text    not null,
+  member_name text    not null default '',
+  name        text    not null,
+  target      numeric not null default 1,
+  unit        text    default '',
+  metric_type text    default 'number',  -- number | yesno
+  sort_order  int     default 0,
+  created_at  timestamptz default now()
 );
+
+-- If upgrading an existing database, run:
+-- alter table scorecard_metrics add column if not exists member_name text not null default '';
+-- alter table scorecard_metrics add column if not exists metric_type text default 'number';
 
 -- Scorecard: weekly entries per member per metric
 create table if not exists scorecard_entries (
@@ -75,6 +81,18 @@ create table if not exists vault_items (
   created_at  timestamptz default now()
 );
 
+-- Prayer list: shared prayer requests per group
+create table if not exists prayer_items (
+  id          uuid default gen_random_uuid() primary key,
+  group_id    text not null,
+  title       text not null,
+  notes       text,
+  added_by    text not null,
+  answered    boolean default false,
+  answered_at timestamptz,
+  created_at  timestamptz default now()
+);
+
 -- Allow public read/write (Cloudflare Access handles auth at the page level)
 alter table scorecard_metrics enable row level security;
 alter table scorecard_entries  enable row level security;
@@ -107,3 +125,6 @@ create table if not exists todos (
 );
 alter table todos enable row level security;
 create policy "public access" on todos for all using (true) with check (true);
+
+alter table prayer_items enable row level security;
+create policy "public access" on prayer_items for all using (true) with check (true);
