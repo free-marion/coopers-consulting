@@ -324,6 +324,17 @@
     .form-label { font-family: 'Cinzel', serif; font-size: .6875rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #222; }
 
     /* ── FOOTER ── */
+    .page-frame {
+      max-width: 980px;
+      margin: 0 auto;
+      position: relative;
+      border-left:  1px solid rgba(184,71,30,0.1);
+      border-right: 1px solid rgba(184,71,30,0.1);
+    }
+    @media (max-width: 980px) {
+      .page-frame { border-left: none; border-right: none; }
+    }
+
     footer {
       background: rgba(184, 71, 30, 0.96); color: var(--cream);
       position: relative; overflow: hidden;
@@ -444,6 +455,7 @@
   <a href="petra.html">PETRA</a>
 </div>
 
+<div class="page-frame">
 <main id="main" style="position:relative;z-index:1">
 
 <!-- ══════════════════════════════════════════════════════════ HERO -->
@@ -597,7 +609,7 @@
 </main>
 
 <!-- FOOTER -->
-<footer style="position:relative;z-index:1">
+<footer style="position:relative;z-index:1;">
   <!-- Cooper's Consulting — left -->
   <div class="footer-stamp">
     <svg width="48" height="55" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -636,6 +648,7 @@
     </a>
   </div>
 </footer>
+</div><!-- /page-frame -->
 
 <!-- ════════════════════════════════════════ THREE.JS HERO MODULE -->
 <script type="module">
