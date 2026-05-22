@@ -33,15 +33,18 @@ function fmt(secs) {
 }
 
 function getWeekStart(offset = 0) {
-  const d = new Date();
-  d.setDate(d.getDate() - d.getDay() + 1 + offset * 7); // Monday
-  return d.toISOString().slice(0, 10);
+  const now = new Date();
+  const utcDay = now.getUTCDay();
+  const daysToMonday = (utcDay + 6) % 7;
+  const monday = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - daysToMonday + offset * 7));
+  return monday.toISOString().slice(0, 10);
 }
 
 // ── MAIN SHELL ───────────────────────────────────────────────────────────────
 function renderShell() {
   app.innerHTML = `
     <nav class="g-nav">
+      <button class="g-hamburger" id="gHamburger">☰</button>
       <a href="../" class="g-nav-back">← Portal</a>
       <div class="g-nav-center">
         <span class="g-badge"><svg viewBox="0 0 28 32" xmlns="http://www.w3.org/2000/svg"><path d="M2,1 L26,1 L26,18 C26,26 14,31 14,31 C14,31 2,26 2,18 Z" fill="${GROUP.color}" stroke="rgba(255,255,255,0.18)" stroke-width="0.75"/><text x="14" y="11" text-anchor="middle" dominant-baseline="central" font-family="'Barlow Condensed',sans-serif" font-weight="800" font-size="${GROUP.initials.length > 1 ? '6' : '10'}" fill="rgba(245,240,232,0.9)" letter-spacing="0.5">${GROUP.initials}</text></svg></span>
@@ -49,19 +52,30 @@ function renderShell() {
       </div>
       <div></div>
     </nav>
-    <div class="g-tabs">
-      <button class="g-tab" data-tab="vault">🗄 Vault</button>
-      <button class="g-tab" data-tab="scorecard">📊 Scorecard</button>
-      <button class="g-tab" data-tab="rocks">🪨 Rocks</button>
-      <button class="g-tab" data-tab="todos">✅ To-Dos</button>
-      <button class="g-tab" data-tab="issues">💡 IDS</button>
-      <button class="g-tab" data-tab="prayer">🙏 Prayer</button>
-      <button class="g-tab" data-tab="timer">⏱ Meeting</button>
+    <div class="g-body">
+      <aside class="g-sidebar" id="gSidebar">
+        <button class="g-tab" data-tab="vault"><span class="g-tab-icon">🗄</span><span class="g-tab-label">Vault</span></button>
+        <button class="g-tab" data-tab="scorecard"><span class="g-tab-icon">📊</span><span class="g-tab-label">Scorecard</span></button>
+        <button class="g-tab" data-tab="rocks"><span class="g-tab-icon">🪨</span><span class="g-tab-label">Rocks</span></button>
+        <button class="g-tab" data-tab="todos"><span class="g-tab-icon">✅</span><span class="g-tab-label">To-Dos</span></button>
+        <button class="g-tab" data-tab="issues"><span class="g-tab-icon">💡</span><span class="g-tab-label">IDS</span></button>
+        <button class="g-tab" data-tab="prayer"><span class="g-tab-icon">🙏</span><span class="g-tab-label">Prayer</span></button>
+        <button class="g-tab" data-tab="timer"><span class="g-tab-icon">⏱</span><span class="g-tab-label">Meeting</span></button>
+      </aside>
+      <div class="g-overlay" id="gOverlay"></div>
+      <main class="g-content" id="gContent"></main>
     </div>
-    <div class="g-content" id="gContent"></div>
   `;
   document.querySelectorAll('.g-tab').forEach(t => {
     t.addEventListener('click', () => switchTab(t.dataset.tab));
+  });
+  document.getElementById('gHamburger').addEventListener('click', () => {
+    document.getElementById('gSidebar').classList.toggle('open');
+    document.getElementById('gOverlay').classList.toggle('active');
+  });
+  document.getElementById('gOverlay').addEventListener('click', () => {
+    document.getElementById('gSidebar').classList.remove('open');
+    document.getElementById('gOverlay').classList.remove('active');
   });
   switchTab('vault');
   initFloatingTimer();
@@ -70,6 +84,8 @@ function renderShell() {
 function switchTab(tab) {
   document.querySelectorAll('.g-tab').forEach(t =>
     t.classList.toggle('active', t.dataset.tab === tab));
+  document.getElementById('gSidebar')?.classList.remove('open');
+  document.getElementById('gOverlay')?.classList.remove('active');
   const c = document.getElementById('gContent');
   updateFloatingTimer();
   if      (tab === 'timer')     { loadMeetingRatings(); renderTimer(c); }
@@ -119,29 +135,58 @@ function updateFloatingTimer() {
   ft.style.borderColor = ts.secsLeft <= 30 ? '#c0392b' : 'var(--copper)';
 }
 
+// ── LEADER ROTATION ──────────────────────────────────────────────────────────
+function getLeaderIdx() {
+  const members = GROUP.members || [];
+  if (!members.length) return 0;
+  return parseInt(localStorage.getItem(`leader_idx_${GROUP.id}`) || '0') % members.length;
+}
+function setLeaderIdx(idx) {
+  localStorage.setItem(`leader_idx_${GROUP.id}`, idx);
+}
+function getCurrentLeader() {
+  const members = GROUP.members || [];
+  if (!members.length) return 'TBD';
+  return members[getLeaderIdx()];
+}
+
+// ── SHARED TIMER INTERVAL ────────────────────────────────────────────────────
+function startTimerInterval(ts) {
+  clearInterval(ts.interval);
+  ts.running = true;
+  ts.interval = setInterval(() => {
+    if (ts.secsLeft > 0) {
+      ts.secsLeft--;
+      ts.elapsed++;
+    }
+    if (ts.secsLeft <= 0) {
+      if (ts.seg < SEGMENTS.length - 1) {
+        ts.seg++;
+        ts.secsLeft = SEGMENTS[ts.seg].duration;
+      } else {
+        ts.secsLeft = 0;
+        clearInterval(ts.interval);
+        ts.running = false;
+      }
+    }
+    if (document.querySelector('.g-tab[data-tab="timer"].active')) {
+      renderTimer(document.getElementById('gContent'));
+    }
+    updateFloatingTimer();
+  }, 1000);
+}
+
 function toggleTimerFromFloat() {
   if (timerState.running) {
     clearInterval(timerState.interval);
     timerState.running = false;
   } else {
-    timerState.running = true;
-    timerState.interval = setInterval(() => {
-      if (timerState.secsLeft > 0) {
-        timerState.secsLeft--;
-        timerState.elapsed++;
-      }
-      if (timerState.secsLeft <= 0) {
-        timerState.secsLeft = 0;
-        clearInterval(timerState.interval);
-        timerState.running = false;
-      }
-      // If meeting tab is open, refresh it
-      if (document.querySelector('.g-tab[data-tab="timer"].active')) {
-        renderTimer(document.getElementById('gContent'));
-      }
-    }, 1000);
+    startTimerInterval(timerState);
   }
   updateFloatingTimer();
+  if (document.querySelector('.g-tab[data-tab="timer"].active')) {
+    renderTimer(document.getElementById('gContent'));
+  }
 }
 
 // ── MEETING RATINGS ──────────────────────────────────────────────────────────
@@ -167,136 +212,139 @@ async function loadMeetingRatings() {
 function renderTimer(c) {
   const ts = timerState;
   const seg = SEGMENTS[ts.seg];
-  const pct = ((seg.duration - ts.secsLeft) / seg.duration) * 100;
-  const totalElapsed = SEGMENTS.slice(0, ts.seg).reduce((s, x) => s + x.duration, 0)
-                     + (seg.duration - ts.secsLeft);
-  const totalPct = (totalElapsed / TOTAL_SECS) * 100;
-  const warn = ts.secsLeft <= 30 && ts.running;
-  const overtime = ts.seg === ts.seg && ts.secsLeft === 0 && !ts.running;
+  const totalElapsed = SEGMENTS.slice(0, ts.seg).reduce((s, x) => s + x.duration, 0) + (seg.duration - ts.secsLeft);
+  const totalPct = Math.min((totalElapsed / TOTAL_SECS) * 100, 100);
+  const CIRC = 314.16;
+  const warn = ts.secsLeft <= 30 && ts.running && ts.seg < SEGMENTS.length - 1;
+  const members = GROUP.members || [];
+  const leaderIdx = getLeaderIdx();
+  const leaderName = members.length ? members[leaderIdx].split(' ')[0] : 'TBD';
 
   c.innerHTML = `
-    <div class="timer-wrap">
-      <div class="timer-left">
-        <div class="timer-seg-name">${seg.name}</div>
-        <div class="timer-seg-desc">${seg.desc}</div>
-        <div class="timer-display ${warn || (ts.secsLeft === 0 && !ts.running) ? 'timer-warn' : ''}">${fmt(ts.secsLeft)}</div>
-        <div class="timer-seg-bar-wrap">
-          <div class="timer-seg-bar" style="width:${pct}%"></div>
+    <div class="tmr-wrap">
+
+      <div class="tmr-left">
+        <div class="tmr-ring-wrap">
+          <svg class="tmr-ring-svg" viewBox="0 0 120 120">
+            <circle class="tmr-ring-bg" cx="60" cy="60" r="50"/>
+            <circle class="tmr-ring-fill${warn ? ' tmr-ring--warn' : ''}" cx="60" cy="60" r="50"
+              stroke-dasharray="${CIRC}"
+              stroke-dashoffset="${(CIRC * (1 - totalPct / 100)).toFixed(2)}"/>
+            <text x="60" y="54" class="tmr-ring-time" text-anchor="middle" dominant-baseline="middle">${fmt(ts.secsLeft)}</text>
+            <text x="60" y="72" class="tmr-ring-total" text-anchor="middle">/ ${fmt(TOTAL_SECS)}</text>
+          </svg>
         </div>
-        <div class="timer-controls">
+        <div class="tmr-currently-label">CURRENTLY ON</div>
+        <div class="tmr-currently-name">${seg.name}</div>
+        <div class="tmr-seg-list">
+          ${SEGMENTS.map((s, i) => {
+            const isCur = i === ts.seg;
+            const isDone = i < ts.seg;
+            return `<div class="tmr-seg-row${isCur ? ' tmr-seg--active' : isDone ? ' tmr-seg--done' : ''}">
+              <span class="tmr-seg-dot">${isDone ? '✓' : isCur ? '▶' : ''}</span>
+              <span class="tmr-seg-name">${s.name}</span>
+              <span class="tmr-seg-time">${isCur ? fmt(ts.secsLeft) : fmt(s.duration)}</span>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+
+      <div class="tmr-main">
+        <div class="tmr-leader-bar">
+          <div>
+            <div class="tmr-leader-label">LEADING THIS MEETING</div>
+            <div class="tmr-leader-name">${leaderName}</div>
+          </div>
+          <div class="tmr-leader-btns">
+            <button class="btn-sm" id="prevLeaderBtn">← Prev</button>
+            <button class="btn-sm btn-sm--bronze" id="nextLeaderBtn">Rotate →</button>
+          </div>
+        </div>
+
+        <div class="tmr-seg-title${warn ? ' tmr-seg-title--warn' : ''}">${seg.name}</div>
+        <div class="tmr-seg-desc">${seg.desc}</div>
+
+        <div class="tmr-controls">
           <button class="btn-t" id="tPrev" ${ts.seg === 0 ? 'disabled' : ''}>← Prev</button>
           <button class="btn-t btn-t--primary" id="tPlay">${ts.running ? '⏸ Pause' : '▶ Start'}</button>
           <button class="btn-t" id="tNext" ${ts.seg === SEGMENTS.length - 1 ? 'disabled' : ''}>Next →</button>
         </div>
-        <div class="timer-total-wrap">
-          <div class="timer-total-label">Overall Progress</div>
-          <div class="timer-seg-bar-wrap">
-            <div class="timer-seg-bar timer-total-bar" style="width:${totalPct}%"></div>
-          </div>
-          <div class="timer-total-label">${fmt(totalElapsed)} / ${fmt(TOTAL_SECS)}</div>
-        </div>
-      </div>
-      <div class="timer-right">
-        ${SEGMENTS.map((s, i) => {
-          const isOvertime = i === ts.seg && ts.secsLeft === 0 && !ts.running;
-          const rowClass = i === ts.seg
-            ? (isOvertime ? 'seg-row--overtime' : 'seg-row--active')
-            : i < ts.seg ? 'seg-row--done' : '';
-          return `
-          <div class="seg-row ${rowClass}">
-            <span class="seg-row-dot">${i < ts.seg ? '✓' : i === ts.seg ? '▶' : String(i+1)}</span>
-            <span class="seg-row-name">${s.name}</span>
-            <span class="seg-row-dur">${fmt(s.duration)}</span>
-          </div>`;
-        }).join('')}
-      </div>
-    </div>
 
-    ${ts.seg === SEGMENTS.length - 1 ? `
-      <div class="rating-section">
-        <div class="rating-section-label">Rate this meeting</div>
-        ${(GROUP.members || []).map(name => `
-          <div class="member-rating-row">
-            <span class="member-rating-name">${name.split(' ')[0]}</span>
-            <div class="rating-buttons">
-              ${[1,2,3,4,5,6,7,8,9,10].map(n => `
-                <button class="rating-btn ${memberRatings[name] === n ? 'rating-btn--active' : ''}"
-                        data-rate="${n}" data-member="${name}">${n}</button>
-              `).join('')}
+        ${ts.seg === SEGMENTS.length - 1 ? `
+          <div class="rating-section">
+            <div class="rating-section-label">Rate this meeting</div>
+            ${members.map(name => `
+              <div class="member-rating-row">
+                <span class="member-rating-name">${name.split(' ')[0]}</span>
+                <div class="rating-buttons">
+                  ${[1,2,3,4,5,6,7,8,9,10].map(n => `
+                    <button class="rating-btn ${memberRatings[name] === n ? 'rating-btn--active' : ''}"
+                            data-rate="${n}" data-member="${name}">${n}</button>
+                  `).join('')}
+                </div>
+              </div>
+            `).join('')}
+            ${members.length > 0 && members.every(m => memberRatings[m] != null)
+              ? `<button class="btn-conclude" id="concludeBtn">✓ Conclude Meeting</button>`
+              : `<div class="conclude-hint">${Object.keys(memberRatings).length} of ${members.length} rated</div>`
+            }
+          </div>
+        ` : ''}
+
+        ${ratingHistory.length > 0 ? `
+          <div class="rating-history-section">
+            <div class="rating-history-label">Meeting Ratings — Last 6 Weeks</div>
+            <div class="rating-hist-table-wrap">
+              <table class="rating-hist-table">
+                <thead>
+                  <tr>
+                    <th>Week</th>
+                    ${members.map(m => `<th>${m.split(' ')[0]}</th>`).join('')}
+                    <th>Avg</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${[...new Set(ratingHistory.map(r => r.week_start))].map(week => {
+                    const weekRows = ratingHistory.filter(r => r.week_start === week);
+                    const vals = members.map(m => (weekRows.find(r => r.member_name === m) || {}).rating ?? null);
+                    const filled = vals.filter(v => v !== null);
+                    const avg = filled.length ? (filled.reduce((a,b)=>a+b,0)/filled.length).toFixed(1) : '—';
+                    const lbl = new Date(week+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
+                    const isCurrent = week === getWeekStart();
+                    return `<tr${isCurrent ? ' class="hist-row-current"' : ''}>
+                      <td class="hist-week-lbl">${lbl}</td>
+                      ${vals.map(v => v !== null
+                        ? `<td class="hist-val" style="color:${v>=8?'#9EA67C':v>=5?'#B07D4B':'#c0392b'}">${v}</td>`
+                        : `<td class="hist-val hist-val--empty">—</td>`
+                      ).join('')}
+                      <td class="hist-avg">${avg}</td>
+                    </tr>`;
+                  }).join('')}
+                </tbody>
+              </table>
             </div>
           </div>
-        `).join('')}
-        ${(GROUP.members || []).length > 0 && (GROUP.members || []).every(m => memberRatings[m] != null)
-          ? `<button class="btn-conclude" id="concludeBtn">✓ Conclude Meeting</button>`
-          : `<div class="conclude-hint">${Object.keys(memberRatings).length} of ${(GROUP.members||[]).length} rated</div>`
-        }
+        ` : ''}
       </div>
-    ` : ''}
-
-    ${ratingHistory.length > 0 ? `
-      <div class="rating-history-section">
-        <div class="rating-history-label">Meeting Ratings — Last 6 Weeks</div>
-        <div class="rating-hist-table-wrap">
-          <table class="rating-hist-table">
-            <thead>
-              <tr>
-                <th>Week</th>
-                ${(GROUP.members || []).map(m => `<th>${m.split(' ')[0]}</th>`).join('')}
-                <th>Avg</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${[...new Set(ratingHistory.map(r => r.week_start))].map(week => {
-                const weekRows = ratingHistory.filter(r => r.week_start === week);
-                const vals = (GROUP.members || []).map(m => (weekRows.find(r => r.member_name === m) || {}).rating ?? null);
-                const filled = vals.filter(v => v !== null);
-                const avg = filled.length ? (filled.reduce((a,b)=>a+b,0)/filled.length).toFixed(1) : '—';
-                const lbl = new Date(week+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
-                const isCurrent = week === getWeekStart();
-                return `<tr${isCurrent ? ' class="hist-row-current"' : ''}>
-                  <td class="hist-week-lbl">${lbl}</td>
-                  ${vals.map(v => v !== null
-                    ? `<td class="hist-val" style="color:${v>=8?'#9EA67C':v>=5?'#B07D4B':'#c0392b'}">${v}</td>`
-                    : `<td class="hist-val hist-val--empty">—</td>`
-                  ).join('')}
-                  <td class="hist-avg">${avg}</td>
-                </tr>`;
-              }).join('')}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    ` : ''}
+    </div>
   `;
 
   document.getElementById('tPlay').addEventListener('click', () => {
     if (ts.running) {
       clearInterval(ts.interval);
       ts.running = false;
+      renderTimer(c);
     } else {
-      ts.running = true;
-      ts.interval = setInterval(() => {
-        if (ts.secsLeft > 0) {
-          ts.secsLeft--;
-          ts.elapsed++;
-        }
-        if (ts.secsLeft <= 0) {
-          ts.secsLeft = 0;
-          clearInterval(ts.interval);
-          ts.running = false;
-        }
-        if (document.querySelector('.g-tab[data-tab="timer"].active')) {
-          renderTimer(document.getElementById('gContent'));
-        }
-      }, 1000);
+      startTimerInterval(ts);
+      renderTimer(c);
     }
-    renderTimer(document.getElementById('gContent'));
+    updateFloatingTimer();
   });
 
   document.getElementById('tPrev').addEventListener('click', () => {
     clearInterval(ts.interval); ts.running = false;
     if (ts.seg > 0) { ts.seg--; ts.secsLeft = SEGMENTS[ts.seg].duration; }
-    renderTimer(document.getElementById('gContent'));
+    renderTimer(c);
   });
 
   document.getElementById('tNext').addEventListener('click', () => {
@@ -304,15 +352,20 @@ function renderTimer(c) {
     if (ts.seg < SEGMENTS.length - 1) {
       ts.seg++;
       ts.secsLeft = SEGMENTS[ts.seg].duration;
-      ts.running = true;
-      ts.interval = setInterval(() => {
-        if (ts.secsLeft > 0) { ts.secsLeft--; ts.elapsed++; }
-        if (ts.secsLeft <= 0) { ts.secsLeft = 0; clearInterval(ts.interval); ts.running = false; }
-        if (document.querySelector('.g-tab[data-tab="timer"].active')) renderTimer(document.getElementById('gContent'));
-        updateFloatingTimer();
-      }, 1000);
+      startTimerInterval(ts);
     }
-    renderTimer(document.getElementById('gContent'));
+    renderTimer(c);
+  });
+
+  document.getElementById('nextLeaderBtn').addEventListener('click', () => {
+    if (!members.length) return;
+    setLeaderIdx((leaderIdx + 1) % members.length);
+    renderTimer(c);
+  });
+  document.getElementById('prevLeaderBtn').addEventListener('click', () => {
+    if (!members.length) return;
+    setLeaderIdx((leaderIdx - 1 + members.length) % members.length);
+    renderTimer(c);
   });
 
   c.querySelectorAll('.rating-btn').forEach(btn => {
@@ -329,9 +382,9 @@ function renderTimer(c) {
   });
 
   c.querySelector('#concludeBtn')?.addEventListener('click', () => {
-    alert(`Meeting concluded! Average rating: ${
-      (() => { const vals = Object.values(memberRatings); return vals.length ? (vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1) : '—'; })()
-    }/10`);
+    const vals = Object.values(memberRatings);
+    const avg = vals.length ? (vals.reduce((a, b) => a + b, 0) / vals.length).toFixed(1) : '—';
+    alert(`Meeting concluded! Average rating: ${avg}/10`);
   });
 }
 
@@ -1023,11 +1076,24 @@ async function renderIssues(c) {
               </div>
               <div class="list-item-right">
                 <span class="status-badge" style="background:${PRI_COLORS[issue.priority]}20;color:${PRI_COLORS[issue.priority]};border:1px solid ${PRI_COLORS[issue.priority]}40">${issue.priority}</span>
+                <button class="btn-sm issue-note-btn" data-issue-id="${issue.id}" title="Notes">📝</button>
                 ${issue.status === 'open' ? `
                   <button class="btn-sm btn-sm--todo" data-todo-from="${issue.id}" data-todo-title="${issue.title.replace(/"/g,'&quot;')}">→ To-Do</button>
                   <button class="btn-sm" data-solve="${issue.id}">Solve</button>
                 ` : ''}
               </div>
+            </div>
+            <div class="issue-notes-area hidden" id="issue-notes-${issue.id}">
+              ${issue.notes ? `<div class="issue-notes-text">${issue.notes.replace(/\n/g,'<br>')}</div>` : ''}
+              <div class="issue-notes-edit hidden" id="issue-notes-edit-${issue.id}">
+                <textarea class="g-input issue-notes-ta" rows="3" placeholder="Notes, context, pick-up-here details…">${issue.notes || ''}</textarea>
+                <div class="form-row" style="margin-top:6px">
+                  <button class="btn-sm btn-sm--bronze" data-save-notes="${issue.id}">Save</button>
+                  <button class="btn-sm" data-cancel-notes="${issue.id}">Cancel</button>
+                </div>
+              </div>
+              ${!issue.notes ? '' : ''}
+              <button class="btn-sm issue-edit-note-btn" data-edit-note="${issue.id}" style="margin-top:6px">${issue.notes ? 'Edit Note' : '+ Add Note'}</button>
             </div>
           </div>
         `).join('')}
@@ -1091,6 +1157,40 @@ async function renderIssues(c) {
       await db.from('issues').update({
         status: 'solved', resolution_note: note, resolved_at: new Date().toISOString()
       }).eq('id', btn.dataset.solve);
+      renderIssues(c);
+    });
+  });
+
+  c.querySelectorAll('.issue-note-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const area = document.getElementById(`issue-notes-${btn.dataset.issueId}`);
+      if (area) area.classList.toggle('hidden');
+    });
+  });
+
+  c.querySelectorAll('.issue-edit-note-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const editDiv = document.getElementById(`issue-notes-edit-${btn.dataset.editNote}`);
+      if (editDiv) { editDiv.classList.remove('hidden'); btn.classList.add('hidden'); }
+    });
+  });
+
+  c.querySelectorAll('[data-cancel-notes]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const editDiv = document.getElementById(`issue-notes-edit-${btn.dataset.cancelNotes}`);
+      if (editDiv) editDiv.classList.add('hidden');
+      const editBtn = c.querySelector(`.issue-edit-note-btn[data-edit-note="${btn.dataset.cancelNotes}"]`);
+      if (editBtn) editBtn.classList.remove('hidden');
+    });
+  });
+
+  c.querySelectorAll('[data-save-notes]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id = btn.dataset.saveNotes;
+      const ta = document.querySelector(`#issue-notes-edit-${id} .issue-notes-ta`);
+      if (!ta) return;
+      const notes = ta.value.trim();
+      await db.from('issues').update({ notes: notes || null }).eq('id', id);
       renderIssues(c);
     });
   });
@@ -1574,58 +1674,82 @@ style.textContent = `
   body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--cream); min-height:100vh; }
 
   /* NAV */
-  .g-nav { display:flex; align-items:center; justify-content:space-between; padding:14px 24px; background:var(--surface); border-bottom:2px solid var(--copper); }
+  .g-nav { display:flex; align-items:center; justify-content:space-between; padding:12px 20px; background:var(--surface); border-bottom:2px solid var(--copper); position:sticky; top:0; z-index:50; }
   .g-nav-back { color:var(--mid); text-decoration:none; font-size:.82rem; transition:color .15s; }
   .g-nav-back:hover { color:var(--copper); }
   .g-nav-center { display:flex; align-items:center; gap:10px; }
-  .g-badge { width:28px; height:32px; display:flex; align-items:center; justify-content:center; font-family:'Barlow Condensed',sans-serif; font-size:.7rem; font-weight:800; color:var(--cream); }
+  .g-badge { width:28px; height:32px; display:flex; align-items:center; justify-content:center; }
   .g-badge svg { width:28px; height:32px; }
   .g-nav-name { font-family:'Playfair Display',serif; font-size:1rem; font-weight:700; color:var(--cream); }
+  .g-hamburger { display:none; background:none; border:none; color:var(--cream); font-size:1.3rem; cursor:pointer; padding:4px 8px; line-height:1; }
+  @media(max-width:768px){ .g-hamburger { display:block; } }
 
-  /* TABS */
-  .g-tabs { display:flex; border-bottom:1px solid var(--lt); overflow-x:auto; background:var(--surface); }
-  .g-tabs::-webkit-scrollbar { display:none; }
-  .g-tab { flex:1; min-width:80px; padding:11px 8px; border:none; background:transparent; color:var(--mid); font-family:'DM Sans',sans-serif; font-size:.82rem; font-weight:500; cursor:pointer; border-bottom:2px solid transparent; transition:all .15s; white-space:nowrap; }
-  .g-tab.active { background:var(--bg); border-bottom-color:var(--copper); color:var(--copper); font-weight:700; }
-  .g-tab:hover { color:var(--cream); }
+  /* BODY + SIDEBAR */
+  .g-body { display:flex; min-height:calc(100vh - 53px); }
+  .g-sidebar { width:190px; background:var(--surface); border-right:1px solid var(--lt); display:flex; flex-direction:column; flex-shrink:0; padding:10px 0; }
+  .g-tab { display:flex; align-items:center; gap:12px; width:100%; padding:11px 18px; border:none; background:transparent; color:var(--mid); font-family:'DM Sans',sans-serif; font-size:.85rem; font-weight:500; cursor:pointer; text-align:left; border-left:3px solid transparent; transition:all .15s; white-space:nowrap; }
+  .g-tab.active { background:rgba(176,125,75,0.12); border-left-color:var(--copper); color:var(--copper); font-weight:700; }
+  .g-tab:hover:not(.active) { color:var(--cream); background:rgba(255,255,255,0.04); }
+  .g-tab-icon { font-size:.95rem; flex-shrink:0; }
+  .g-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:99; }
+  .g-overlay.active { display:block; }
+  @media(max-width:768px){
+    .g-sidebar { position:fixed; left:-210px; top:0; bottom:0; z-index:100; width:210px; padding-top:56px; transition:left .25s ease; box-shadow:4px 0 20px rgba(0,0,0,.4); }
+    .g-sidebar.open { left:0; }
+  }
 
   /* CONTENT */
-  .g-content { padding:24px; max-width:900px; margin:0 auto; }
+  .g-content { flex:1; padding:24px; overflow-y:auto; min-width:0; }
+  @media(max-width:768px){ .g-content { padding:16px; } }
   .loading { color:var(--mid); font-size:.85rem; padding:32px; text-align:center; font-style:italic; }
 
   /* SECTION HEADER */
   .list-section-title { font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--cream); margin-bottom:2px; }
   .list-section-rule { width:32px; height:2px; background:var(--copper); margin-bottom:16px; }
 
-  /* TIMER */
-  .timer-wrap { display:grid; grid-template-columns:1fr 260px; gap:28px; }
-  @media(max-width:640px){ .timer-wrap{ grid-template-columns:1fr; } .timer-right{ display:none; } }
-  .timer-seg-name { font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:700; color:var(--cream); margin-bottom:4px; }
-  .timer-seg-desc { font-size:.82rem; color:var(--mid); font-style:italic; margin-bottom:20px; }
-  .timer-display { font-family:'Barlow Condensed',sans-serif; font-size:5rem; font-weight:800; letter-spacing:.02em; color:var(--copper); line-height:1; margin-bottom:16px; transition:color .3s; }
-  .timer-warn { color:#c0392b !important; }
-  .timer-seg-bar-wrap { background:var(--lt); border-radius:2px; height:3px; overflow:hidden; margin-bottom:20px; }
-  .timer-seg-bar { height:100%; background:var(--copper); border-radius:2px; transition:width .5s; }
-  .timer-total-bar { background:var(--sage); }
-  .timer-total-wrap { margin-top:8px; }
-  .timer-total-label { font-size:.68rem; color:var(--mid); letter-spacing:.06em; text-transform:uppercase; margin-bottom:4px; }
-  .timer-controls { display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
+  /* TIMER — NEW DESIGN */
+  .tmr-wrap { display:flex; gap:0; min-height:calc(100vh - 110px); }
+  .tmr-left { width:220px; flex-shrink:0; background:var(--surface); border-right:1px solid var(--lt); padding:20px 0 20px; display:flex; flex-direction:column; align-items:center; gap:0; }
+  .tmr-ring-wrap { padding:20px 20px 10px; }
+  .tmr-ring-svg { width:130px; height:130px; transform:rotate(-90deg); }
+  .tmr-ring-bg { fill:none; stroke:var(--lt); stroke-width:8; }
+  .tmr-ring-fill { fill:none; stroke:var(--copper); stroke-width:8; stroke-linecap:round; transition:stroke-dashoffset .8s linear, stroke .3s; }
+  .tmr-ring--warn { stroke:#c0392b; }
+  .tmr-ring-time { fill:var(--copper); font-family:'Barlow Condensed',sans-serif; font-size:22px; font-weight:800; transform:rotate(90deg); transform-origin:60px 60px; }
+  .tmr-ring-total { fill:var(--mid); font-family:'DM Sans',sans-serif; font-size:9px; transform:rotate(90deg); transform-origin:60px 60px; }
+  .tmr-currently-label { font-size:.58rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--mid); margin-bottom:3px; text-align:center; padding:0 12px; }
+  .tmr-currently-name { font-family:'Playfair Display',serif; font-size:.92rem; font-weight:700; color:var(--copper); margin-bottom:14px; text-align:center; padding:0 12px; }
+  .tmr-seg-list { width:100%; display:flex; flex-direction:column; gap:1px; padding:0 0 8px; }
+  .tmr-seg-row { display:flex; align-items:center; gap:8px; padding:8px 16px; font-size:.78rem; color:var(--mid); border-left:3px solid transparent; transition:all .15s; }
+  .tmr-seg--active { background:rgba(176,125,75,0.12); border-left-color:var(--copper); color:var(--cream); }
+  .tmr-seg--done { opacity:.38; }
+  .tmr-seg-dot { width:14px; font-size:.65rem; color:var(--copper); flex-shrink:0; text-align:center; }
+  .tmr-seg-name { flex:1; font-weight:500; }
+  .tmr-seg-time { font-family:'Barlow Condensed',sans-serif; font-size:.82rem; color:var(--mid); }
+  .tmr-seg--active .tmr-seg-time { color:var(--copper); font-weight:700; }
+  .tmr-main { flex:1; padding:28px 32px; display:flex; flex-direction:column; gap:20px; overflow-y:auto; }
+  @media(max-width:700px){
+    .tmr-wrap { flex-direction:column; min-height:unset; }
+    .tmr-left { width:100%; border-right:none; border-bottom:1px solid var(--lt); padding:16px 0; }
+    .tmr-seg-list { flex-direction:row; flex-wrap:wrap; padding:0 12px; gap:4px; }
+    .tmr-seg-row { flex-direction:column; align-items:center; gap:2px; padding:6px 10px; border-left:none; border-bottom:3px solid transparent; font-size:.7rem; min-width:56px; }
+    .tmr-seg--active { border-bottom-color:var(--copper); border-left-color:transparent; }
+    .tmr-seg-time { display:none; }
+    .tmr-main { padding:16px; }
+  }
+  .tmr-leader-bar { display:flex; align-items:center; justify-content:space-between; gap:12px; background:var(--surface); border-left:3px solid var(--copper); border-radius:0 4px 4px 0; padding:12px 16px; flex-wrap:wrap; }
+  .tmr-leader-label { font-size:.58rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--mid); margin-bottom:2px; }
+  .tmr-leader-name { font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--cream); }
+  .tmr-leader-btns { display:flex; gap:8px; }
+  .tmr-seg-title { font-family:'Playfair Display',serif; font-size:2rem; font-weight:700; color:var(--cream); line-height:1.15; }
+  .tmr-seg-title--warn { color:#c0392b; }
+  .tmr-seg-desc { font-size:.9rem; color:var(--mid); font-style:italic; line-height:1.5; }
+  .tmr-controls { display:flex; gap:10px; flex-wrap:wrap; }
   .btn-t { padding:8px 18px; border-radius:3px; border:1px solid var(--lt); background:transparent; color:var(--cream); font-family:'DM Sans',sans-serif; font-size:.85rem; font-weight:700; cursor:pointer; transition:all .15s; }
   .btn-t:hover:not(:disabled) { border-color:var(--copper); color:var(--copper); }
   .btn-t:disabled { opacity:.3; cursor:default; }
   .btn-t--primary { background:var(--copper); color:var(--cream); border-color:var(--copper); }
   .btn-t--primary:hover { opacity:.85; }
-  .seg-row { display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:3px; font-size:.8rem; color:var(--mid); }
-  .seg-row--active { background:var(--surface2); color:var(--cream); border-left:2px solid var(--copper); }
-  .seg-row--done { opacity:.4; }
-  .seg-row-dot { width:18px; text-align:center; font-size:.72rem; color:var(--copper); flex-shrink:0; }
-  .seg-row-name { flex:1; font-weight:500; }
-  .seg-row-dur { font-family:'Barlow Condensed',sans-serif; font-size:.78rem; color:var(--mid); }
-
-  /* OVERTIME */
-  .seg-row--overtime { background:rgba(192,57,43,0.15); color:#c0392b; border-left:2px solid #c0392b; }
-  .seg-row--overtime .seg-row-dot { color:#c0392b; }
-  .seg-row--overtime .seg-row-dur { color:#c0392b; }
 
   /* SCORECARD */
   .sc-wrap { display:flex; flex-direction:column; gap:16px; }
@@ -1683,6 +1807,10 @@ style.textContent = `
   .rock-add-ms-label { font-size:.65rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--mid); margin-bottom:8px; }
   .pm-empty { font-size:.78rem; color:var(--mid); font-style:italic; padding:2px 0 6px; }
   .issue-resolution { font-size:.72rem; color:var(--sage); margin-top:4px; font-style:italic; }
+  .issue-notes-area { padding:10px 16px 14px; border-top:1px solid var(--lt); background:var(--bg); }
+  .issue-notes-text { font-size:.82rem; color:var(--cream); line-height:1.55; white-space:pre-wrap; margin-bottom:6px; }
+  .issue-notes-ta { width:100%; resize:vertical; min-height:72px; }
+  .issue-note-btn { font-size:.72rem; padding:3px 8px; }
   .empty-state { color:var(--mid); font-size:.85rem; font-style:italic; padding:32px; text-align:center; }
 
   /* FORMS */
