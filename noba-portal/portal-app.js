@@ -1478,6 +1478,18 @@ async function renderVault(c) {
         </div>
       </div>
 
+      ${GROUP.group_agreement ? `
+      <div class="agreement-section">
+        <div class="agreement-label">Group Agreement</div>
+        <div class="agreement-card">
+          <ul class="agreement-list">
+            ${GROUP.group_agreement.map(item => `<li class="agreement-item">${item}</li>`).join('')}
+          </ul>
+        </div>
+        <div class="shared-materials-divider"></div>
+      </div>
+      ` : ''}
+
       <div class="shared-materials-section">
         <div class="shared-materials-label">Shared Materials</div>
         <div class="vault-grid">${pinnedCards}</div>
@@ -1798,6 +1810,14 @@ style.textContent = `
   .rr-dot { width:8px; height:8px; border-radius:50%; background:var(--lt); flex-shrink:0; }
   .rr-dot--active { background:var(--copper); }
   .rr-done-msg { text-align:center; font-size:.78rem; color:var(--sage); font-style:italic; padding:4px; }
+
+  /* GROUP AGREEMENT */
+  .agreement-section { margin-bottom:4px; }
+  .agreement-label { font-size:.65rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--mid); margin-bottom:10px; }
+  .agreement-card { background:var(--surface); border-left:3px solid var(--copper); border-radius:0 4px 4px 0; padding:16px 20px; }
+  .agreement-list { list-style:none; display:flex; flex-direction:column; gap:10px; padding:0; }
+  .agreement-item { font-size:.85rem; color:var(--cream); line-height:1.55; padding-left:14px; position:relative; }
+  .agreement-item::before { content:'—'; position:absolute; left:0; color:var(--copper); font-weight:700; }
 `;
 document.head.appendChild(style);
 document.head.insertAdjacentHTML('beforeend', `<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@400;500;700&family=Barlow+Condensed:wght@600;800&display=swap" rel="stylesheet">`);

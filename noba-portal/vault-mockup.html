@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vault — Mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@400;500;700&family=Barlow+Condensed:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#1E2D33; --surface:#2B3F47; --surface2:#3A5560;
+  --copper:#B07D4B; --sage:#9EA67C; --cream:#F5F0E8; --mid:#8A9AA0; --lt:#3A5560;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--cream);min-height:100vh;}
+
+.g-nav{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;background:var(--surface);border-bottom:2px solid var(--copper);}
+.g-nav-back{color:var(--mid);text-decoration:none;font-size:.82rem;}
+.g-nav-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--cream);}
+
+.g-tabs{display:flex;border-bottom:1px solid var(--lt);background:var(--surface);overflow-x:auto;}
+.g-tabs::-webkit-scrollbar{display:none}
+.g-tab{flex:1;min-width:80px;padding:11px 8px;border:none;background:transparent;color:var(--mid);font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;}
+.g-tab.active{background:var(--bg);border-bottom-color:var(--copper);color:var(--copper);font-weight:700;}
+
+.g-content{padding:24px;max-width:900px;margin:0 auto;}
+
+.section-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--cream);margin-bottom:4px;}
+.section-rule{width:32px;height:2px;background:var(--copper);margin-bottom:20px;}
+
+/* ADD BAR */
+.vault-add-bar{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;}
+.btn-sm{padding:6px 14px;border-radius:3px;border:1px solid var(--lt);background:transparent;color:var(--cream);font-size:.78rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;}
+.btn-sm--bronze{background:var(--copper);color:var(--cream);border-color:var(--copper);}
+
+/* GRID */
+.vault-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;}
+@media(max-width:540px){.vault-grid{grid-template-columns:repeat(2,1fr);}}
+
+.vault-card{background:var(--surface);border-radius:4px;overflow:hidden;border-top:3px solid var(--copper);display:flex;flex-direction:column;transition:transform .15s;cursor:pointer;}
+.vault-card:hover{transform:translateY(-3px);}
+.vault-card.sage{border-top-color:var(--sage);}
+.vault-card.link-card{border-top-color:var(--mid);}
+
+.vault-preview{height:110px;background:var(--surface2);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;}
+.vault-preview img{width:100%;height:100%;object-fit:cover;}
+.vault-type-badge{position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.55);border-radius:2px;font-size:.58rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mid);padding:2px 6px;}
+.vault-icon{font-size:2.4rem;opacity:.28;}
+
+.vault-card-body{padding:10px 12px 12px;}
+.vault-title{font-family:'Playfair Display',serif;font-size:.82rem;font-weight:700;color:var(--cream);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.vault-meta{font-size:.65rem;color:var(--mid);font-style:italic;margin-bottom:8px;}
+.vault-actions{display:flex;gap:6px;}
+.btn-v{flex:1;padding:5px 0;border-radius:2px;border:1px solid var(--lt);background:transparent;color:var(--mid);font-size:.68rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;text-align:center;transition:all .15s;}
+.btn-v:hover{border-color:var(--copper);color:var(--copper);}
+.btn-v.primary{background:var(--copper);border-color:var(--copper);color:var(--cream);}
+
+/* SECTION DIVIDER */
+.vault-section{margin-bottom:28px;}
+.vault-section-label{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mid);margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+.vault-section-label::after{content:'';flex:1;height:1px;background:var(--lt);}
+</style>
+</head>
+<body>
+
+<nav class="g-nav">
+  <a href="#" class="g-nav-back">← Portal</a>
+  <div class="g-nav-name">Zeta Group</div>
+  <div></div>
+</nav>
+
+<div class="g-tabs">
+  <button class="g-tab">⏱ Meeting</button>
+  <button class="g-tab">📊 Scorecard</button>
+  <button class="g-tab">🪨 Rocks</button>
+  <button class="g-tab">💡 Issues</button>
+  <button class="g-tab active">🗄 Vault</button>
+</div>
+
+<div class="g-content">
+
+  <div class="section-title">Vault</div>
+  <div class="section-rule"></div>
+
+  <div class="vault-add-bar">
+    <button class="btn-sm btn-sm--bronze">↑ Upload File</button>
+    <button class="btn-sm">+ Add Link</button>
+  </div>
+
+  <!-- DOCUMENTS -->
+  <div class="vault-section">
+    <div class="vault-section-label">Documents &amp; PDFs</div>
+    <div class="vault-grid">
+
+      <div class="vault-card">
+        <div class="vault-preview">
+          <span class="vault-icon">📄</span>
+          <span class="vault-type-badge">PDF</span>
+        </div>
+        <div class="vault-card-body">
+          <div class="vault-title">Sarah M. — Compass</div>
+          <div class="vault-meta">Apr 14, 2026</div>
+          <div class="vault-actions">
+            <button class="btn-v primary">View</button>
+            <button class="btn-v">↓</button>
+            <button class="btn-v">✕</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="vault-card">
+        <div class="vault-preview">
+          <span class="vault-icon">📄</span>
+          <span class="vault-type-badge">PDF</span>
+        </div>
+        <div class="vault-card-body">
+          <div class="vault-title">James T. — Compass</div>
+          <div class="vault-meta">Apr 13, 2026</div>
+          <div class="vault-actions">
+            <button class="btn-v primary">View</button>
+            <button class="btn-v">↓</button>
+            <button class="btn-v">✕</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="vault-card">
+        <div class="vault-preview">
+          <span class="vault-icon">📄</span>
+          <span class="vault-type-badge">PDF</span>
+        </div>
+        <div class="vault-card-body">
+          <div class="vault-title">Rachel K. — Compass</div>
+          <div class="vault-meta">Apr 12, 2026</div>
+          <div class="vault-actions">
+            <button class="btn-v primary">View</button>
+            <button class="btn-v">↓</button>
+            <button class="btn-v">✕</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="vault-card">
+        <div class="vault-preview">
+          <span class="vault-icon">📄</span>
+          <span class="vault-type-badge">PDF</span>
+        </div>
+        <div class="vault-card-body">
+          <div class="vault-title">Marcus W. — Compass</div>
+          <div class="vault-meta">Apr 10, 2026</div>
+          <div class="vault-actions">
+            <button class="btn-v primary">View</button>
+            <button class="btn-v">↓</button>
+            <button class="btn-v">✕</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="vault-card">
+        <div class="vault-preview">
+          <span class="vault-icon">📄</span>
+          <span class="vault-type-badge">PDF</span>
+        </div>
+        <div class="vault-card-body">
+          <div class="vault-title">Dana L. — Compass</div>
+          <div class="vault-meta">Apr 9, 2026</div>
+          <div class="vault-actions">
+            <button class="btn-v primary">View</button>
+            <button class="btn-v">↓</button>
+            <button class="btn-v">✕</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PHOTOS -->
+  <div class="vault-section">
+    <div class="vault-section-label">Photos</div>
+    <div class="vault-grid">
+
+      <div class="vault-card sage">
+        <div class="vault-preview" style="background:#1a2e1a">
+          <svg width="100%" height="100%" viewBox="0 0 160 110" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <rect width="160" height="110" fill="#1a2e1a"/>
+            <rect x="20" y="30" width="120" height="60" rx="4" fill="#2a4a2a" opacity=".6"/>
+            <circle cx="80" cy="55" r="18" fill="#3a6a3a" opacity=".5"/>
+            <text x="80" y="60" text-anchor="middle" font-size="22" fill="rgba(158,166,124,0.4)">🌲</text>
+          </svg>
+          <span class="vault-type-badge">JPG</span>
+        </div>
+        <div class="vault-card-body">
+          <div class="vault-title">Q1 Retreat Group</div>
+          <div class="vault-meta">Marcus W. · Apr 5, 2026</div>
+          <div class="vault-actions">
+            <button class="btn-v primary">View</button>
+            <button class="btn-v">↓</button>
+            <button class="btn-v">✕</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="vault-card sage">
+        <div class="vault-preview" style="background:#2a1a1a">
+          <svg width="100%" height="100%" viewBox="0 0 160 110" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <rect width="160" height="110" fill="#2a1a0a"/>
+            <rect x="0" y="60" width="160" height="50" fill="#1a0a00" opacity=".8"/>
+            <circle cx="80" cy="40" r="25" fill="#B07D4B" opacity=".2"/>
+            <text x="80" y="48" text-anchor="middle" font-size="26" fill="rgba(176,125,75,0.3)">🔥</text>
+          </svg>
+          <span class="vault-type-badge">JPG</span>
+        </div>
+        <div class="vault-card-body">
+          <div class="vault-title">Kickoff Night</div>
+          <div class="vault-meta">Sarah M. · Mar 28, 2026</div>
+          <div class="vault-actions">
+            <button class="btn-v primary">View</button>
+            <button class="btn-v">↓</button>
+            <button class="btn-v">✕</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="vault-card sage">
+        <div class="vault-preview" style="background:#1a1a2e">
+          <svg width="100%" height="100%" viewBox="0 0 160 110" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <rect width="160" height="110" fill="#1a1a2e"/>
+            <rect x="30" y="20" width="100" height="70" rx="2" fill="#2a2a4a" opacity=".7"/>
+            <text x="80" y="62" text-anchor="middle" font-size="28" fill="rgba(138,154,160,0.3)">🏆</text>
+          </svg>
+          <span class="vault-type-badge">PNG</span>
+        </div>
+        <div class="vault-card-body">
+          <div class="vault-title">Winner Board</div>
+          <div class="vault-meta">Dana L. · Mar 15, 2026</div>
+          <div class="vault-actions">
+            <button class="btn-v primary">View</button>
+            <button class="btn-v">↓</button>
+            <button class="btn-v">✕</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- LINKS -->
+  <div class="vault-section">
+    <div class="vault-section-label">Links &amp; Resources</div>
+    <div class="vault-grid">
+
+      <div class="vault-card link-card">
+        <div class="vault-preview">
+          <span class="vault-icon">📊</span>
+          <span class="vault-type-badge">Sheets</span>
+        </div>
+        <div class="vault-card-body">
+          <div class="vault-title">Q2 Budget Tracker</div>
+          <div class="vault-meta">James T. · Apr 8, 2026</div>
+          <div class="vault-actions">
+            <button class="btn-v primary">Open</button>
+            <button class="btn-v">✕</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="vault-card link-card">
+        <div class="vault-preview">
+          <span class="vault-icon">📝</span>
+          <span class="vault-type-badge">Docs</span>
+        </div>
+        <div class="vault-card-body">
+          <div class="vault-title">Pod Norms &amp; Agreements</div>
+          <div class="vault-meta">Rachel K. · Mar 30, 2026</div>
+          <div class="vault-actions">
+            <button class="btn-v primary">Open</button>
+            <button class="btn-v">✕</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="vault-card link-card">
+        <div class="vault-preview">
+          <span class="vault-icon">🔗</span>
+          <span class="vault-type-badge">Link</span>
+        </div>
+        <div class="vault-card-body">
+          <div class="vault-title">NOBA Member Directory</div>
+          <div class="vault-meta">Marcus W. · Mar 20, 2026</div>
+          <div class="vault-actions">
+            <button class="btn-v primary">Open</button>
+            <button class="btn-v">✕</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

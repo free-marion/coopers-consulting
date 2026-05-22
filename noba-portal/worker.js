@@ -14,7 +14,7 @@ export default {
       'zeta':           '1',
       'bad-batch':      '2',
       'crimson-aces':   '3',
-      'dragon-shields': '4',
+      'dragon-shields': 'joelsux',
       'storm-wardens':  '5',
       'phoenix-wing':   '6',
       'knights-raven':  '7',
