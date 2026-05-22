@@ -34,10 +34,13 @@ function fmt(secs) {
 
 function getWeekStart(offset = 0) {
   const now = new Date();
-  const utcDay = now.getUTCDay();
-  const daysToMonday = (utcDay + 6) % 7;
-  const monday = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - daysToMonday + offset * 7));
-  return monday.toISOString().slice(0, 10);
+  const local = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const daysToMonday = (local.getDay() + 6) % 7;
+  local.setDate(local.getDate() - daysToMonday + offset * 7);
+  const y = local.getFullYear();
+  const m = String(local.getMonth() + 1).padStart(2, '0');
+  const d = String(local.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
 }
 
 // ── MAIN SHELL ───────────────────────────────────────────────────────────────
