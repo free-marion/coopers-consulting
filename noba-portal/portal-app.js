@@ -399,9 +399,10 @@ async function renderScorecard(c) {
   const weeks = [];
   for (let i = 0; i < 6; i++) weeks.push(getWeekStart(-i));
 
-  const [{ data: metrics }, { data: entries }] = await Promise.all([
+  const [{ data: metrics }, { data: entries }, { data: ratingsData }] = await Promise.all([
     db.from('scorecard_metrics').select('*').eq('group_id', GROUP.id).order('member_name').order('sort_order'),
     db.from('scorecard_entries').select('*').eq('group_id', GROUP.id).in('week_start', weeks),
+    db.from('meeting_ratings').select('week_start, member_name, rating').eq('group_id', GROUP.id).in('week_start', weeks).order('week_start', { ascending: false }),
   ]);
 
   const mlist = (metrics || []).sort((a, b) => {
@@ -501,6 +502,46 @@ async function renderScorecard(c) {
           </tbody>
         </table>
       </div>
+
+      ${(ratingsData || []).length > 0 ? (() => {
+        const members = GROUP.members || [];
+        const allWeeks = [...new Set((ratingsData || []).map(r => r.week_start))].sort().reverse();
+        return `
+        <div class="sc-ratings-section">
+          <div class="list-section-title" style="margin-top:28px">Meeting Ratings</div>
+          <div class="list-section-rule"></div>
+          <div class="rating-hist-table-wrap">
+            <table class="rating-hist-table">
+              <thead>
+                <tr>
+                  <th>Week</th>
+                  ${members.map(m => `<th>${m.split(' ')[0]}</th>`).join('')}
+                  <th>Avg</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${allWeeks.map(week => {
+                  const weekRows = (ratingsData || []).filter(r => r.week_start === week);
+                  const vals = members.map(m => (weekRows.find(r => r.member_name === m) || {}).rating ?? null);
+                  const filled = vals.filter(v => v !== null);
+                  const avg = filled.length ? (filled.reduce((a, b) => a + b, 0) / filled.length).toFixed(1) : '—';
+                  const lbl = new Date(week + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                  const isCurrent = week === getWeekStart();
+                  return `<tr${isCurrent ? ' class="hist-row-current"' : ''}>
+                    <td class="hist-week-lbl">${lbl}</td>
+                    ${vals.map(v => v !== null
+                      ? `<td class="hist-val" style="color:${v >= 8 ? '#9EA67C' : v >= 5 ? '#B07D4B' : '#c0392b'}">${v}</td>`
+                      : `<td class="hist-val hist-val--empty">—</td>`
+                    ).join('')}
+                    <td class="hist-avg">${avg}</td>
+                  </tr>`;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>`;
+      })() : ''}
+
     </div>
   `;
 
