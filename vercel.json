@@ -4,6 +4,7 @@
   "rewrites": [
     { "source": "/noba",  "destination": "/noba.html" },
     { "source": "/petra", "destination": "/petra.html" },
-    { "source": "/forum", "destination": "/forum.html" }
+    { "source": "/forum", "destination": "/forum.html" },
+    { "source": "/qbo/callback", "destination": "/qbo/callback.html" }
   ]
 }

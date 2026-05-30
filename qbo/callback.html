@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>QBO Auth</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f0f0f; color: #e0e0e0; font-family: monospace; padding: 40px 20px; }
+  h1 { color: #4fc3f7; margin-bottom: 8px; font-size: 20px; }
+  p { color: #888; margin-bottom: 32px; font-size: 14px; }
+  .card { background: #1a1a1a; border: 1px solid #333; border-radius: 6px; padding: 20px; margin-bottom: 16px; }
+  .label { color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .value { color: #4fc3f7; font-size: 15px; word-break: break-all; line-height: 1.5; }
+  .value.big { font-size: 22px; color: #a5d6a7; }
+  .copy-btn { margin-top: 12px; background: #333; border: 1px solid #555; color: #e0e0e0; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-family: monospace; font-size: 13px; }
+  .copy-btn:hover { background: #444; }
+  .copy-btn.copied { color: #a5d6a7; border-color: #a5d6a7; }
+  .error { color: #ef9a9a; }
+</style>
+</head>
+<body>
+<h1>QBO Authorization Complete</h1>
+<p>Paste the full URL below into Claude Code to finish the connection.</p>
+
+<div class="card" id="fullurl-card">
+  <div class="label">Full URL — paste this into Claude Code</div>
+  <div class="value" id="fullurl"></div>
+  <button class="copy-btn" onclick="copy('fullurl', this)">Copy</button>
+</div>
+
+<div class="card">
+  <div class="label">Auth Code</div>
+  <div class="value big" id="code"></div>
+</div>
+
+<div class="card">
+  <div class="label">Realm ID (Company)</div>
+  <div class="value big" id="realmid"></div>
+</div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const code = params.get('code');
+const realmId = params.get('realmId');
+const fullUrl = window.location.href;
+
+document.getElementById('fullurl').textContent = fullUrl;
+document.getElementById('code').textContent = code || '— not found —';
+document.getElementById('realmid').textContent = realmId || '— not found —';
+
+if (!code) {
+  document.getElementById('code').classList.add('error');
+  document.getElementById('realmid').classList.add('error');
+}
+
+function copy(id, btn) {
+  const text = id === 'fullurl' ? fullUrl : document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+</script>
+</body>
+</html>
