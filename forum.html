@@ -282,6 +282,19 @@ nav.scrolled {
   align-self: flex-start;
 }
 
+/* ── SCHEDULE EVE ── */
+.sched-eve {
+  padding: 2rem 5vw 2.5rem;
+  border-bottom: 1px solid var(--rule);
+}
+.sched-eve .sched-day-label { margin-bottom: 1.5rem; }
+.terrace-img {
+  display: block; width: 100%; max-height: 280px;
+  object-fit: cover; object-position: center 55%;
+  border: 1px solid rgba(232,112,26,.18);
+  margin-top: 1rem;
+}
+
 /* ── DATA STRIP ── */
 .data-strip {
   position: relative; z-index: 1;
@@ -676,10 +689,30 @@ footer {
     <h2>Two Days. All Signal.</h2>
     <p>A focused program for owners and leaders ready to move the needle.</p>
   </div>
+  <div class="sched-eve">
+    <div class="sched-day-label">Wednesday Evening &nbsp;&middot;&nbsp; June 17</div>
+    <div class="session">
+      <div class="sess-time">7:00–9:00 PM</div>
+      <div class="sess-body">
+        <div class="sess-title">Welcome Cocktail Hour</div>
+        <div class="sess-speaker">Gateway Terrace &nbsp;&middot;&nbsp; 18th Floor</div>
+        <span class="sess-tag">Pre-Event</span>
+        <img class="terrace-img" src="https://gatetoadventures.com/wp-content/uploads/2024/01/Hyatt-Regency-St.-Louis-22.jpg" alt="Gateway Terrace — Hyatt Regency St. Louis at The Arch" />
+      </div>
+    </div>
+  </div>
+
   <div class="schedule-grid">
 
     <div class="sched-day">
       <div class="sched-day-label">Day One &nbsp;&middot;&nbsp; June 18</div>
+      <div class="session">
+        <div class="sess-time">7:00–8:00 AM</div>
+        <div class="sess-body">
+          <div class="sess-title">Breakfast</div>
+          <div class="sess-speaker">Secondary Meeting Room</div>
+        </div>
+      </div>
       <div class="session">
         <div class="sess-time">8:00 AM</div>
         <div class="sess-body">
@@ -743,6 +776,13 @@ footer {
 
     <div class="sched-day">
       <div class="sched-day-label">Day Two &nbsp;&middot;&nbsp; June 19</div>
+      <div class="session">
+        <div class="sess-time">7:00–8:00 AM</div>
+        <div class="sess-body">
+          <div class="sess-title">Breakfast</div>
+          <div class="sess-speaker">Secondary Meeting Room</div>
+        </div>
+      </div>
       <div class="session">
         <div class="sess-time">8:00 AM</div>
         <div class="sess-body">
