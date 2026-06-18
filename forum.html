@@ -569,7 +569,7 @@ footer {
 .slide-img {
   position: absolute; inset: 0; width: 100%; height: 100%;
   object-fit: cover; opacity: 0;
-  transition: opacity .8s ease;
+  transition: opacity .35s ease;
   z-index: 1;
 }
 .slide-img.slide-active { opacity: 1; z-index: 2; }
@@ -593,7 +593,7 @@ footer {
   width: 3rem; height: 5rem;
   display: flex; align-items: center; justify-content: center;
   cursor: pointer; transition: background .2s, border-color .2s;
-  padding: 0;
+  padding: 0; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
 }
 .slide-btn:hover { background: rgba(232,112,26,.18); border-color: rgba(232,112,26,.6); }
 .slide-prev { left: 0; border-left: none; border-radius: 0 4px 4px 0; }
@@ -713,6 +713,66 @@ footer {
 
 /* ── SCROLL MARGIN (accounts for fixed nav + sticky banner) ── */
 section[id], #pay { scroll-margin-top: 128px; }
+
+/* ── DEPTH OF FIELD ── */
+/* Hero: side + bottom vignette creates lens-like focal plane */
+.hero::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse 55% 100% at 0%   50%, rgba(0,0,0,.40) 0%, transparent 100%),
+    radial-gradient(ellipse 55% 100% at 100% 50%, rgba(0,0,0,.40) 0%, transparent 100%),
+    radial-gradient(ellipse 100% 38% at 50% 100%, rgba(0,0,0,.50) 0%, transparent 100%);
+}
+.hero-inner, .quick-ref { position: relative; z-index: 1; }
+
+/* Card elevation — physical depth on interactive surfaces */
+.speaker-card {
+  box-shadow: 0 4px 28px rgba(0,0,0,.42), 0 1px 6px rgba(0,0,0,.28);
+}
+.speaker-card:hover {
+  box-shadow: 0 8px 48px rgba(232,112,26,.10), 0 4px 20px rgba(0,0,0,.38);
+}
+.stl-card {
+  box-shadow: 0 2px 18px rgba(0,0,0,.35);
+}
+.stl-card:hover {
+  box-shadow: 0 6px 32px rgba(232,112,26,.09), 0 2px 10px rgba(0,0,0,.32);
+}
+.quick-ref {
+  box-shadow: 0 10px 52px rgba(0,0,0,.52), 0 2px 10px rgba(0,0,0,.32);
+}
+
+/* Section depth: content recedes into page edges */
+.sect-a {
+  background:
+    radial-gradient(ellipse 110% 60% at 50% 0%, transparent 55%, rgba(0,0,0,.14) 100%),
+    var(--sect-a);
+}
+.sect-b {
+  background:
+    radial-gradient(ellipse 110% 60% at 50% 0%, transparent 55%, rgba(0,0,0,.14) 100%),
+    var(--sect-b);
+}
+
+/* ── MARGIN FIX — sections with zero horizontal padding ── */
+#ids    { padding: 3.5rem max(24px, 5vw); }
+#people { padding: 3.5rem max(24px, 5vw); }
+
+/* ── MOBILE — 24px floor so text never crowds the edge ── */
+@media (max-width: 420px) {
+  nav { padding-left: 16px; padding-right: 16px; }
+  .schedule-header, .speakers-header, .stl-header,
+  .logistics-header, .mat-header, .gallery-header,
+  .sched-eve, .day-panel  { padding-left: 24px; padding-right: 24px; }
+  .mat-row, .mat-day-label { padding-left: 24px; padding-right: 24px; }
+  .charity-inner  { padding-left: 24px; padding-right: 24px; }
+  .contact-strip  { padding-left: 24px; padding-right: 24px; }
+  .pay-strip      { padding-left: 24px; padding-right: 24px; }
+  footer          { padding-left: 24px; padding-right: 24px; }
+  .stl-live-bar   { padding-left: 24px; padding-right: 24px; }
+  .now-banner     { padding-left: 24px; padding-right: 24px; }
+  .slideshow-wrap { padding-left: 24px; padding-right: 24px; padding-right: 24px; }
+}
 
 /* ── STL LIVE BAR ── */
 .stl-live-bar {
@@ -1911,7 +1971,7 @@ const navOverlay   = document.getElementById('nav-overlay');
 const overlayClose = document.getElementById('overlay-close');
 const openMenu  = () => { navOverlay.classList.add('open'); burgerBtn.setAttribute('aria-expanded','true'); document.body.style.overflow='hidden'; };
 const closeMenu = () => { navOverlay.classList.remove('open'); burgerBtn.setAttribute('aria-expanded','false'); document.body.style.overflow=''; };
-burgerBtn.addEventListener('click', openMenu);
+burgerBtn.addEventListener('click', () => { navOverlay.classList.contains('open') ? closeMenu() : openMenu(); });
 overlayClose.addEventListener('click', closeMenu);
 navOverlay.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
@@ -2175,7 +2235,11 @@ function fetchCardinals() {
     const cur = active === 'a' ? imgA : imgB;
     const nxt = active === 'a' ? imgB : imgA;
 
+    // Cancel any pending load on nxt before reusing it
+    nxt.onload = nxt.onerror = null;
+
     function doSwap() {
+      nxt.onload = nxt.onerror = null;
       nxt.classList.add('slide-active');
       cur.classList.remove('slide-active');
       active = active === 'a' ? 'b' : 'a';
@@ -2202,10 +2266,15 @@ function fetchCardinals() {
   prevBtn.addEventListener('click', function () { advance(-1); });
   nextBtn.addEventListener('click', function () { advance(1); });
 
-  stage.addEventListener('mouseenter', function () { clearInterval(timer); });
-  stage.addEventListener('mouseleave', function () {
-    timer = setInterval(function () { show(idx + 1); }, AUTO_MS);
-  });
+  // Swipe support for mobile
+  var swipeX = null;
+  stage.addEventListener('touchstart', function (e) { swipeX = e.touches[0].clientX; }, { passive: true });
+  stage.addEventListener('touchend', function (e) {
+    if (swipeX === null) return;
+    var dx = e.changedTouches[0].clientX - swipeX;
+    swipeX = null;
+    if (Math.abs(dx) > 40) advance(dx < 0 ? 1 : -1);
+  }, { passive: true });
 
   document.addEventListener('keydown', function (e) {
     if (e.key === 'ArrowLeft')  advance(-1);
