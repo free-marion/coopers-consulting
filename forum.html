@@ -563,13 +563,18 @@ footer {
   padding: 2.5rem 5vw 3rem;
   display: grid; grid-template-columns: repeat(3,1fr); gap: .6rem;
 }
-.gallery-item { position: relative; overflow: hidden; }
+.gallery-item {
+  position: relative; overflow: hidden;
+  opacity: 0; transform: translateY(28px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+.gallery-item.vis { opacity: 1; transform: translateY(0); }
 .gallery-item img {
   width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block;
   border: 1px solid rgba(232,112,26,.14);
-  transition: transform .3s, filter .3s;
+  transition: transform .35s, filter .35s;
 }
-.gallery-item:hover img { transform: scale(1.03); filter: brightness(1.08); }
+.gallery-item:hover img { transform: scale(1.04); filter: brightness(1.1); }
 .gallery-item .g-caption {
   position: absolute; bottom: 0; left: 0; right: 0;
   background: linear-gradient(transparent, rgba(10,8,5,.82));
@@ -590,19 +595,31 @@ footer {
 /* ── IDS LIST ── */
 .ids-list { list-style: none; margin: 0; padding: 0; }
 .ids-item {
-  display: flex; align-items: baseline; gap: 1rem;
+  display: flex; align-items: center; gap: 1rem;
   padding: .9rem 0; border-bottom: 1px solid rgba(242,235,218,.08);
+  cursor: pointer; user-select: none;
 }
+.ids-item:hover { background: rgba(242,235,218,.02); }
 .ids-num {
   font-family: 'Cinzel', serif; font-size: .75rem; font-weight: 700;
   color: var(--orange); min-width: 1.8rem; flex-shrink: 0;
+  transition: color .25s;
 }
 .ids-body { flex: 1; }
-.ids-title { font-size: .9375rem; color: var(--cream); line-height: 1.45; }
+.ids-title { font-size: .9375rem; color: var(--cream); line-height: 1.45; transition: color .25s; }
 .ids-owner {
   font-size: .75rem; color: var(--muted); margin-top: .2rem;
-  font-style: italic; letter-spacing: .03em;
+  font-style: italic; letter-spacing: .03em; transition: color .25s;
 }
+.ids-solved-badge {
+  font-family: 'Cinzel', serif; font-size: .6rem; font-weight: 700;
+  letter-spacing: .14em; color: var(--orange); text-transform: uppercase;
+  flex-shrink: 0; opacity: 0; transition: opacity .25s;
+}
+.ids-item.solved .ids-num { color: rgba(242,235,218,.25); }
+.ids-item.solved .ids-title { color: rgba(242,235,218,.3); text-decoration: line-through; }
+.ids-item.solved .ids-owner { color: rgba(242,235,218,.18); }
+.ids-item.solved .ids-solved-badge { opacity: 1; }
 .ids-empty {
   font-size: .875rem; font-style: italic; color: rgba(242,235,218,.2);
   padding: 2rem 0; font-family: 'Cinzel', serif; letter-spacing: .06em;
@@ -919,6 +936,8 @@ section[id], #pay { scroll-margin-top: 128px; }
   <button id="overlay-close" class="overlay-close" aria-label="Close menu">✕</button>
   <a href="#schedule">Schedule</a>
   <a href="#materials">Materials</a>
+  <a href="#ids">IDS</a>
+  <a href="#gallery">Gallery</a>
   <a href="#people">People</a>
   <a href="#explore">Explore</a>
   <a href="#logistics">Logistics</a>
@@ -1237,58 +1256,65 @@ section[id], #pay { scroll-margin-top: 128px; }
 
 <!-- ── IDS LIST ── -->
 <section class="sect sect-a" id="ids">
-  <div class="sect-label">Issues · Decisions · Solutions</div>
+  <div class="sect-label">Identify · Discuss · Solve</div>
   <h2>IDS List</h2>
-  <p style="font-size:.9375rem;color:var(--muted);margin-bottom:2rem;">Issues captured during Focus Forum 2026. Updated live.</p>
+  <p style="font-size:.9375rem;color:var(--muted);margin-bottom:2rem;">Issues captured during Focus Forum 2026. Tap any issue to mark it solved.</p>
   <ol class="ids-list" id="ids-list">
-    <li class="ids-item">
+    <li class="ids-item" data-id="1">
       <span class="ids-num">1</span>
       <div class="ids-body">
         <div class="ids-title">Marketing that resonates with my clientele</div>
-        <div class="ids-owner">Owner — unknown</div>
+        <div class="ids-owner">Who — unknown</div>
       </div>
+      <span class="ids-solved-badge">Solved</span>
     </li>
-    <li class="ids-item">
+    <li class="ids-item" data-id="2">
       <span class="ids-num">2</span>
       <div class="ids-body">
         <div class="ids-title">Developing a shared vision with my 3 partners</div>
-        <div class="ids-owner">Owner — Eric Meyer</div>
+        <div class="ids-owner">Who — Eric Meyer</div>
       </div>
+      <span class="ids-solved-badge">Solved</span>
     </li>
-    <li class="ids-item">
+    <li class="ids-item" data-id="3">
       <span class="ids-num">3</span>
       <div class="ids-body">
         <div class="ids-title">People are worried about becoming irrelevant / left behind as we embrace change</div>
-        <div class="ids-owner">Owner — Bailey Gilder</div>
+        <div class="ids-owner">Who — Bailey Gilder</div>
       </div>
+      <span class="ids-solved-badge">Solved</span>
     </li>
-    <li class="ids-item">
+    <li class="ids-item" data-id="4">
       <span class="ids-num">4</span>
       <div class="ids-body">
         <div class="ids-title">Too big of a vision — too many irons in the fire; afraid of losing control of growth</div>
-        <div class="ids-owner">Owner — Levi Kinnard</div>
+        <div class="ids-owner">Who — Levi Kinnard</div>
       </div>
+      <span class="ids-solved-badge">Solved</span>
     </li>
-    <li class="ids-item">
+    <li class="ids-item" data-id="5">
       <span class="ids-num">5</span>
       <div class="ids-body">
         <div class="ids-title">Overly dependent on a single person — Mark at one location, Billy at the other</div>
-        <div class="ids-owner">Owner — Mark McMullin</div>
+        <div class="ids-owner">Who — Mark McMullin</div>
       </div>
+      <span class="ids-solved-badge">Solved</span>
     </li>
-    <li class="ids-item">
+    <li class="ids-item" data-id="6">
       <span class="ids-num">6</span>
       <div class="ids-body">
         <div class="ids-title">Overly dependent on a single person</div>
-        <div class="ids-owner">Owner — Troy Wilkinson</div>
+        <div class="ids-owner">Who — Troy Wilkinson</div>
       </div>
+      <span class="ids-solved-badge">Solved</span>
     </li>
-    <li class="ids-item">
+    <li class="ids-item" data-id="7">
       <span class="ids-num">7</span>
       <div class="ids-body">
         <div class="ids-title">Decision fatigue — too many people seeking affirmation; need to teach people to decide on their own</div>
-        <div class="ids-owner">Owner — Zac Abell</div>
+        <div class="ids-owner">Who — Zac Abell</div>
       </div>
+      <span class="ids-solved-badge">Solved</span>
     </li>
   </ol>
 </section>
@@ -2107,6 +2133,33 @@ function fetchCardinals() {
     });
     labels.forEach(lbl => { lbl.style.display = q ? 'none' : ''; });
     noRes.style.display = anyVisible ? 'none' : 'block';
+  });
+})();
+
+// ── GALLERY FADE-IN ──
+(function () {
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('vis'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.gallery-item').forEach((el, i) => {
+    el.style.transitionDelay = (i % 3) * 0.12 + 's';
+    io.observe(el);
+  });
+})();
+
+// ── IDS SOLVED TOGGLE ──
+(function () {
+  const KEY = 'ff2026-ids-solved';
+  const solved = new Set(JSON.parse(localStorage.getItem(KEY) || '[]'));
+  document.querySelectorAll('.ids-item[data-id]').forEach(item => {
+    if (solved.has(item.dataset.id)) item.classList.add('solved');
+    item.addEventListener('click', () => {
+      item.classList.toggle('solved');
+      item.classList.contains('solved') ? solved.add(item.dataset.id) : solved.delete(item.dataset.id);
+      localStorage.setItem(KEY, JSON.stringify([...solved]));
+    });
   });
 })();
 
