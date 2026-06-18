@@ -587,6 +587,27 @@ footer {
 @media (max-width: 700px) { .gallery-grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 450px) { .gallery-grid { grid-template-columns: 1fr; } }
 
+/* ── IDS LIST ── */
+.ids-list { list-style: none; margin: 0; padding: 0; }
+.ids-item {
+  display: flex; align-items: baseline; gap: 1rem;
+  padding: .9rem 0; border-bottom: 1px solid rgba(242,235,218,.08);
+}
+.ids-num {
+  font-family: 'Cinzel', serif; font-size: .75rem; font-weight: 700;
+  color: var(--orange); min-width: 1.8rem; flex-shrink: 0;
+}
+.ids-body { flex: 1; }
+.ids-title { font-size: .9375rem; color: var(--cream); line-height: 1.45; }
+.ids-owner {
+  font-size: .75rem; color: var(--muted); margin-top: .2rem;
+  font-style: italic; letter-spacing: .03em;
+}
+.ids-empty {
+  font-size: .875rem; font-style: italic; color: rgba(242,235,218,.2);
+  padding: 2rem 0; font-family: 'Cinzel', serif; letter-spacing: .06em;
+}
+
 /* ── PEOPLE DIRECTORY ── */
 .people-search-wrap {
   max-width: 420px; margin: 0 auto 2.5rem;
@@ -878,6 +899,7 @@ section[id], #pay { scroll-margin-top: 128px; }
   <ul class="nav-links" role="list">
     <li><a href="#schedule">Schedule</a></li>
     <li><a href="#materials">Materials</a></li>
+    <li><a href="#ids">IDS</a></li>
     <li><a href="#gallery">Gallery</a></li>
     <li><a href="#people">People</a></li>
     <li><a href="#explore">Explore</a></li>
@@ -1211,6 +1233,29 @@ section[id], #pay { scroll-margin-top: 128px; }
     <div class="mat-sess-name">Charity &amp; Close<div class="mat-sess-speaker">Mary Wilkinson</div></div>
     <div class="mat-links"><span class="mat-empty">Nothing yet</span></div>
   </div>
+</section>
+
+<!-- ── IDS LIST ── -->
+<section class="sect sect-a" id="ids">
+  <div class="sect-label">Issues · Decisions · Solutions</div>
+  <h2>IDS List</h2>
+  <p style="font-size:.9375rem;color:var(--muted);margin-bottom:2rem;">Issues captured during Focus Forum 2026. Updated live.</p>
+  <ol class="ids-list" id="ids-list">
+    <li class="ids-item">
+      <span class="ids-num">1</span>
+      <div class="ids-body">
+        <div class="ids-title">Marketing that resonates with my clientele</div>
+        <div class="ids-owner">Owner — unknown</div>
+      </div>
+    </li>
+    <li class="ids-item">
+      <span class="ids-num">2</span>
+      <div class="ids-body">
+        <div class="ids-title">Developing a shared vision with my 3 partners</div>
+        <div class="ids-owner">Owner — Eric Meyer</div>
+      </div>
+    </li>
+  </ol>
 </section>
 
 <!-- ── SPEAKERS ── -->
