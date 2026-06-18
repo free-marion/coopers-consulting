@@ -1239,7 +1239,7 @@ section[id], #pay { scroll-margin-top: 128px; }
       <div class="speaker-name">Adam &amp; Marie Hill</div>
       <div class="speaker-role">Professional EOS Implementer</div>
       <span class="speaker-session-tag">Day One &nbsp;&middot;&nbsp; SPARK Session &nbsp;&middot;&nbsp; EOS Panel</span>
-      <p class="speaker-bio">Former CEO of a fourth-generation family business, Adam scaled to 9 figures and grew revenue by $40M within two years of implementing EOS. Ironman World Championship finisher. He and Marie bring the SPARK framework — practical tools for high-performing couples to rebuild trust, communicate honestly, and create an aligned vision for life and business.</p>
+      <p class="speaker-bio">Marie is a Relationship &amp; Intimacy Coach who works with high-performing couples navigating the specific pressures that ambition puts on a marriage. Adam is a former fourth-generation CEO who scaled to 9 figures and grew revenue by $40M within two years of running EOS — and an Ironman finisher. Together they built the SPARK framework: a practical system for couples who lead together to rebuild trust, communicate honestly, and build a shared vision that actually holds up under the weight of a real business.</p>
     </div>
 
     <div class="speaker-card">
@@ -1745,8 +1745,13 @@ section[id], #pay { scroll-margin-top: 128px; }
   const err   = document.getElementById('pw-error');
   if (sessionStorage.getItem('ff_auth') === '1') { gate.classList.add('unlocked'); return; }
   document.body.style.overflow = 'hidden';
-  function attempt() {
-    if (input.value.trim().toUpperCase() === 'EOS') {
+  // SHA-256 of "EOS" — password not stored in plain text
+  const CORRECT = 'b6d20684d51a031b9268dba1b5cefca014dca2d47f19a21521607af94379747e';
+  async function attempt() {
+    const val = input.value.trim().toUpperCase();
+    const buf  = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(val));
+    const hash = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+    if (hash === CORRECT) {
       sessionStorage.setItem('ff_auth', '1');
       document.body.style.overflow = '';
       gate.classList.add('unlocked');
