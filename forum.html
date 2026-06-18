@@ -587,6 +587,48 @@ footer {
 @media (max-width: 700px) { .gallery-grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 450px) { .gallery-grid { grid-template-columns: 1fr; } }
 
+/* ── PASSWORD GATE ── */
+.pw-gate {
+  position: fixed; inset: 0; z-index: 9999;
+  background: var(--bg);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 2rem;
+}
+.pw-gate.unlocked { display: none; }
+.pw-inner {
+  display: flex; flex-direction: column; align-items: center; gap: 1.5rem;
+  width: 100%; max-width: 340px;
+}
+.pw-logo { width: 52px; height: 58px; }
+.pw-heading {
+  font-family: 'Cinzel', serif; font-size: clamp(1rem,3vw,1.4rem);
+  font-weight: 600; letter-spacing: .08em; color: var(--cream); text-align: center;
+}
+.pw-sub { font-size: .875rem; font-style: italic; color: var(--muted); text-align: center; margin-top: -.75rem; }
+.pw-input {
+  width: 100%; padding: .9rem 1.25rem;
+  background: rgba(242,235,218,.04); border: 1px solid rgba(232,112,26,.28);
+  color: var(--cream); font-family: 'Cinzel', serif;
+  font-size: 1.1rem; font-weight: 700; letter-spacing: .28em; text-align: center;
+  outline: none; transition: border-color .2s; -webkit-appearance: none;
+}
+.pw-input:focus { border-color: var(--orange); }
+.pw-input::placeholder { font-weight: 400; letter-spacing: .12em; color: rgba(242,235,218,.22); }
+.pw-btn {
+  width: 100%; padding: .88rem;
+  background: var(--orange); border: none; cursor: pointer;
+  font-family: 'Cinzel', serif; font-size: .78rem; font-weight: 700;
+  letter-spacing: .18em; text-transform: uppercase; color: var(--bg);
+  transition: background .2s;
+}
+.pw-btn:hover { background: var(--orange-hi); }
+.pw-error {
+  font-family: 'Cinzel', serif; font-size: .7rem; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--orange);
+  opacity: 0; transition: opacity .2s; margin-top: -.75rem;
+}
+.pw-error.show { opacity: 1; }
+
 /* ── SCROLL MARGIN (accounts for fixed nav + sticky banner) ── */
 section[id], #pay { scroll-margin-top: 128px; }
 
@@ -740,6 +782,36 @@ section[id], #pay { scroll-margin-top: 128px; }
 </style>
 </head>
 <body>
+
+<!-- ── PASSWORD GATE ── -->
+<div class="pw-gate" id="pw-gate" role="dialog" aria-modal="true" aria-label="Enter password">
+  <div class="pw-inner">
+    <svg class="pw-logo" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <radialGradient id="og-pw" cx="50%" cy="42%" r="58%" gradientUnits="objectBoundingBox">
+          <stop offset="0%" stop-color="#CC5428"/><stop offset="100%" stop-color="#7A2E10"/>
+        </radialGradient>
+        <filter id="c-pw" x="-12%" y="-12%" width="124%" height="124%" color-interpolation-filters="sRGB">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="b"/>
+          <feDiffuseLighting in="b" lighting-color="#8a6040" surfaceScale="-7" diffuseConstant="1.9" result="l">
+            <feDistantLight azimuth="135" elevation="38"/>
+          </feDiffuseLighting>
+          <feComposite in="l" in2="SourceAlpha" operator="in" result="lm"/>
+          <feBlend in="SourceGraphic" in2="lm" mode="hard-light" result="bl"/>
+          <feComposite in="bl" in2="SourceAlpha" operator="in"/>
+        </filter>
+      </defs>
+      <polygon points="200,10 364.54,105 364.54,295 200,390 35.46,295 35.46,105" fill="#0a0a0a"/>
+      <polygon points="200,18 357.61,109 357.61,291 200,382 42.39,291 42.39,109" fill="url(#og-pw)"/>
+      <path d="M302.19,141 L200,82 L97.81,141 L97.81,259 L200,318 L302.19,259 L302.19,239 L267.55,239 L200,278 L132.45,239 L132.45,161 L200,122 L267.55,161 L302.19,161 Z" fill="#235023" filter="url(#c-pw)"/>
+    </svg>
+    <div class="pw-heading">Focus Forum 2026</div>
+    <p class="pw-sub">Attendee access only</p>
+    <input class="pw-input" id="pw-input" type="text" placeholder="Password" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false"/>
+    <button class="pw-btn" id="pw-btn">Enter &rarr;</button>
+    <div class="pw-error" id="pw-error">Incorrect password</div>
+  </div>
+</div>
 
 <a href="#main" class="skip-link">Skip to content</a>
 
@@ -1429,6 +1501,31 @@ section[id], #pay { scroll-margin-top: 128px; }
 </div><!-- /page-frame -->
 
 <script>
+// ── PASSWORD GATE ──
+(function () {
+  const gate  = document.getElementById('pw-gate');
+  const input = document.getElementById('pw-input');
+  const btn   = document.getElementById('pw-btn');
+  const err   = document.getElementById('pw-error');
+  if (sessionStorage.getItem('ff_auth') === '1') { gate.classList.add('unlocked'); return; }
+  document.body.style.overflow = 'hidden';
+  function attempt() {
+    if (input.value.trim().toUpperCase() === 'EOS') {
+      sessionStorage.setItem('ff_auth', '1');
+      document.body.style.overflow = '';
+      gate.classList.add('unlocked');
+    } else {
+      err.classList.add('show');
+      input.value = '';
+      input.focus();
+      setTimeout(() => err.classList.remove('show'), 2200);
+    }
+  }
+  btn.addEventListener('click', attempt);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') attempt(); });
+  input.focus();
+})();
+
 // ── NAV SCROLL ──
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => {
