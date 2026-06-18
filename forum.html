@@ -3,18 +3,10 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Focus Forum 2026 — St. Louis</title>
+<title>Focus Forum 2026 — Attendee Guide</title>
 <link rel="canonical" href="https://coopersconsulting.com/forum"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@400;700&display=swap" rel="stylesheet"/>
-<script type="importmap">
-{
-  "imports": {
-    "three":         "https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js",
-    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/"
-  }
-}
-</script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -32,7 +24,7 @@
 
 html { scroll-behavior: smooth; font-size: 16px; background: var(--bg); }
 body {
-  background: transparent; color: var(--cream);
+  background: var(--bg); color: var(--cream);
   font-family: 'EB Garamond', serif; line-height: 1.68;
   font-variation-settings: 'wght' 410;
   font-feature-settings: 'onum' 1, 'kern' 1;
@@ -47,9 +39,6 @@ h1,h2,h3 { font-family: 'Cinzel', serif; line-height: 1.12; font-weight: 600; le
   text-decoration: none; z-index: 9999; transition: top .2s;
 }
 .skip-link:focus { top: 16px; }
-
-/* ── HEX CANVAS ── */
-#hex-canvas-wrap { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 
 /* ── NAV ── */
 nav {
@@ -86,6 +75,7 @@ nav.scrolled {
 }
 .nav-links a:hover { color: var(--cream); }
 .nav-links a:hover::after { transform: scaleX(1); }
+.nav-links a.nav-pay { color: rgba(232,112,26,.65); font-size: .7rem; }
 .nav-burger { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
 .nav-overlay {
   display: none; position: fixed; inset: 0; z-index: 190;
@@ -108,33 +98,27 @@ nav.scrolled {
 /* ── HERO ── */
 .hero {
   position: relative; z-index: 1;
-  height: 100vh; min-height: 600px;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  background: transparent; overflow: hidden;
+  padding: 8rem 5vw 4rem;
+  display: flex; flex-direction: column; align-items: center;
+  background: radial-gradient(ellipse at 50% 0%, rgba(232,112,26,0.08) 0%, transparent 65%);
+  border-bottom: 1px solid var(--rule);
 }
 .hero-inner {
-  display: flex; flex-direction: column; align-items: center; gap: 1.1rem;
+  display: flex; flex-direction: column; align-items: center; gap: 1rem;
   text-align: center;
-  animation: heroIn 1.4s cubic-bezier(0.22,1,0.36,1) 0.3s both;
-}
-@keyframes heroIn {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
 }
 .hero-kicker {
   font-family: 'Cinzel', serif; font-size: clamp(.68rem,1.3vw,.82rem);
   letter-spacing: .22em; text-transform: uppercase;
-  color: rgba(242,235,218,.45); order: -1;
+  color: rgba(242,235,218,.45);
 }
 .hero-logo {
-  width: clamp(240px, 34vw, 400px);
+  width: clamp(200px, 28vw, 320px);
   mix-blend-mode: screen;
-  filter: drop-shadow(0 0 28px rgba(232,112,26,.55))
-          drop-shadow(0 0 70px rgba(196,82,10,.28));
+  filter: drop-shadow(0 0 20px rgba(232,112,26,.40)) drop-shadow(0 0 50px rgba(196,82,10,.20));
 }
 .hero-date {
-  font-family: 'Cinzel', serif; font-size: clamp(1rem,2vw,1.375rem);
+  font-family: 'Cinzel', serif; font-size: clamp(1rem,2vw,1.25rem);
   letter-spacing: .14em; color: var(--cream); font-weight: 600;
 }
 .hero-venue {
@@ -142,27 +126,42 @@ nav.scrolled {
   letter-spacing: .12em; text-transform: uppercase;
   color: rgba(242,235,218,.45);
 }
-.hero-cta {
-  margin-top: .75rem;
-  display: inline-block; text-decoration: none;
-  font-family: 'Cinzel', serif; font-size: .82rem; font-weight: 600;
-  letter-spacing: .14em; text-transform: uppercase;
+
+/* ── QUICK REF ── */
+.quick-ref {
+  width: 100%; max-width: 860px; margin-top: 2.75rem;
+  border: 1px solid rgba(232,112,26,0.28);
+  background: rgba(232,112,26,0.04);
+  display: grid; grid-template-columns: repeat(4,1fr);
+}
+.qr-cell {
+  padding: 1.25rem 1.5rem;
+  display: flex; flex-direction: column; gap: .3rem;
+  border-right: 1px solid rgba(232,112,26,0.14);
+}
+.qr-cell:last-child { border-right: none; }
+.qr-label {
+  font-family: 'Cinzel', serif; font-size: .56rem; font-weight: 500;
+  letter-spacing: .18em; text-transform: uppercase; color: var(--orange); opacity: .85;
+}
+.qr-value {
+  font-family: 'Cinzel', serif; font-size: .95rem; font-weight: 700;
+  color: var(--cream); line-height: 1.3;
+}
+.qr-value a { color: var(--orange); text-decoration: none; }
+.qr-value a:hover { color: var(--orange-hi); }
+.qr-sub {
+  font-size: .78rem; font-style: italic; color: var(--muted); line-height: 1.5;
+}
+.qr-btn {
+  display: inline-block; margin-top: .4rem;
+  font-family: 'Cinzel', serif; font-size: .62rem; font-weight: 600;
+  letter-spacing: .12em; text-transform: uppercase;
   color: var(--bg); background: var(--orange);
-  padding: .95rem 2.75rem;
-  transition: background .25s, box-shadow .25s;
-  box-shadow: 0 0 22px rgba(232,112,26,.22);
+  padding: .45rem .95rem; text-decoration: none;
+  transition: background .2s; align-self: flex-start;
 }
-.hero-cta:hover { background: var(--orange-hi); box-shadow: 0 0 40px rgba(232,112,26,.45); }
-.hero-strip {
-  position: absolute; bottom: 0; left: 0; right: 0;
-  display: flex; justify-content: center; gap: 3rem;
-  padding: .9rem 2rem;
-  border-top: 1px solid rgba(232,112,26,.1);
-  font-family: 'Cinzel', serif; font-size: clamp(.58rem,.88vw,.7rem);
-  letter-spacing: .22em; text-transform: uppercase;
-  color: rgba(242,235,218,.3);
-}
-.hero-strip strong { color: rgba(232,112,26,.65); font-weight: 600; }
+.qr-btn:hover { background: var(--orange-hi); }
 
 /* ── DUALITY RULE ── */
 .duality-rule {
@@ -181,62 +180,6 @@ nav.scrolled {
   display: flex; align-items: center; gap: .75rem;
 }
 .sect-label::after { content: ''; flex: 1; max-width: 44px; height: 1px; background: var(--orange); opacity: .38; }
-
-/* ── ABOUT ── */
-.about-inner {
-  display: grid; grid-template-columns: 1fr 1px 1.4fr;
-}
-.about-left {
-  padding: 5rem 4rem 5rem 5vw;
-  display: flex; flex-direction: column; gap: 1.75rem;
-}
-.about-left h2 { font-size: clamp(2rem,3.5vw,3.25rem); color: var(--cream); }
-.about-left h2 .h-accent { color: var(--orange); }
-.about-rule { width: 32px; height: 2px; background: var(--orange); }
-.about-vdiv { background: var(--rule); }
-.about-right {
-  padding: 5rem 5vw 5rem 4rem;
-  display: flex; flex-direction: column; gap: 1.5rem;
-}
-.about-right p { font-size: .9375rem; line-height: 1.82; color: rgba(242,235,218,.7); }
-.about-right p strong { color: var(--cream); }
-.about-callout { border-left: 3px solid var(--orange); padding-left: 1.25rem; }
-.about-callout p { font-style: italic; color: rgba(242,235,218,.6); font-size: 1rem; line-height: 1.7; }
-.about-stats {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
-  padding-top: 1.25rem; border-top: 1px solid var(--rule); margin-top: .25rem;
-}
-.stat { display: flex; flex-direction: column; gap: .3rem; }
-.stat-num {
-  font-family: 'Cinzel', serif; font-weight: 700;
-  font-size: clamp(2rem,3vw,2.75rem); color: var(--orange); line-height: 1;
-}
-.stat-label {
-  font-family: 'Cinzel', serif; font-size: .6rem;
-  letter-spacing: .1em; text-transform: uppercase; color: var(--muted);
-}
-
-/* ── PULL QUOTE ── */
-.pull-quote {
-  position: relative; z-index: 1;
-  background: rgba(8,6,4,.90);
-  border-bottom: 1px solid var(--rule);
-  padding: 5rem 5vw;
-  display: flex; justify-content: center;
-}
-.pull-quote blockquote { max-width: 820px; text-align: center; }
-.pull-quote blockquote p {
-  font-family: 'Cinzel', serif; font-weight: 400;
-  font-size: clamp(1.1rem,2.4vw,1.85rem);
-  letter-spacing: .05em; line-height: 1.65; color: var(--cream);
-}
-.pull-quote blockquote p .q-accent { color: var(--orange); }
-.pull-quote cite {
-  display: block; margin-top: 1.75rem;
-  font-family: 'Cinzel', serif; font-style: normal;
-  font-size: .62rem; letter-spacing: .16em; text-transform: uppercase;
-  color: rgba(242,235,218,.3);
-}
 
 /* ── SCHEDULE ── */
 .schedule-header {
@@ -258,7 +201,7 @@ nav.scrolled {
 }
 .sched-day-label::after { content: ''; flex: 1; height: 1px; background: var(--orange); opacity: .22; }
 .session {
-  display: grid; grid-template-columns: 72px 1fr;
+  display: grid; grid-template-columns: 76px 1fr;
   gap: .75rem; padding: .875rem 0;
   border-bottom: 1px solid rgba(232,112,26,.07);
 }
@@ -268,12 +211,16 @@ nav.scrolled {
   letter-spacing: .07em; text-transform: uppercase;
   color: var(--orange); padding-top: .22rem;
 }
-.sess-body { display: flex; flex-direction: column; gap: .2rem; }
+.sess-body { display: flex; flex-direction: column; gap: .18rem; }
 .sess-title {
   font-family: 'Cinzel', serif; font-size: .875rem; font-weight: 600;
   letter-spacing: .03em; color: var(--cream);
 }
 .sess-speaker { font-size: .82rem; font-style: italic; color: var(--muted); }
+.sess-room {
+  font-family: 'Cinzel', serif; font-size: .54rem; letter-spacing: .12em;
+  text-transform: uppercase; color: rgba(232,112,26,.50); margin-top: .1rem;
+}
 .sess-tag {
   display: inline-block; margin-top: .2rem;
   font-family: 'Cinzel', serif; font-size: .56rem; letter-spacing: .1em;
@@ -289,27 +236,11 @@ nav.scrolled {
 }
 .sched-eve .sched-day-label { margin-bottom: 1.5rem; }
 .terrace-img {
-  display: block; width: 100%; max-height: 280px;
+  display: block; width: 100%; max-height: 240px;
   object-fit: cover; object-position: center 55%;
   border: 1px solid rgba(232,112,26,.18);
   margin-top: 1rem;
 }
-
-/* ── DATA STRIP ── */
-.data-strip {
-  position: relative; z-index: 1;
-  background: rgba(232,112,26,.07);
-  border-top: 1px solid rgba(232,112,26,.14);
-  border-bottom: 1px solid rgba(232,112,26,.14);
-  padding: 2.5rem 5vw;
-  display: flex; justify-content: center;
-}
-.data-strip-text {
-  font-family: 'Cinzel', serif; font-weight: 600;
-  font-size: clamp(1rem,2.2vw,1.875rem);
-  letter-spacing: .06em; color: var(--cream); text-align: center;
-}
-.data-strip-text .da { color: var(--orange); }
 
 /* ── SPEAKERS ── */
 .speakers-header {
@@ -338,22 +269,16 @@ nav.scrolled {
   border-color: transparent rgba(232,112,26,.5) transparent transparent;
   opacity: 0; transition: opacity .25s;
 }
-.speaker-card:hover {
-  background: rgba(232,112,26,.05);
-  box-shadow: 0 0 40px rgba(232,112,26,.06);
-  border-color: rgba(232,112,26,.28); z-index: 1;
-}
+.speaker-card:hover { background: rgba(232,112,26,.05); box-shadow: 0 0 40px rgba(232,112,26,.06); border-color: rgba(232,112,26,.28); z-index: 1; }
 .speaker-card:hover::after { opacity: 1; }
 .speaker-avatar {
   width: 72px; height: 72px; flex-shrink: 0;
   background: rgba(232,112,26,.09);
   border: 1px solid rgba(232,112,26,.2);
+  overflow: hidden;
   display: flex; align-items: center; justify-content: center;
 }
-.speaker-initials {
-  font-family: 'Cinzel', serif; font-size: 1.375rem; font-weight: 700;
-  color: var(--orange); opacity: .6;
-}
+.speaker-initials { font-family: 'Cinzel', serif; font-size: 1.375rem; font-weight: 700; color: var(--orange); opacity: .6; }
 .speaker-name { font-family: 'Cinzel', serif; font-size: 1.25rem; font-weight: 700; color: var(--cream); }
 .speaker-role { font-family: 'Cinzel', serif; font-size: .63rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .speaker-session-tag {
@@ -364,14 +289,24 @@ nav.scrolled {
 }
 .speaker-bio { font-size: .875rem; font-style: italic; color: rgba(242,235,218,.45); line-height: 1.65; flex: 1; }
 
-/* ── STL ── */
+/* ── EXPLORE STL ── */
 .stl-header {
   padding: 4rem 5vw 2.75rem;
-  display: flex; flex-direction: column; gap: .75rem;
+  display: flex; flex-direction: column; gap: .875rem;
   border-bottom: 1px solid var(--rule);
 }
 .stl-header h2 { font-size: clamp(1.5rem,2.5vw,2.5rem); }
 .stl-header p { font-size: .9375rem; font-style: italic; color: var(--muted); max-width: 680px; }
+.stl-advisory {
+  font-size: .875rem; line-height: 1.72; color: rgba(242,235,218,.5);
+  border-left: 2px solid rgba(232,112,26,.35); padding-left: 1.1rem;
+  max-width: 680px;
+}
+.stl-advisory a {
+  color: var(--orange); text-decoration: none;
+  border-bottom: 1px solid rgba(232,112,26,.32); transition: border-color .2s;
+}
+.stl-advisory a:hover { border-bottom-color: var(--orange); }
 .stl-grid {
   display: grid; grid-template-columns: repeat(3,1fr);
   border-top: 1px solid var(--rule);
@@ -380,9 +315,11 @@ nav.scrolled {
   display: flex; flex-direction: column; gap: .875rem;
   padding: 2.25rem 2rem; position: relative; overflow: hidden;
   border: 2px solid transparent; border-top: none;
-  transition: background .25s, box-shadow .25s, border-color .25s;
+  transition: background .25s, border-color .25s;
 }
 .stl-card + .stl-card { border-left: 1px solid var(--rule); }
+.stl-card:nth-child(3n+1) { border-left: none; }
+.stl-card:nth-child(n+4) { border-top: 1px solid var(--rule); }
 .stl-card::after {
   content: ''; position: absolute; top: 0; right: 0;
   width: 0; height: 0; border-style: solid;
@@ -392,23 +329,84 @@ nav.scrolled {
 }
 .stl-card:hover { background: rgba(232,112,26,.04); border-color: rgba(232,112,26,.22); }
 .stl-card:hover::after { opacity: 1; }
-.stl-num {
-  font-family: 'Cinzel', serif; font-size: .6rem; font-weight: 700;
-  letter-spacing: .16em; text-transform: uppercase; color: var(--orange); opacity: .65;
+.stl-cat {
+  font-family: 'Cinzel', serif; font-size: .56rem; font-weight: 700;
+  letter-spacing: .18em; text-transform: uppercase; color: var(--orange); opacity: .6;
 }
 .stl-name { font-family: 'Cinzel', serif; font-size: 1.1rem; font-weight: 700; color: var(--cream); }
 .stl-desc { font-size: .875rem; font-style: italic; color: var(--muted); line-height: 1.65; }
 
+/* ── LOGISTICS ── */
+.logistics-header {
+  padding: 4rem 5vw 2.5rem;
+  display: flex; flex-direction: column; gap: .75rem;
+  border-bottom: 1px solid var(--rule);
+}
+.logistics-header h2 { font-size: clamp(1.5rem,2.5vw,2.5rem); }
+.logistics-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+}
+.logi-panel {
+  padding: 2.75rem 3rem 3rem;
+  display: flex; flex-direction: column; gap: 1.5rem;
+  border-right: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+.logi-panel:nth-child(odd) { padding-left: 5vw; }
+.logi-panel:nth-child(even) { border-right: none; padding-right: 5vw; }
+.logi-panel:nth-last-child(-n+2) { border-bottom: none; }
+.logi-label {
+  font-family: 'Cinzel', serif; font-size: .63rem; font-weight: 500;
+  letter-spacing: .16em; text-transform: uppercase; color: var(--orange);
+}
+.logi-title { font-family: 'Cinzel', serif; font-size: 1.1rem; font-weight: 700; color: var(--cream); line-height: 1.3; }
+.logi-body { display: flex; flex-direction: column; gap: 1rem; }
+.logi-item { display: flex; flex-direction: column; gap: .18rem; }
+.logi-item-label {
+  font-family: 'Cinzel', serif; font-size: .56rem; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--muted);
+}
+.logi-item-val {
+  font-family: 'Cinzel', serif; font-size: .9rem; font-weight: 600; color: var(--cream); line-height: 1.4;
+}
+.logi-item-note { font-size: .82rem; font-style: italic; color: var(--muted); line-height: 1.6; }
+.btn-maps {
+  display: inline-block; text-decoration: none;
+  font-family: 'Cinzel', serif; font-size: .68rem; font-weight: 600;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--orange); border: 1px solid rgba(232,112,26,.38);
+  padding: .6rem 1.1rem; transition: background .2s, border-color .2s;
+  align-self: flex-start;
+}
+.btn-maps:hover { background: rgba(232,112,26,.08); border-color: var(--orange); }
+
+/* ── CONTACT STRIP ── */
+.contact-strip {
+  background: rgba(232,112,26,.05);
+  border-top: 1px solid rgba(232,112,26,.14);
+  border-bottom: 1px solid rgba(232,112,26,.14);
+  padding: 2rem 5vw;
+  display: flex; align-items: center; justify-content: center;
+  gap: 4rem; flex-wrap: wrap;
+}
+.contact-item { display: flex; flex-direction: column; align-items: center; gap: .3rem; }
+.contact-label {
+  font-family: 'Cinzel', serif; font-size: .56rem; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--muted);
+}
+.contact-val {
+  font-family: 'Cinzel', serif; font-size: 1.1rem; font-weight: 700; color: var(--cream);
+}
+.contact-val a { color: var(--orange); text-decoration: none; }
+.contact-val a:hover { color: var(--orange-hi); }
+
 /* ── CHARITY ── */
 .charity-inner {
   display: grid; grid-template-columns: 1fr 2fr;
-  gap: clamp(3rem,6vw,8rem); padding: 5rem 5vw;
+  gap: clamp(3rem,6vw,8rem); padding: 4rem 5vw;
 }
-.charity-label {
-  position: sticky; top: 5rem;
-  display: flex; flex-direction: column; gap: 1.5rem;
-}
-.charity-label h2 { font-size: clamp(1.75rem,3vw,3rem); }
+.charity-label { display: flex; flex-direction: column; gap: 1.5rem; }
+.charity-label h2 { font-size: clamp(1.75rem,3vw,2.5rem); }
 .charity-label h2 .h-accent { color: var(--orange); }
 .charity-label p { font-size: .875rem; font-style: italic; line-height: 1.72; color: var(--muted); }
 .charity-link {
@@ -418,96 +416,37 @@ nav.scrolled {
   border-bottom: 1px solid rgba(232,112,26,.32); transition: border-color .2s;
 }
 .charity-link:hover { border-bottom-color: var(--orange); }
-.charity-body { display: flex; flex-direction: column; gap: 1.75rem; }
+.charity-body { display: flex; flex-direction: column; gap: 1.25rem; }
 .charity-body p { font-size: .9375rem; line-height: 1.82; color: rgba(242,235,218,.68); }
 .charity-body p strong { color: var(--cream); }
-.charity-stats {
-  display: grid; grid-template-columns: repeat(3,1fr);
-  gap: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--rule);
-}
-.c-stat { display: flex; flex-direction: column; gap: .3rem; }
-.c-stat-num {
-  font-family: 'Cinzel', serif; font-weight: 700;
-  font-size: clamp(1.375rem,2.5vw,2rem); color: var(--orange); line-height: 1;
-}
-.c-stat-label {
-  font-family: 'Cinzel', serif; font-size: .58rem;
-  letter-spacing: .1em; text-transform: uppercase; color: var(--muted);
-}
-.charity-quote { padding-left: 1.25rem; border-left: 3px solid var(--orange); }
-.charity-quote p { font-size: .9375rem; font-style: italic; color: rgba(242,235,218,.58); line-height: 1.65; }
-.charity-quote cite {
-  display: block; margin-top: .75rem;
-  font-family: 'Cinzel', serif; font-style: normal;
-  font-size: .6rem; letter-spacing: .12em; text-transform: uppercase; color: var(--orange);
-}
 
-/* ── RESERVE ── */
-.reserve-header {
-  padding: 4rem 5vw 2.5rem;
-  display: flex; align-items: baseline; justify-content: space-between;
-  flex-wrap: wrap; gap: 1rem; border-bottom: 1px solid var(--rule);
+/* ── PAY FOOTER ── */
+.pay-strip {
+  background: rgba(8,6,4,.92);
+  border-top: 1px solid var(--rule);
+  padding: 2rem 5vw;
+  display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;
 }
-.reserve-header h2 { font-size: clamp(1.5rem,2.5vw,2.5rem); }
-.reserve-header p {
-  font-family: 'Cinzel', serif; font-size: .66rem;
-  letter-spacing: .18em; text-transform: uppercase; color: var(--orange);
+.pay-strip-label {
+  font-family: 'Cinzel', serif; font-size: .6rem; font-weight: 500;
+  letter-spacing: .18em; text-transform: uppercase; color: var(--muted); flex-shrink: 0;
 }
-.reserve-panels { display: grid; grid-template-columns: 1.6fr 1fr 1fr; }
-.res-panel {
-  padding: 3rem 2.5rem;
-  border-right: 1px solid var(--rule);
-  display: flex; flex-direction: column; gap: 1.5rem;
-}
-.res-panel:last-child { border-right: none; }
-.panel-num {
-  font-family: 'Cinzel', serif; font-size: .63rem; font-weight: 500;
-  letter-spacing: .2em; text-transform: uppercase; color: var(--orange); opacity: .78;
-}
-.panel-title { font-size: clamp(1.2rem,2vw,1.75rem); color: var(--cream); }
-.panel-amount {
-  font-family: 'Cinzel', serif; font-weight: 700;
-  font-size: clamp(3rem,5vw,4.5rem);
-  color: var(--orange); line-height: 1; letter-spacing: -.02em;
-}
-.panel-amount-sub {
-  font-family: 'Cinzel', serif; font-size: .66rem; letter-spacing: .2em;
-  text-transform: uppercase; color: var(--muted); margin-top: -.75rem;
-}
-.panel-hotel {
-  font-family: 'Cinzel', serif; font-size: .9rem; font-weight: 700;
-  color: var(--cream); line-height: 1.5;
-}
-.panel-desc { font-size: .875rem; font-style: italic; color: var(--muted); line-height: 1.72; flex: 1; }
-.btn-primary {
-  display: block; text-align: center; text-decoration: none;
-  font-family: 'Cinzel', serif; font-size: .72rem; font-weight: 600;
+.pay-strip-text { font-size: .9rem; font-style: italic; color: var(--muted); flex: 1; min-width: 200px; }
+.pay-strip-text strong { color: var(--cream); font-style: normal; }
+.btn-pay {
+  display: inline-block; text-decoration: none;
+  font-family: 'Cinzel', serif; font-size: .7rem; font-weight: 600;
   letter-spacing: .14em; text-transform: uppercase;
   color: var(--bg); background: var(--orange);
-  padding: .9rem 1.75rem; border: none; cursor: pointer;
-  transition: background .25s, box-shadow .25s;
-  box-shadow: 0 0 16px rgba(232,112,26,.18);
-  margin-top: auto;
+  padding: .75rem 1.5rem; flex-shrink: 0;
+  transition: background .25s;
 }
-.btn-primary:hover { background: var(--orange-hi); box-shadow: 0 0 30px rgba(232,112,26,.42); }
-.btn-secondary {
-  display: block; text-align: center; text-decoration: none;
-  font-family: 'Cinzel', serif; font-size: .72rem; font-weight: 500;
-  letter-spacing: .14em; text-transform: uppercase;
-  color: var(--orange); background: transparent;
-  padding: .85rem 1.75rem;
-  border: 1px solid rgba(232,112,26,.38); cursor: pointer;
-  transition: background .25s, border-color .25s;
-}
-.btn-secondary:hover { background: rgba(232,112,26,.08); border-color: var(--orange); }
-.pay-options { display: flex; flex-direction: column; gap: .75rem; }
-.pay-note { font-size: .78rem; font-style: italic; color: var(--muted); line-height: 1.6; }
+.btn-pay:hover { background: var(--orange-hi); }
 
 /* ── FOOTER ── */
 footer {
-  position: relative; z-index: 1;
   background: rgba(8,6,4,.93);
-  padding: 3rem 5vw 2.5rem;
+  padding: 2.75rem 5vw 2.25rem;
   border-top: 1px solid rgba(232,112,26,.14);
   display: flex; align-items: center; justify-content: space-between;
   flex-wrap: wrap; gap: 1.5rem;
@@ -522,58 +461,135 @@ footer {
 }
 .footer-contact a { color: var(--orange); text-decoration: none; transition: color .2s; }
 .footer-contact a:hover { color: var(--orange-hi); }
-.footer-copy {
-  font-family: 'Cinzel', serif; font-size: .66rem;
-  letter-spacing: .12em; color: rgba(242,235,218,.18);
-}
+.footer-copy { font-family: 'Cinzel', serif; font-size: .66rem; letter-spacing: .12em; color: rgba(242,235,218,.18); }
 
-/* ── PAGE FRAME (hex sidebars) ── */
+/* ── PAGE FRAME ── */
 .page-frame {
-  max-width: 980px;
-  margin: 0 auto;
-  position: relative;
+  max-width: 980px; margin: 0 auto;
   border-left:  1px solid rgba(232,112,26,0.1);
   border-right: 1px solid rgba(232,112,26,0.1);
 }
-@media (max-width: 980px) {
-  .page-frame { border-left: none; border-right: none; }
-}
+@media (max-width: 980px) { .page-frame { border-left: none; border-right: none; } }
 
 /* ── RESPONSIVE ── */
-@media (max-width: 1000px) {
-  .speakers-grid { grid-template-columns: 1fr 1fr; }
-}
+@media (max-width: 1000px) { .speakers-grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 900px) {
-  .about-inner { grid-template-columns: 1fr; }
-  .about-vdiv { display: none; }
-  .about-right { padding: 0 5vw 4rem; }
   .schedule-grid { grid-template-columns: 1fr; }
   .sched-vdiv { display: none; }
   .sched-day:last-child { padding: 3rem 5vw; border-top: 1px solid var(--rule); }
   .speakers-grid { grid-template-columns: 1fr; }
   .stl-grid { grid-template-columns: 1fr 1fr; }
+  .stl-card:nth-child(3n+1) { border-left: 1px solid var(--rule); }
+  .stl-card:nth-child(odd) { border-left: none; }
+  .stl-card:nth-child(n+4) { border-top: none; }
+  .stl-card:nth-child(n+3) { border-top: 1px solid var(--rule); }
   .charity-inner { grid-template-columns: 1fr; }
-  .charity-label { position: static; }
-  .charity-stats { grid-template-columns: 1fr 1fr; }
-  .reserve-panels { grid-template-columns: 1fr; }
-  .res-panel { border-right: none; border-bottom: 1px solid var(--rule); }
-  .res-panel:last-child { border-bottom: none; }
-  .reserve-header { flex-direction: column; }
-  .hero-strip { display: none; }
+  .logistics-grid { grid-template-columns: 1fr; }
+  .logi-panel { border-right: none; border-bottom: 1px solid var(--rule); padding-right: 5vw; }
+  .logi-panel:nth-last-child(-n+2) { border-bottom: 1px solid var(--rule); }
+  .logi-panel:last-child { border-bottom: none; }
   nav .nav-links { display: none; }
   .nav-burger { display: block; }
   footer { flex-direction: column; text-align: center; }
 }
-@media (max-width: 600px) {
-  .about-stats { grid-template-columns: 1fr; }
+@media (max-width: 700px) {
+  .quick-ref { grid-template-columns: 1fr 1fr; }
+  .qr-cell:nth-child(even) { border-right: none; }
+  .qr-cell:nth-child(n+3) { border-top: 1px solid rgba(232,112,26,.14); }
   .stl-grid { grid-template-columns: 1fr; }
-  .charity-stats { grid-template-columns: 1fr; }
+  .stl-card { border-left: none !important; border-top: 1px solid var(--rule) !important; }
+  .stl-card:first-child { border-top: none !important; }
+  .contact-strip { gap: 2rem; }
 }
+@media (max-width: 480px) {
+  .quick-ref { grid-template-columns: 1fr; }
+  .qr-cell { border-right: none; border-top: 1px solid rgba(232,112,26,.14); }
+  .qr-cell:first-child { border-top: none; }
+}
+
+/* ── NOW BANNER ── */
+.now-banner {
+  position: sticky; top: 64px; z-index: 180;
+  background: rgba(10,8,5,0.97); border-bottom: 1px solid rgba(232,112,26,0.30);
+  backdrop-filter: blur(10px);
+  padding: .7rem 5vw;
+  display: flex; align-items: stretch; gap: 0;
+  min-height: 56px;
+}
+.now-banner.hidden { display: none; }
+.nb-current, .nb-next {
+  display: flex; flex-direction: column; justify-content: center; gap: .12rem;
+  flex: 1; padding: .2rem 1.5rem .2rem 0;
+}
+.nb-next {
+  padding: .2rem 0 .2rem 1.5rem;
+  border-left: 1px solid rgba(232,112,26,0.14);
+}
+.nb-pip {
+  font-family: 'Cinzel', serif; font-size: .52rem; font-weight: 700;
+  letter-spacing: .22em; text-transform: uppercase;
+  display: flex; align-items: center; gap: .4rem;
+}
+.nb-pip .pip-dot {
+  width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+}
+.nb-current .nb-pip { color: var(--orange); }
+.nb-current .nb-pip .pip-dot { background: var(--orange); animation: pulse-pip 1.6s ease-in-out infinite; }
+.nb-next .nb-pip { color: rgba(242,235,218,.38); }
+.nb-next .nb-pip .pip-dot { background: rgba(242,235,218,.3); }
+@keyframes pulse-pip {
+  0%,100% { opacity:1; transform:scale(1); }
+  50%      { opacity:.4; transform:scale(.72); }
+}
+.nb-title {
+  font-family: 'Cinzel', serif; font-size: .84rem; font-weight: 600;
+  letter-spacing: .02em; color: var(--cream); line-height: 1.25;
+}
+.nb-next .nb-title { color: rgba(242,235,218,.55); font-size: .78rem; }
+.nb-meta { font-size: .72rem; font-style: italic; color: var(--muted); }
+@media (max-width: 600px) {
+  .now-banner { flex-direction: column; gap: .5rem; }
+  .nb-next { border-left: none; border-top: 1px solid rgba(232,112,26,0.14); padding: .4rem 0 0; }
+}
+
+/* ── DAY TABS ── */
+.day-tabs {
+  display: flex; border-bottom: 1px solid var(--rule);
+}
+.day-tab {
+  flex: 1; padding: .9rem 2rem;
+  font-family: 'Cinzel', serif; font-size: .72rem; font-weight: 600;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: rgba(242,235,218,.38); background: none; border: none; cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color .2s, border-color .2s;
+  position: relative; bottom: -1px;
+}
+.day-tab.active { color: var(--orange); border-bottom-color: var(--orange); }
+.day-tab:hover:not(.active) { color: rgba(242,235,218,.65); }
+.day-panel { display: none; padding: 2.5rem 5vw 3.5rem; }
+.day-panel.active { display: block; }
+
+/* ── SESSION STATUS BADGES ── */
+.sess-status {
+  display: inline-flex; align-items: center; gap: .35rem;
+  font-family: 'Cinzel', serif; font-size: .52rem; font-weight: 700;
+  letter-spacing: .16em; text-transform: uppercase;
+  padding: .1rem .4rem; margin-bottom: .12rem; align-self: flex-start;
+}
+.sess-status.s-now  { color: var(--orange);            border: 1px solid rgba(232,112,26,.5); }
+.sess-status.s-next { color: rgba(242,235,218,.6);     border: 1px solid rgba(242,235,218,.22); }
+.sess-status.s-done { color: rgba(242,235,218,.2);     border: 1px solid rgba(242,235,218,.08); }
+.sess-status .sd    { width: 5px; height: 5px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+.sess-status.s-now .sd { animation: pulse-pip 1.6s ease-in-out infinite; }
+.session.done .sess-title { color: rgba(242,235,218,.28); }
+.session.done .sess-speaker,
+.session.done .sess-room,
+.session.done .sess-tag { opacity: .25; }
 </style>
 </head>
 <body>
 
-<div id="hex-canvas-wrap" aria-hidden="true"></div>
 <a href="#main" class="skip-link">Skip to content</a>
 
 <!-- ── NAV ── -->
@@ -582,7 +598,7 @@ footer {
     <svg class="nav-hex" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <defs>
         <radialGradient id="og-ff" cx="50%" cy="42%" r="58%" gradientUnits="objectBoundingBox">
-          <stop offset="0%"   stop-color="#CC5428"/>
+          <stop offset="0%" stop-color="#CC5428"/>
           <stop offset="100%" stop-color="#7A2E10"/>
         </radialGradient>
         <filter id="c-engrave-ff" x="-12%" y="-12%" width="124%" height="124%" color-interpolation-filters="sRGB">
@@ -605,11 +621,11 @@ footer {
     </span>
   </a>
   <ul class="nav-links" role="list">
-    <li><a href="#about">About</a></li>
     <li><a href="#schedule">Schedule</a></li>
     <li><a href="#speakers">Speakers</a></li>
-    <li><a href="#st-louis">St. Louis</a></li>
-    <li><a href="#reserve">Register</a></li>
+    <li><a href="#explore">Explore STL</a></li>
+    <li><a href="#logistics">Logistics</a></li>
+    <li><a href="#pay" class="nav-pay">Pay</a></li>
   </ul>
   <button class="nav-burger" id="burger-btn" aria-expanded="false" aria-controls="nav-overlay" aria-label="Open navigation menu">
     <svg width="26" height="17" viewBox="0 0 26 17" fill="none" aria-hidden="true">
@@ -622,11 +638,25 @@ footer {
 
 <div id="nav-overlay" class="nav-overlay" role="dialog" aria-modal="true" aria-label="Navigation menu">
   <button id="overlay-close" class="overlay-close" aria-label="Close menu">✕</button>
-  <a href="#about">About</a>
   <a href="#schedule">Schedule</a>
   <a href="#speakers">Speakers</a>
-  <a href="#st-louis">St. Louis</a>
-  <a href="#reserve">Register</a>
+  <a href="#explore">Explore STL</a>
+  <a href="#logistics">Logistics</a>
+  <a href="#pay">Pay</a>
+</div>
+
+<!-- ── NOW BANNER ── -->
+<div id="now-banner" class="now-banner hidden" role="status" aria-live="polite">
+  <div class="nb-current">
+    <div class="nb-pip"><span class="pip-dot"></span><span id="nb-now-label">Now</span></div>
+    <div class="nb-title" id="nb-now-title"></div>
+    <div class="nb-meta" id="nb-now-meta"></div>
+  </div>
+  <div class="nb-next" id="nb-next-col">
+    <div class="nb-pip"><span class="pip-dot"></span><span>Up Next</span></div>
+    <div class="nb-title" id="nb-next-title"></div>
+    <div class="nb-meta" id="nb-next-meta"></div>
+  </div>
 </div>
 
 <div class="page-frame">
@@ -634,224 +664,204 @@ footer {
 <!-- ── HERO ── -->
 <section class="hero" id="main">
   <div class="hero-inner">
-    <p class="hero-kicker">Cooper's Consulting Presents</p>
+    <p class="hero-kicker">You're In &nbsp;&middot;&nbsp; Cooper's Consulting Presents</p>
     <img src="images/logo-forum.png" alt="Focus Forum 2026" class="hero-logo"/>
     <p class="hero-date">June 18 &ndash; 19, 2026</p>
-    <p class="hero-venue">Hyatt Regency &nbsp;&middot;&nbsp; St. Louis, Missouri</p>
-    <a href="#reserve" class="hero-cta">Reserve Your Seat &rarr;</a>
+    <p class="hero-venue">Hyatt Regency at The Arch &nbsp;&middot;&nbsp; St. Louis, Missouri</p>
   </div>
-  <div class="hero-strip">
-    <span><strong>Two Days</strong> &nbsp;&middot;&nbsp; St. Louis, MO</span>
-    <span><strong>Limited Seating</strong> &nbsp;&middot;&nbsp; $400 Per Person</span>
-    <span><strong>EOS Principles</strong> &nbsp;&middot;&nbsp; Business Leaders</span>
+
+  <div class="quick-ref" role="complementary" aria-label="Quick reference">
+    <div class="qr-cell">
+      <div class="qr-label">Sessions Begin</div>
+      <div class="qr-value">8:00 AM</div>
+      <div class="qr-sub">Breakfast from 7:00–8:00 AM</div>
+    </div>
+    <div class="qr-cell">
+      <div class="qr-label">Main Room</div>
+      <div class="qr-value">Gateway East</div>
+      <div class="qr-sub">Meals &amp; breakouts: Gateway West</div>
+    </div>
+    <div class="qr-cell">
+      <div class="qr-label">Questions? Call Joel</div>
+      <div class="qr-value"><a href="tel:5737604007">573.760.4007</a></div>
+      <div class="qr-sub">Joel Cooper, Coordinator</div>
+    </div>
+    <div class="qr-cell">
+      <div class="qr-label">Attendee Group</div>
+      <div class="qr-value" style="font-size:.85rem;letter-spacing:.03em;">WhatsApp Community</div>
+      <a href="https://chat.whatsapp.com/DfqVSaCDkCNAsK6UI6zoj5" target="_blank" rel="noopener" class="qr-btn">Join Group &rarr;</a>
+    </div>
   </div>
 </section>
 
 <div class="duality-rule"></div>
 
-<!-- ── ABOUT ── -->
-<section class="sect sect-a" id="about">
-  <div class="about-inner">
-    <div class="about-left">
-      <div class="sect-label">The Conference</div>
-      <h2>What is the<br><span class="h-accent">Focus Forum?</span></h2>
-      <div class="about-rule"></div>
-    </div>
-    <div class="about-vdiv"></div>
-    <div class="about-right">
-      <p>Focus Forum is a two-day event built for owners and leaders who carry the weight of growing organizations. If you possess the will to grow but are struggling with the way, <strong>this conference is for you.</strong></p>
-      <p>This is not a large-scale, anonymous event. The Focus Forum began as a small group of business owners gathered to learn the principles of the Entrepreneurial Operating System and discuss real organizational challenges amongst peers. The 2025 gathering in St. Louis was so successful we immediately began planning the next — which you are cordially invited to.</p>
-      <div class="about-callout">
-        <p>"This is a working conversation with your entrepreneurial peers that emphasizes execution, leadership, and how to responsibly integrate A.I. technology in ways that practically help your business."</p>
-      </div>
-      <div class="about-stats">
-        <div class="stat"><div class="stat-num">2</div><div class="stat-label">Full Days</div></div>
-        <div class="stat"><div class="stat-num">5+</div><div class="stat-label">Featured Speakers</div></div>
-        <div class="stat"><div class="stat-num">$400</div><div class="stat-label">Per Person</div></div>
-        <div class="stat"><div class="stat-num">1</div><div class="stat-label">City Worth Visiting</div></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── PULL QUOTE ── -->
-<div class="pull-quote">
-  <blockquote>
-    <p>We do not aim to shallowly inspire, nor hide from <span class="q-accent">uncomfortable truths.</span> Sessions are practical and discussions are candid. Be prepared to set ego to the side.</p>
-    <cite>Focus Forum &nbsp;&middot;&nbsp; Conference Philosophy</cite>
-  </blockquote>
-</div>
-
 <!-- ── SCHEDULE ── -->
 <section class="sect sect-b" id="schedule">
   <div class="schedule-header">
     <div class="sect-label">The Agenda</div>
-    <h2>Two Days. All Signal.</h2>
-    <p>A focused program for owners and leaders ready to move the needle.</p>
+    <h2>Full Schedule</h2>
+    <p>All sessions in Gateway East. Breakfast and lunch in Gateway West.</p>
   </div>
+
   <div class="sched-eve">
     <div class="sched-day-label">Wednesday Evening &nbsp;&middot;&nbsp; June 17</div>
     <div class="session">
       <div class="sess-time">7:00–9:00 PM</div>
       <div class="sess-body">
         <div class="sess-title">Welcome Cocktail Hour</div>
-        <div class="sess-speaker">Gateway Terrace &nbsp;&middot;&nbsp; 18th Floor</div>
-        <span class="sess-tag">Pre-Event</span>
-        <img class="terrace-img" src="images/Gateway-Terrace-at-Night-1000x660.jpg" alt="Gateway Terrace — Hyatt Regency St. Louis at The Arch" />
+        <div class="sess-speaker">Full bar &amp; hors d'oeuvres</div>
+        <div class="sess-room">The Terrace &nbsp;&middot;&nbsp; 18th Floor</div>
+        <img class="terrace-img" src="images/Gateway-Terrace-at-Night-1000x660.jpg" alt="The Terrace — Hyatt Regency St. Louis at The Arch"/>
       </div>
     </div>
   </div>
 
-  <div class="schedule-grid">
-
-    <div class="sched-day">
-      <div class="sched-day-label">Day One &nbsp;&middot;&nbsp; June 18</div>
-      <div class="session">
-        <div class="sess-time">7:00–8:00 AM</div>
-        <div class="sess-body">
-          <div class="sess-title">Breakfast</div>
-          <div class="sess-speaker">Secondary Meeting Room</div>
-        </div>
-      </div>
-      <div class="session">
-        <div class="sess-time">8:00 AM</div>
-        <div class="sess-body">
-          <div class="sess-title">Opening &amp; Ice Breaker</div>
-          <div class="sess-speaker">Dale Cooper</div>
-          <span class="sess-tag">Interview a Stranger</span>
-        </div>
-      </div>
-      <div class="session">
-        <div class="sess-time">9:00 AM</div>
-        <div class="sess-body">
-          <div class="sess-title">Reignite the SPARK: Build a 10/10 Relationship That Fuels Everything Else</div>
-          <div class="sess-speaker">Adam &amp; Marie Hill</div>
-          <span class="sess-tag">Couples Workshop</span>
-        </div>
-      </div>
-      <div class="session">
-        <div class="sess-time">10:00–10:30</div>
-        <div class="sess-body">
-          <div class="sess-title">Break</div>
-        </div>
-      </div>
-      <div class="session">
-        <div class="sess-time">10:30 AM</div>
-        <div class="sess-body">
-          <div class="sess-title">Emotional Intelligence</div>
-          <div class="sess-speaker">Marcus Truman</div>
-        </div>
-      </div>
-      <div class="session">
-        <div class="sess-time">11:30 AM</div>
-        <div class="sess-body">
-          <div class="sess-title">Lunch</div>
-        </div>
-      </div>
-      <div class="session">
-        <div class="sess-time">1:00 PM</div>
-        <div class="sess-body">
-          <div class="sess-title">EOS Panel</div>
-          <div class="sess-speaker">Adam Hill &nbsp;&middot;&nbsp; Ben Kelley &nbsp;&middot;&nbsp; Dale Cooper</div>
-          <span class="sess-tag">Panel</span>
-        </div>
-      </div>
-      <div class="session">
-        <div class="sess-time">2:00 PM</div>
-        <div class="sess-body">
-          <div class="sess-title">Visionary / Integrator Breakout</div>
-          <div class="sess-speaker">Greg Rogers &nbsp;&middot;&nbsp; Bailey Gilder</div>
-          <span class="sess-tag">Breakout</span>
-        </div>
-      </div>
-      <div class="session">
-        <div class="sess-time">Evening</div>
-        <div class="sess-body">
-          <div class="sess-title">Close of Day One</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="sched-vdiv"></div>
-
-    <div class="sched-day">
-      <div class="sched-day-label">Day Two &nbsp;&middot;&nbsp; June 19</div>
-      <div class="session">
-        <div class="sess-time">7:00–8:00 AM</div>
-        <div class="sess-body">
-          <div class="sess-title">Breakfast</div>
-          <div class="sess-speaker">Secondary Meeting Room</div>
-        </div>
-      </div>
-      <div class="session">
-        <div class="sess-time">8:00 AM</div>
-        <div class="sess-body">
-          <div class="sess-title">The Healthy Visionary</div>
-          <div class="sess-speaker">Dale Cooper</div>
-        </div>
-      </div>
-      <div class="session">
-        <div class="sess-time">9:00 AM</div>
-        <div class="sess-body">
-          <div class="sess-title">How to Make Your Kids Hate You</div>
-          <div class="sess-speaker">Mark McMullin</div>
-          <span class="sess-tag">Legacy Planning</span>
-        </div>
-      </div>
-      <div class="session">
-        <div class="sess-time">10:00–10:30</div>
-        <div class="sess-body">
-          <div class="sess-title">Break</div>
-        </div>
-      </div>
-      <div class="session">
-        <div class="sess-time">10:30 AM</div>
-        <div class="sess-body">
-          <div class="sess-title">The VTO Flight Path: Launching Bold Vision and Creative Ascent</div>
-          <div class="sess-speaker">Ben Kelley</div>
-        </div>
-      </div>
-      <div class="session">
-        <div class="sess-time">11:30 AM</div>
-        <div class="sess-body">
-          <div class="sess-title">Lunch</div>
-        </div>
-      </div>
-      <div class="session">
-        <div class="sess-time">1:00 PM</div>
-        <div class="sess-body">
-          <div class="sess-title">The New Co-Worker: Integrating AI Without Losing the Human Touch</div>
-          <span class="sess-tag">AI Panel</span>
-        </div>
-      </div>
-      <div class="session">
-        <div class="sess-time">2:00 PM</div>
-        <div class="sess-body">
-          <div class="sess-title">Charity &amp; Close</div>
-          <div class="sess-speaker">Hope Center Indy</div>
-        </div>
-      </div>
-    </div>
-
+  <div class="day-tabs" role="tablist">
+    <button class="day-tab" id="tab-d1" role="tab" aria-selected="false" aria-controls="panel-d1" onclick="switchDay(1)">Day 1 &nbsp;&middot;&nbsp; June 18</button>
+    <button class="day-tab" id="tab-d2" role="tab" aria-selected="false" aria-controls="panel-d2" onclick="switchDay(2)">Day 2 &nbsp;&middot;&nbsp; June 19</button>
   </div>
+
+  <div class="day-panel" id="panel-d1" role="tabpanel" aria-labelledby="tab-d1">
+    <div class="session" data-sid="d1-0">
+      <div class="sess-time">7:00–8:00 AM</div>
+      <div class="sess-body">
+        <div class="sess-title">Breakfast</div>
+        <div class="sess-room">Gateway West</div>
+      </div>
+    </div>
+    <div class="session" data-sid="d1-1">
+      <div class="sess-time">8:00 AM</div>
+      <div class="sess-body">
+        <div class="sess-title">Opening &amp; Ice Breaker</div>
+        <div class="sess-speaker">Dale Cooper</div>
+        <span class="sess-tag">Interview a Stranger</span>
+        <div class="sess-room">Gateway East</div>
+      </div>
+    </div>
+    <div class="session" data-sid="d1-2">
+      <div class="sess-time">9:00 AM</div>
+      <div class="sess-body">
+        <div class="sess-title">Reignite the SPARK: Build a 10/10 Relationship That Fuels Everything Else</div>
+        <div class="sess-speaker">Adam &amp; Marie Hill</div>
+        <span class="sess-tag">Couples Workshop</span>
+        <div class="sess-room">Gateway East</div>
+      </div>
+    </div>
+    <div class="session" data-sid="d1-3">
+      <div class="sess-time">10:00–10:30 AM</div>
+      <div class="sess-body">
+        <div class="sess-title">Break</div>
+      </div>
+    </div>
+    <div class="session" data-sid="d1-4">
+      <div class="sess-time">10:30 AM</div>
+      <div class="sess-body">
+        <div class="sess-title">Emotional Intelligence</div>
+        <div class="sess-speaker">Marcus Truman</div>
+        <div class="sess-room">Gateway East</div>
+      </div>
+    </div>
+    <div class="session" data-sid="d1-5">
+      <div class="sess-time">11:30 AM</div>
+      <div class="sess-body">
+        <div class="sess-title">Lunch &nbsp;&middot;&nbsp; The Hill Menu</div>
+        <div class="sess-room">Gateway West</div>
+      </div>
+    </div>
+    <div class="session" data-sid="d1-6">
+      <div class="sess-time">1:00 PM</div>
+      <div class="sess-body">
+        <div class="sess-title">EOS Panel</div>
+        <div class="sess-speaker">Adam Hill &nbsp;&middot;&nbsp; Ben Kelley &nbsp;&middot;&nbsp; Dale Cooper</div>
+        <span class="sess-tag">Panel</span>
+        <div class="sess-room">Gateway East</div>
+      </div>
+    </div>
+    <div class="session" data-sid="d1-7">
+      <div class="sess-time">2:00 PM</div>
+      <div class="sess-body">
+        <div class="sess-title">Visionary / Integrator Breakout</div>
+        <div class="sess-speaker">Greg Rogers &nbsp;&middot;&nbsp; Bailey Gilder</div>
+        <span class="sess-tag">Breakout</span>
+        <div class="sess-room">Gateway East &amp; West</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="day-panel" id="panel-d2" role="tabpanel" aria-labelledby="tab-d2">
+    <div class="session" data-sid="d2-0">
+      <div class="sess-time">7:00–8:00 AM</div>
+      <div class="sess-body">
+        <div class="sess-title">Breakfast</div>
+        <div class="sess-room">Gateway West</div>
+      </div>
+    </div>
+    <div class="session" data-sid="d2-1">
+      <div class="sess-time">8:00 AM</div>
+      <div class="sess-body">
+        <div class="sess-title">The Healthy Visionary</div>
+        <div class="sess-speaker">Dale Cooper</div>
+        <div class="sess-room">Gateway East</div>
+      </div>
+    </div>
+    <div class="session" data-sid="d2-2">
+      <div class="sess-time">9:00 AM</div>
+      <div class="sess-body">
+        <div class="sess-title">How to Make Your Kids Hate You</div>
+        <div class="sess-speaker">Mark McMullin</div>
+        <span class="sess-tag">Legacy Planning</span>
+        <div class="sess-room">Gateway East</div>
+      </div>
+    </div>
+    <div class="session" data-sid="d2-3">
+      <div class="sess-time">10:00–10:30 AM</div>
+      <div class="sess-body">
+        <div class="sess-title">Break</div>
+      </div>
+    </div>
+    <div class="session" data-sid="d2-4">
+      <div class="sess-time">10:30 AM</div>
+      <div class="sess-body">
+        <div class="sess-title">The VTO Flight Path: Launching Bold Vision and Creative Ascent</div>
+        <div class="sess-speaker">Ben Kelley</div>
+        <div class="sess-room">Gateway East</div>
+      </div>
+    </div>
+    <div class="session" data-sid="d2-5">
+      <div class="sess-time">11:30 AM</div>
+      <div class="sess-body">
+        <div class="sess-title">Lunch &nbsp;&middot;&nbsp; Soulard Menu</div>
+        <div class="sess-room">Gateway West</div>
+      </div>
+    </div>
+    <div class="session" data-sid="d2-6">
+      <div class="sess-time">1:00 PM</div>
+      <div class="sess-body">
+        <div class="sess-title">The New Co-Worker: Integrating AI Without Losing the Human Touch</div>
+        <div class="sess-speaker">Alan Thomas &nbsp;&middot;&nbsp; Caleb Jones</div>
+        <span class="sess-tag">AI Panel</span>
+        <div class="sess-room">Gateway East</div>
+      </div>
+    </div>
+    <div class="session" data-sid="d2-7">
+      <div class="sess-time">2:00 PM</div>
+      <div class="sess-body">
+        <div class="sess-title">Charity &amp; Close</div>
+        <div class="sess-speaker">Mary Wilkinson &nbsp;&middot;&nbsp; Hope Center Indy</div>
+        <div class="sess-room">Gateway East</div>
+      </div>
+    </div>
+  </div>
+
 </section>
-
-<!-- ── DATA STRIP ── -->
-<div class="data-strip">
-  <p class="data-strip-text">
-    <span class="da">$400</span> per person &nbsp;&middot;&nbsp;
-    <span class="da">June 18–19</span> &nbsp;&middot;&nbsp;
-    Hyatt Regency, St. Louis &nbsp;&middot;&nbsp;
-    <span class="da">Limited Seating</span>
-  </p>
-</div>
 
 <!-- ── SPEAKERS ── -->
 <section class="sect sect-a" id="speakers">
   <div class="speakers-header">
     <div class="sect-label">The Speakers</div>
     <h2>Featured Voices</h2>
-    <p>Leaders and practitioners bringing substance to every session. Full bios coming soon.</p>
+    <p>The people in front of the room — and what they're bringing to it.</p>
   </div>
   <div class="speakers-grid">
 
@@ -861,18 +871,18 @@ footer {
       </div>
       <div class="speaker-name">Dale Cooper</div>
       <div class="speaker-role">Founder &nbsp;&middot;&nbsp; Safe Slide Restoration &amp; Cooper's Consulting</div>
-      <span class="speaker-session-tag">Opening Keynote &nbsp;&middot;&nbsp; MC</span>
-      <p class="speaker-bio">Dale built Safe Slide Restoration over thirty years from a regional outfit into a global operation — 400+ projects a year, an industry-recognized training program, and clients spanning waterparks on every continent. He also founded Cherrywood Farm &amp; Golf Club in Fredericktown, MO, naming it for Cherry, his wife and the constant behind every venture he's ever built. The Focus Forum is his most personal project yet — created for the business owners he's watched grind without the right framework for far too long. He's not here to speak at you. He's here because he believes this room can change things. Husband to Cherry, father of 12.</p>
+      <span class="speaker-session-tag">Opening &nbsp;&middot;&nbsp; Healthy Visionary &nbsp;&middot;&nbsp; EOS Panel &nbsp;&middot;&nbsp; MC</span>
+      <p class="speaker-bio">Dale built Safe Slide Restoration over thirty years from a regional outfit into a global operation — 400+ projects a year, an industry-recognized training program, and clients spanning waterparks on every continent. He also founded Cherrywood Farm &amp; Golf Club. The Focus Forum was his idea, built for the business owners he's watched grind without the right framework for far too long. Husband to Cherry, father of 12.</p>
     </div>
 
     <div class="speaker-card">
       <div class="speaker-avatar">
         <img src="https://implementer.eosworldwide.com/wp-content/uploads/2026/03/Startup-Spouces-62300KB-683x1024.jpg" alt="Adam Hill" style="width:100%;height:100%;object-fit:cover;object-position:top center;display:block;"/>
       </div>
-      <div class="speaker-name">Adam Hill</div>
+      <div class="speaker-name">Adam &amp; Marie Hill</div>
       <div class="speaker-role">Professional EOS Implementer</div>
-      <span class="speaker-session-tag">Day One &nbsp;&middot;&nbsp; SPARK Session &nbsp;&middot;&nbsp; Implementors Panel</span>
-      <p class="speaker-bio">Former CEO of a fourth-generation family business, Adam scaled his company to 9 figures and grew revenue by $40M within two years of implementing EOS. Ironman World Championship finisher. 20+ years of business leadership experience. He and his wife Marie bring the SPARK framework to the Focus Forum — practical tools for high-performing couples to rebuild trust, communicate honestly, and create an aligned vision for life and business.</p>
+      <span class="speaker-session-tag">Day One &nbsp;&middot;&nbsp; SPARK Session &nbsp;&middot;&nbsp; EOS Panel</span>
+      <p class="speaker-bio">Former CEO of a fourth-generation family business, Adam scaled to 9 figures and grew revenue by $40M within two years of implementing EOS. Ironman World Championship finisher. He and Marie bring the SPARK framework — practical tools for high-performing couples to rebuild trust, communicate honestly, and create an aligned vision for life and business.</p>
     </div>
 
     <div class="speaker-card">
@@ -881,8 +891,8 @@ footer {
       </div>
       <div class="speaker-name">Ben Kelley</div>
       <div class="speaker-role">Certified EOS Implementer</div>
-      <span class="speaker-session-tag">Day Two &nbsp;&middot;&nbsp; The VTO Flight Path</span>
-      <p class="speaker-bio">5+ years guiding leadership teams through EOS. Ben's background spans product design, real estate, and running a design company — giving him a practitioner's lens on the same challenges his clients face. His focus: helping owners work less in their business and earn more, without burning out.</p>
+      <span class="speaker-session-tag">Day Two &nbsp;&middot;&nbsp; VTO Flight Path &nbsp;&middot;&nbsp; EOS Panel</span>
+      <p class="speaker-bio">5+ years guiding leadership teams through EOS. Ben's background spans product design, real estate, and running a design company — a practitioner's lens on the same challenges his clients face. His focus: helping owners work less in the business and earn more, without burning out.</p>
     </div>
 
     <div class="speaker-card">
@@ -891,8 +901,8 @@ footer {
       </div>
       <div class="speaker-name">Marcus Truman</div>
       <div class="speaker-role">Leadership Performance Coach &nbsp;&middot;&nbsp; Archangel Performance</div>
-      <span class="speaker-session-tag">Emotional Intelligence</span>
-      <p class="speaker-bio">Former Special Warfare leader with two decades of military service. Marcus now coaches elite performers on mental resilience, emotional strength, and leading without losing yourself. He doesn't coach from theory — he coaches from the fire.</p>
+      <span class="speaker-session-tag">Day One &nbsp;&middot;&nbsp; Emotional Intelligence</span>
+      <p class="speaker-bio">Former Special Warfare leader with two decades of military service. Marcus coaches elite performers on mental resilience, emotional strength, and leading without losing yourself. He doesn't coach from theory — he coaches from the fire.</p>
     </div>
 
     <div class="speaker-card">
@@ -902,127 +912,235 @@ footer {
       <div class="speaker-name">Mark McMullin</div>
       <div class="speaker-role">Attorney at Law &nbsp;&middot;&nbsp; Estate Planning &amp; Elder Law</div>
       <span class="speaker-session-tag">Day Two &nbsp;&middot;&nbsp; Legacy Planning</span>
-      <p class="speaker-bio">Founder of the Law Office of Mark McMullin in Cape Girardeau, MO. Mark began his career in finance before pursuing law at Mizzou, where he found his calling in estate planning — helping individuals be intentional about what happens to them, their family, and everything they've worked to build.</p>
+      <p class="speaker-bio">Founder of the Law Office of Mark McMullin in Cape Girardeau, MO. Mark began in finance before pursuing law at Mizzou — finding his calling in estate planning. He helps people be intentional about what happens to them, their family, and everything they've worked to build.</p>
+    </div>
+
+    <div class="speaker-card">
+      <div class="speaker-avatar">
+        <span class="speaker-initials">AT</span>
+      </div>
+      <div class="speaker-name">Alan Thomas</div>
+      <div class="speaker-role">Founder &nbsp;&middot;&nbsp; Thomas AI &amp; GHL Consulting</div>
+      <span class="speaker-session-tag">Day Two &nbsp;&middot;&nbsp; AI Panel</span>
+      <p class="speaker-bio">Service-Disabled Veteran and founder of Thomas AI &amp; GHL Consulting in Gilbert, AZ. Alan helps business owners put AI to work — conversational voice AI, automated lead follow-up, and GoHighLevel CRM systems that run without requiring a full-time human behind them. His clients don't theorize about AI. They use it.</p>
+    </div>
+
+    <div class="speaker-card">
+      <div class="speaker-avatar">
+        <img src="https://backend.henrystewartconferences.com/sites/default/files/Caleb%20Jones.jpg" alt="Caleb Jones" style="width:100%;height:100%;object-fit:cover;object-position:top center;display:block;"/>
+      </div>
+      <div class="speaker-name">Caleb Jones</div>
+      <div class="speaker-role">Design Operations Consultant &nbsp;&middot;&nbsp; 1041 Consulting</div>
+      <span class="speaker-session-tag">Day Two &nbsp;&middot;&nbsp; AI Panel</span>
+      <p class="speaker-bio">Twenty years building and scaling creative organizations at companies like Hilton and NerdWallet. Caleb led AI communications implementation at Pearson across 40 universities and 300+ programs — generating $50M in recurring revenue while cutting friction at every level. He works at the intersection of people, process, and technology: the part where AI either helps or gets in the way.</p>
     </div>
 
   </div>
 </section>
 
-<!-- ── ST. LOUIS ── -->
-<section class="sect sect-b" id="st-louis">
+<!-- ── EXPLORE STL ── -->
+<section class="sect sect-b" id="explore">
   <div class="stl-header">
     <div class="sect-label">While You're Here</div>
-    <h2>St. Louis Awaits</h2>
-    <p>Arrive early. Stay late. The Gateway City has more than you'd expect.</p>
+    <h2>Explore St. Louis</h2>
+    <p>You're in one of the most underrated cities in America. Use the time you have.</p>
+    <p class="stl-advisory"><strong style="color:var(--cream)">Driving advisory —</strong> I-44 through downtown St. Louis is currently closed due to a major sinkhole, with no confirmed reopening date. Check your navigation before heading in and give yourself extra time. <a href="https://www.stlpr.org/government-politics-issues/2026-06-14/huge-hole-closed-interstate-44-downtown-st-louis" target="_blank" rel="noopener">Full story &rarr;</a></p>
   </div>
   <div class="stl-grid">
     <div class="stl-card">
-      <div class="stl-num">01</div>
+      <div class="stl-cat">See</div>
       <div class="stl-name">Gateway Arch</div>
-      <p class="stl-desc">Ride to the top of the country's tallest man-made monument. The view of the Mississippi River and downtown St. Louis is worth every second.</p>
+      <p class="stl-desc">Ride to the top of the country's tallest man-made monument. The view of the Mississippi and downtown is worth every second. Practically in your backyard — walkable from the hotel.</p>
     </div>
     <div class="stl-card">
-      <div class="stl-num">02</div>
+      <div class="stl-cat">See</div>
       <div class="stl-name">City Museum</div>
-      <p class="stl-desc">Part playground, part art installation, part fever dream. An absolute must for anyone who thought they'd outgrown wonder. Bring your sense of adventure.</p>
+      <p class="stl-desc">Part playground, part art installation, part fever dream. An absolute must for anyone who thought they'd outgrown wonder. Go at night — it's a different experience entirely.</p>
     </div>
     <div class="stl-card">
-      <div class="stl-num">03</div>
+      <div class="stl-cat">See</div>
       <div class="stl-name">Forest Park</div>
-      <p class="stl-desc">1,371 acres of free museums, trails, and open space. Home to the St. Louis Art Museum, the Zoo, and the History Museum — all free to the public.</p>
+      <p class="stl-desc">1,371 acres. The Art Museum, Zoo, and History Museum — all free. Bigger than Central Park. Come early, stay for hours, spend nothing.</p>
     </div>
     <div class="stl-card">
-      <div class="stl-num">04</div>
-      <div class="stl-name">Soulard</div>
-      <p class="stl-desc">One of the oldest neighborhoods in America. Cobblestone streets, live blues, and a farmers market running since 1779. The city's soul in a single neighborhood.</p>
-    </div>
-    <div class="stl-card">
-      <div class="stl-num">05</div>
+      <div class="stl-cat">Eat</div>
       <div class="stl-name">The Hill</div>
-      <p class="stl-desc">St. Louis's legendary Italian neighborhood. Old-school red sauce, bocce courts, and a sense of community your grandfather would recognize. Dinner on The Hill is mandatory.</p>
+      <p class="stl-desc">STL's Italian neighborhood. Old-school red sauce, bocce courts. Charlie Gitto's or Trattoria Marcella for the full experience. ~10 min from the hotel. (You'll also get a taste at Thursday's lunch.)</p>
     </div>
     <div class="stl-card">
-      <div class="stl-num">06</div>
+      <div class="stl-cat">Eat</div>
+      <div class="stl-name">Broadway Oyster Bar</div>
+      <p class="stl-desc">Live music nightly, Cajun and seafood, ice-cold drinks. A true St. Louis original. ~5 min drive from the Hyatt. No reservations — walk in, find a spot, stay too long.</p>
+    </div>
+    <div class="stl-card">
+      <div class="stl-cat">Eat</div>
+      <div class="stl-name">Soulard</div>
+      <p class="stl-desc">Cobblestones, live blues, and one of the oldest farmers markets in America running since 1779. McGurk's Irish Pub for a pint and a plate. The city's soul in one neighborhood.</p>
+    </div>
+    <div class="stl-card">
+      <div class="stl-cat">Eat</div>
+      <div class="stl-name">Imo's Pizza</div>
+      <p class="stl-desc">STL-style thin crust with Provel cheese. Controversial outside Missouri. Non-negotiable if you're in town. Multiple locations. It's fine — it's actually great.</p>
+    </div>
+    <div class="stl-card">
+      <div class="stl-cat">Eat</div>
+      <div class="stl-name">Sugarfire Smoke House</div>
+      <p class="stl-desc">Award-winning BBQ. Ribs, brisket, housemade sides. Multiple STL locations. The line moves. Worth it.</p>
+    </div>
+    <div class="stl-card">
+      <div class="stl-cat">Watch</div>
       <div class="stl-name">Cardinals at Busch Stadium</div>
-      <p class="stl-desc">June is peak baseball season. Catch a Cardinals game at Busch Stadium — one of the most beautiful parks in the National League. The city will be loud.</p>
+      <p class="stl-desc">June is peak baseball. Busch Stadium is one of the most beautiful parks in the National League — walkable from the hotel. Check the schedule before you go. The city will be loud.</p>
     </div>
   </div>
 </section>
+
+<!-- ── LOGISTICS ── -->
+<section class="sect sect-a" id="logistics">
+  <div class="logistics-header">
+    <div class="sect-label">Know Before You Go</div>
+    <h2>Logistics</h2>
+  </div>
+  <div class="logistics-grid">
+
+    <div class="logi-panel">
+      <div class="logi-label">Getting Here</div>
+      <div class="logi-title">Hyatt Regency St. Louis at The Arch</div>
+      <div class="logi-body">
+        <div class="logi-item">
+          <div class="logi-item-label">Address</div>
+          <div class="logi-item-val">315 Chestnut Street<br>St. Louis, MO 63102</div>
+        </div>
+        <a href="https://maps.google.com/?q=Hyatt+Regency+St+Louis+at+The+Arch,+315+Chestnut+Street,+St+Louis,+MO+63102" target="_blank" rel="noopener" class="btn-maps">Open in Google Maps &rarr;</a>
+        <div class="logi-item">
+          <div class="logi-item-label">Hotel Check-In</div>
+          <div class="logi-item-val">4:00 PM</div>
+        </div>
+        <div class="logi-item">
+          <div class="logi-item-label">Hotel Check-Out</div>
+          <div class="logi-item-val">11:00 AM</div>
+        </div>
+        <div class="logi-item">
+          <div class="logi-item-note">I-44 through downtown is currently closed due to a sinkhole. Check your navigation app before driving in.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="logi-panel">
+      <div class="logi-label">Parking</div>
+      <div class="logi-title">Options Near the Hotel</div>
+      <div class="logi-body">
+        <div class="logi-item">
+          <div class="logi-item-label">Hotel Valet</div>
+          <div class="logi-item-val">$50 / night</div>
+          <div class="logi-item-note">In/out privileges. Most convenient if you're coming and going.</div>
+        </div>
+        <div class="logi-item">
+          <div class="logi-item-label">Hotel Self-Park</div>
+          <div class="logi-item-val">$40 / night</div>
+          <div class="logi-item-note">Adjacent to the hotel.</div>
+        </div>
+        <div class="logi-item">
+          <div class="logi-item-label">Budget Option</div>
+          <div class="logi-item-val">Kiener Plaza Parking Garage</div>
+          <div class="logi-item-note">Short walk from the hotel. Significantly cheaper than hotel rates — it's where the hotel staff parks.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="logi-panel">
+      <div class="logi-label">Event Rooms</div>
+      <div class="logi-title">Where to Find Us</div>
+      <div class="logi-body">
+        <div class="logi-item">
+          <div class="logi-item-label">General Sessions</div>
+          <div class="logi-item-val">Gateway East</div>
+          <div class="logi-item-note">All keynotes, panels, and breakouts. Both days.</div>
+        </div>
+        <div class="logi-item">
+          <div class="logi-item-label">Breakfast &amp; Lunch</div>
+          <div class="logi-item-val">Gateway West</div>
+          <div class="logi-item-note">Both days. Breakfast 7:00–8:00 AM, lunch 11:30 AM.</div>
+        </div>
+        <div class="logi-item">
+          <div class="logi-item-label">Wednesday Evening</div>
+          <div class="logi-item-val">The Terrace, 18th Floor</div>
+          <div class="logi-item-note">Welcome cocktail hour. 7:00–9:00 PM.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="logi-panel">
+      <div class="logi-label">Meals</div>
+      <div class="logi-title">What We're Eating</div>
+      <div class="logi-body">
+        <div class="logi-item">
+          <div class="logi-item-label">Wednesday Cocktail Hour</div>
+          <div class="logi-item-val">Hors d'oeuvres &amp; Full Bar</div>
+          <div class="logi-item-note">Toasted ravioli, beef tenderloin crostini, bacon-wrapped jalapeño chicken, Mediterranean skewers, and more.</div>
+        </div>
+        <div class="logi-item">
+          <div class="logi-item-label">Thursday Lunch</div>
+          <div class="logi-item-val">The Hill Menu</div>
+          <div class="logi-item-note">Chicken Piccata, Whitefish, Orecchiette, Tiramisu, Cannoli.</div>
+        </div>
+        <div class="logi-item">
+          <div class="logi-item-label">Friday Lunch</div>
+          <div class="logi-item-val">Soulard Menu</div>
+          <div class="logi-item-note">Mahi Mahi, Cajun Chicken, Red Beans &amp; Rice, Beignets, Pecan Tart.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── CONTACT STRIP ── -->
+<div class="contact-strip">
+  <div class="contact-item">
+    <div class="contact-label">Questions &amp; Day-Of</div>
+    <div class="contact-val"><a href="tel:5737604007">573.760.4007</a></div>
+  </div>
+  <div class="contact-item">
+    <div class="contact-label">Coordinator</div>
+    <div class="contact-val">Joel Cooper</div>
+  </div>
+  <div class="contact-item">
+    <div class="contact-label">Attendee Community</div>
+    <div class="contact-val"><a href="https://chat.whatsapp.com/DfqVSaCDkCNAsK6UI6zoj5" target="_blank" rel="noopener">WhatsApp Group &rarr;</a></div>
+  </div>
+</div>
 
 <!-- ── CHARITY ── -->
-<section class="sect sect-a" id="charity">
+<section class="sect sect-b" id="charity">
   <div class="charity-inner">
     <div class="charity-label">
-      <div class="sect-label">Giving Back</div>
+      <div class="sect-label">Friday Afternoon</div>
       <h2>Our <span class="h-accent">Charity</span></h2>
-      <p>A portion of every ticket supports The Hope Center Indy — a faith-based organization on the front lines of restoring lives through comprehensive care.</p>
-      <a href="https://www.hopecenterindy.org" target="_blank" rel="noopener" class="charity-link">Visit hopecenterindy.org &rarr;</a>
+      <p>Day two closes with a presentation by The Hope Center Indy. Bring your generosity — donation via Venmo will be available at the event.</p>
+      <a href="https://www.hopecenterindy.org" target="_blank" rel="noopener" class="charity-link">hopecenterindy.org &rarr;</a>
     </div>
     <div class="charity-body">
-      <p>The <strong>Hope Center Indy</strong> operates a 25-acre campus in Indianapolis serving women ages 18–30 coming out of sex trafficking, sexual exploitation, and addiction. Their mission: <strong>to impart hope and healing to every heart</strong> through programs that address both immediate needs and long-term restoration.</p>
-      <p>Their model goes beyond shelter. Through vocational training, therapy, and social enterprises — coffee shops and boutiques whose profits fund the mission — survivors are equipped for lives of independence and purpose. <strong>The past does not define you.</strong> That's not a tagline at Hope Center. It's the operating principle.</p>
-      <div class="charity-stats">
-        <div class="c-stat"><div class="c-stat-num">240</div><div class="c-stat-label">Women in Programs</div></div>
-        <div class="c-stat"><div class="c-stat-num">280</div><div class="c-stat-label">Families Fed Weekly</div></div>
-        <div class="c-stat"><div class="c-stat-num">377</div><div class="c-stat-label">Arrests via K-9 Work</div></div>
-      </div>
-      <blockquote class="charity-quote">
-        <p>"God keeps blessing my life with rebuilt family relationships, renewed love of the Father, new Christian friend relationships, a church community..."</p>
-        <cite>Hope Center Resident</cite>
-      </blockquote>
+      <p>The <strong>Hope Center Indy</strong> operates a 25-acre campus in Indianapolis serving women ages 18–30 coming out of sex trafficking, sexual exploitation, and addiction. Their mission: <strong>to impart hope and healing to every heart.</strong></p>
+      <p>Through vocational training, therapy, and social enterprises — coffee shops and boutiques whose profits fund the mission — survivors are equipped for lives of independence and purpose. <strong>Mary Wilkinson</strong> will be presenting on behalf of Hope Center. The past does not define you. That's not a tagline there. It's the operating principle.</p>
     </div>
   </div>
 </section>
 
-<!-- ── RESERVE ── -->
-<section class="sect sect-b" id="reserve">
-  <div class="reserve-header">
-    <h2>Reserve Your Seat</h2>
-    <p>June 2026 &nbsp;&middot;&nbsp; St. Louis, MO &nbsp;&middot;&nbsp; Limited Seating</p>
-  </div>
-  <div class="reserve-panels">
-
-    <div class="res-panel">
-      <div class="panel-num">01 &nbsp;/&nbsp; Register</div>
-      <h3 class="panel-title">Claim Your Spot</h3>
-      <p class="panel-desc">Complete the registration form to secure your seat. Seating is limited and fills early. Both a confirmed registration and payment are required to hold your reservation.</p>
-      <p class="panel-desc">After registering, join the <strong style="color:var(--cream)">Focus Forum WhatsApp community</strong> — our primary channel for updates, logistics, and pre-conference conversation.</p>
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLSfMmSLKAe5uFeQzOLFT9uoH_pz_ox6Uw11p5XQDs5vKPHu5SA/viewform?usp=header" target="_blank" rel="noopener" class="btn-primary">Register Now &rarr;</a>
-      <a href="https://chat.whatsapp.com/DfqVSaCDkCNAsK6UI6zoj5" target="_blank" rel="noopener" class="btn-secondary">Join WhatsApp Group</a>
-    </div>
-
-    <div class="res-panel">
-      <div class="panel-num">02 &nbsp;/&nbsp; Pay</div>
-      <h3 class="panel-title">Secure Payment</h3>
-      <div class="panel-amount">$400</div>
-      <div class="panel-amount-sub">Per person</div>
-      <p class="panel-desc">Payment confirms your reservation. Complete registration first, then use one of the options below.</p>
-      <div class="pay-options">
-        <a href="https://account.venmo.com/u/coopersconsulting" target="_blank" rel="noopener" class="btn-primary">Pay via Venmo &rarr;</a>
-        <a href="#" class="btn-secondary">Pay via Zelle</a>
-      </div>
-      <p class="pay-note">Zelle: send to <strong style="color:var(--cream)">573.760.4007</strong> and note "Focus Forum" in the memo.</p>
-    </div>
-
-    <div class="res-panel">
-      <div class="panel-num">03 &nbsp;/&nbsp; Stay</div>
-      <h3 class="panel-title">Book Your Room</h3>
-      <div class="panel-hotel">Hyatt Regency<br>St. Louis at The Arch</div>
-      <p class="panel-desc">A room block is reserved for Focus Forum attendees at the Hyatt Regency at the Arch. Book early — the block is limited and the group rate expires.</p>
-      <a href="https://www.hyatt.com/events/en-US/group-booking/STLRS/G-SFFC" target="_blank" rel="noopener" class="btn-primary">Book Hotel Room &rarr;</a>
-    </div>
-
-  </div>
-</section>
+<!-- ── PAY (tucked for those who haven't yet) ── -->
+<div class="pay-strip" id="pay">
+  <div class="pay-strip-label">Haven't Paid?</div>
+  <div class="pay-strip-text"><strong>$400 per person.</strong> Send via Venmo @coopersconsulting or Zelle to <strong>573.760.4007</strong> — memo: "Focus Forum."</div>
+  <a href="https://account.venmo.com/u/coopersconsulting" target="_blank" rel="noopener" class="btn-pay">Pay via Venmo &rarr;</a>
+</div>
 
 <!-- ── FOOTER ── -->
 <footer>
   <div class="footer-brand">Cooper's Consulting &nbsp;&middot;&nbsp; Focus Forum 2026</div>
   <div class="footer-contact">
-    1157 Madison Ave, Fredericktown, MO 63645 &nbsp;&nbsp;
     <a href="tel:5737604007">573.760.4007</a>
     &nbsp;&middot;&nbsp;
-    <a href="https://chat.whatsapp.com/DfqVSaCDkCNAsK6UI6zoj5" target="_blank" rel="noopener">Attendee Group</a>
+    <a href="https://chat.whatsapp.com/DfqVSaCDkCNAsK6UI6zoj5" target="_blank" rel="noopener">Attendee WhatsApp</a>
     &nbsp;&middot;&nbsp;
     <a href="/">coopersconsulting.com</a>
   </div>
@@ -1031,191 +1149,17 @@ footer {
 
 </div><!-- /page-frame -->
 
-<!-- ════════════════════════ THREE.JS HEX CANVAS ════════════════════════ -->
-<script type="module">
-import * as THREE               from 'three';
-import { EffectComposer }       from 'three/addons/postprocessing/EffectComposer.js';
-import { RenderPass }           from 'three/addons/postprocessing/RenderPass.js';
-import { UnrealBloomPass }      from 'three/addons/postprocessing/UnrealBloomPass.js';
-import { OutputPass }           from 'three/addons/postprocessing/OutputPass.js';
-
-let W = window.innerWidth;
-let H = window.innerHeight;
-
-const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setSize(W, H);
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.1;
-Object.assign(renderer.domElement.style, { width: '100%', height: '100%', display: 'block' });
-document.getElementById('hex-canvas-wrap').appendChild(renderer.domElement);
-
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x0C0A08);
-
-const camera = new THREE.PerspectiveCamera(45, W / H, 0.1, 2000);
-camera.position.z = 220;
-
-const HEX_R  = 9.5;
-const GAP    = 1.25;
-const TILE_R = HEX_R - GAP;
-
-const shape = new THREE.Shape();
-for (let i = 0; i < 6; i++) {
-  const a = (Math.PI / 3) * i + Math.PI / 2;
-  i === 0 ? shape.moveTo(TILE_R * Math.cos(a), TILE_R * Math.sin(a))
-           : shape.lineTo(TILE_R * Math.cos(a), TILE_R * Math.sin(a));
-}
-shape.closePath();
-
-const DEPTH = 1.8, BEVEL = 0.32;
-const tileGeo = new THREE.ExtrudeGeometry(shape, {
-  depth: DEPTH, bevelEnabled: true,
-  bevelThickness: BEVEL, bevelSize: BEVEL * 0.75, bevelSegments: 3,
-});
-tileGeo.translate(0, 0, -(DEPTH + BEVEL));
-
-const tileMat = new THREE.MeshStandardMaterial({
-  color:             new THREE.Color(0x130800),
-  emissive:          new THREE.Color(0x2c1400),
-  emissiveIntensity: 1.0,
-  metalness: 0.15, roughness: 0.88,
-});
-
-const COLS = 52, ROWS = 34, COUNT = COLS * ROWS;
-const COL_W = HEX_R * Math.sqrt(3);
-const ROW_H = HEX_R * 1.5;
-const tileMesh = new THREE.InstancedMesh(tileGeo, tileMat, COUNT);
-tileMesh.frustumCulled = false;
-
-const dummy = new THREE.Object3D();
-const gridW = COLS * COL_W, gridH = ROWS * ROW_H;
-let idx = 0;
-for (let row = 0; row < ROWS; row++) {
-  for (let col = 0; col < COLS; col++) {
-    dummy.position.set(
-      -gridW / 2 + col * COL_W + (row % 2 ? COL_W * 0.5 : 0),
-      -gridH / 2 + row * ROW_H, 0
-    );
-    dummy.rotation.set(0, 0, 0);
-    dummy.scale.setScalar(1);
-    dummy.updateMatrix();
-    tileMesh.setMatrixAt(idx++, dummy.matrix);
-  }
-}
-tileMesh.instanceMatrix.needsUpdate = true;
-scene.add(tileMesh);
-
-const glowGeo = new THREE.PlaneGeometry(gridW + 120, gridH + 120);
-const glowMat = new THREE.ShaderMaterial({
-  uniforms: {
-    uLightPos:  { value: new THREE.Vector2(0, 0) },
-    uIntensity: { value: 0.0 },
-    uRadius:    { value: Math.max(gridW, gridH) * 0.38 },
-  },
-  vertexShader: /* glsl */`
-    varying vec2 vWorld;
-    void main() {
-      vec4 wp = modelMatrix * vec4(position, 1.0);
-      vWorld = wp.xy;
-      gl_Position = projectionMatrix * viewMatrix * wp;
-    }
-  `,
-  fragmentShader: /* glsl */`
-    uniform vec2  uLightPos;
-    uniform float uIntensity;
-    uniform float uRadius;
-    varying vec2  vWorld;
-    void main() {
-      float d   = length(vWorld - uLightPos);
-      float raw = 1.0 - clamp(d / uRadius, 0.0, 1.0);
-      float t   = pow(raw, 2.2);
-      vec3 c0 = vec3(0.004, 0.001, 0.000);
-      vec3 c1 = vec3(0.060, 0.020, 0.002);
-      vec3 c2 = vec3(0.180, 0.060, 0.006);
-      vec3 c3 = vec3(0.300, 0.130, 0.010);
-      vec3 col;
-      if      (t < 0.25) col = mix(c0, c1, t / 0.25);
-      else if (t < 0.55) col = mix(c1, c2, (t - 0.25) / 0.30);
-      else               col = mix(c2, c3, (t - 0.55) / 0.45);
-      float hot = pow(max(0.0, 1.0 - d / (uRadius * 0.10)), 3.0);
-      col += vec3(0.20, 0.080, 0.006) * hot;
-      gl_FragColor = vec4(col * uIntensity, 1.0);
-    }
-  `,
-  side: THREE.FrontSide, depthWrite: false,
-});
-const glowPlane = new THREE.Mesh(glowGeo, glowMat);
-glowPlane.position.z = -(DEPTH + BEVEL + 0.8);
-scene.add(glowPlane);
-
-scene.add(new THREE.AmbientLight(0x2e1800, 1.8));
-const pointLight = new THREE.PointLight(0xFF7020, 0, 900);
-pointLight.position.set(0, 0, 80);
-scene.add(pointLight);
-scene.add(Object.assign(new THREE.PointLight(0x301800, 2.8, 800), { position: { x: -130, y: 90, z: 100 } }));
-
-const composer = new EffectComposer(renderer);
-composer.addPass(new RenderPass(scene, camera));
-const isMobile = W < 768;
-const bloomPass = new UnrealBloomPass(
-  new THREE.Vector2(W, H),
-  isMobile ? 0.30 : 0.60,
-  isMobile ? 0.30 : 0.45,
-  isMobile ? 0.45 : 0.28
-);
-composer.addPass(bloomPass);
-composer.addPass(new OutputPass());
-
-let mouseX = null, mouseY = null, startTime = null;
-let lxSmooth = 0, lySmooth = 0, camX = 0, camY = 0;
-
-function screenToWorld(sx, sy) {
-  const halfH = Math.tan((45 / 2) * (Math.PI / 180)) * camera.position.z;
-  const halfW = halfH * (W / H);
-  return { x: ((sx / W) - 0.5) * 2 * halfW, y: -((sy / H) - 0.5) * 2 * halfH };
-}
-
-window.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; }, { passive: true });
-window.addEventListener('resize', () => {
-  W = window.innerWidth; H = window.innerHeight;
-  camera.aspect = W / H; camera.updateProjectionMatrix();
-  renderer.setSize(W, H); composer.setSize(W, H);
-  bloomPass.resolution.set(W, H);
-}, { passive: true });
-
-(function animate(ts) {
-  requestAnimationFrame(animate);
-  if (!startTime) startTime = ts;
-  const rawBoot = Math.min(1, (ts - startTime) / 2400);
-  const boot    = 1 - Math.pow(1 - rawBoot, 3);
-  let tgt = mouseX !== null ? screenToWorld(mouseX, mouseY) : screenToWorld(W * 0.5, H * 0.5);
-  tgt.x += Math.sin(ts * 0.00024) * 14 * Math.min(1, boot);
-  tgt.y += Math.cos(ts * 0.00019) * 9  * Math.min(1, boot);
-  lxSmooth += (tgt.x - lxSmooth) * 0.055;
-  lySmooth += (tgt.y - lySmooth) * 0.055;
-  const intensity = boot * (boot >= 1 ? 1 + 0.035 * Math.sin(ts * 0.0017) : 1);
-  glowMat.uniforms.uLightPos.value.set(lxSmooth, lySmooth);
-  glowMat.uniforms.uIntensity.value = intensity;
-  pointLight.position.set(lxSmooth, lySmooth, 80);
-  pointLight.intensity = 2.0 * intensity;
-  camX += ((mouseX !== null ? mouseX / W - 0.5 : 0) * 6 - camX) * 0.04;
-  camY += ((mouseY !== null ? -(mouseY / H - 0.5) * 4 : 0) - camY) * 0.04;
-  camera.position.x = camX; camera.position.y = camY;
-  composer.render();
-})();
-</script>
-
-<!-- ════════════════════════ SITE SCRIPTS ════════════════════════ -->
 <script>
+// ── NAV SCROLL ──
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => {
   nav.classList.toggle('scrolled', window.scrollY > 40);
 }, { passive: true });
 if (window.scrollY > 40) nav.classList.add('scrolled');
 
-const burgerBtn  = document.getElementById('burger-btn');
-const navOverlay = document.getElementById('nav-overlay');
+// ── MOBILE MENU ──
+const burgerBtn    = document.getElementById('burger-btn');
+const navOverlay   = document.getElementById('nav-overlay');
 const overlayClose = document.getElementById('overlay-close');
 const openMenu  = () => { navOverlay.classList.add('open'); burgerBtn.setAttribute('aria-expanded','true'); document.body.style.overflow='hidden'; };
 const closeMenu = () => { navOverlay.classList.remove('open'); burgerBtn.setAttribute('aria-expanded','false'); document.body.style.overflow=''; };
@@ -1223,6 +1167,141 @@ burgerBtn.addEventListener('click', openMenu);
 overlayClose.addEventListener('click', closeMenu);
 navOverlay.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+
+// ── SCHEDULE DATA ──
+// month is 0-indexed: June = 5
+const SCHED = [
+  { sid:'d1-0', day:1, sh:7,  sm:0,  eh:8,  em:0,  title:'Breakfast',                         room:'Gateway West'        },
+  { sid:'d1-1', day:1, sh:8,  sm:0,  eh:9,  em:0,  title:'Opening & Ice Breaker',              room:'Gateway East'        },
+  { sid:'d1-2', day:1, sh:9,  sm:0,  eh:10, em:0,  title:'Reignite the SPARK',                 room:'Gateway East'        },
+  { sid:'d1-3', day:1, sh:10, sm:0,  eh:10, em:30, title:'Break',                              room:''                    },
+  { sid:'d1-4', day:1, sh:10, sm:30, eh:11, em:30, title:'Emotional Intelligence',             room:'Gateway East'        },
+  { sid:'d1-5', day:1, sh:11, sm:30, eh:13, em:0,  title:'Lunch — The Hill Menu',              room:'Gateway West'        },
+  { sid:'d1-6', day:1, sh:13, sm:0,  eh:14, em:0,  title:'EOS Panel',                          room:'Gateway East'        },
+  { sid:'d1-7', day:1, sh:14, sm:0,  eh:17, em:0,  title:'Visionary / Integrator Breakout',    room:'Gateway East & West' },
+  { sid:'d2-0', day:2, sh:7,  sm:0,  eh:8,  em:0,  title:'Breakfast',                         room:'Gateway West'        },
+  { sid:'d2-1', day:2, sh:8,  sm:0,  eh:9,  em:0,  title:'The Healthy Visionary',              room:'Gateway East'        },
+  { sid:'d2-2', day:2, sh:9,  sm:0,  eh:10, em:0,  title:'How to Make Your Kids Hate You',     room:'Gateway East'        },
+  { sid:'d2-3', day:2, sh:10, sm:0,  eh:10, em:30, title:'Break',                              room:''                    },
+  { sid:'d2-4', day:2, sh:10, sm:30, eh:11, em:30, title:'The VTO Flight Path',                room:'Gateway East'        },
+  { sid:'d2-5', day:2, sh:11, sm:30, eh:13, em:0,  title:'Lunch — Soulard Menu',               room:'Gateway West'        },
+  { sid:'d2-6', day:2, sh:13, sm:0,  eh:14, em:0,  title:'AI Panel: The New Co-Worker',        room:'Gateway East'        },
+  { sid:'d2-7', day:2, sh:14, sm:0,  eh:16, em:0,  title:'Charity & Close',                    room:'Gateway East'        },
+];
+
+function sessDate(s) {
+  const d = s.day === 1 ? 18 : 19;
+  return {
+    start: new Date(2026, 5, d, s.sh, s.sm),
+    end:   new Date(2026, 5, d, s.eh, s.em)
+  };
+}
+
+function findCurNext(now) {
+  let curIdx = -1, nextIdx = -1;
+  for (let i = 0; i < SCHED.length; i++) {
+    const { start, end } = sessDate(SCHED[i]);
+    if (now >= start && now < end) { curIdx = i; break; }
+  }
+  nextIdx = curIdx !== -1
+    ? (curIdx + 1 < SCHED.length ? curIdx + 1 : -1)
+    : SCHED.findIndex(s => { const { start } = sessDate(s); return now < start; });
+  return { curIdx, nextIdx };
+}
+
+// ── NOW BANNER ──
+function updateNowBanner() {
+  const banner   = document.getElementById('now-banner');
+  const now      = new Date();
+  const inDay1   = now >= new Date(2026,5,18,7,0) && now < new Date(2026,5,18,17,0);
+  const inDay2   = now >= new Date(2026,5,19,7,0) && now < new Date(2026,5,19,16,0);
+
+  if (!inDay1 && !inDay2) { banner.classList.add('hidden'); return; }
+  banner.classList.remove('hidden');
+
+  const { curIdx, nextIdx } = findCurNext(now);
+  const nbNextCol = document.getElementById('nb-next-col');
+  const nowLabel  = document.getElementById('nb-now-label');
+  const nowTitle  = document.getElementById('nb-now-title');
+  const nowMeta   = document.getElementById('nb-now-meta');
+  const nextTitle = document.getElementById('nb-next-title');
+  const nextMeta  = document.getElementById('nb-next-meta');
+
+  if (curIdx !== -1) {
+    const cur = SCHED[curIdx];
+    nowLabel.textContent = 'Now';
+    nowTitle.textContent = cur.title;
+    nowMeta.textContent  = cur.room;
+
+    if (nextIdx !== -1) {
+      const nxt = SCHED[nextIdx];
+      const { start: ns } = sessDate(nxt);
+      const mins = Math.round((ns - now) / 60000);
+      nextTitle.textContent = nxt.title;
+      nextMeta.textContent  = (nxt.room || '') + (mins > 0 && mins <= 90 ? ' · in ' + mins + ' min' : '');
+      nbNextCol.style.display = '';
+    } else {
+      nbNextCol.style.display = 'none';
+    }
+  } else if (nextIdx !== -1) {
+    const nxt = SCHED[nextIdx];
+    const { start: ns } = sessDate(nxt);
+    const mins = Math.round((ns - now) / 60000);
+    nowLabel.textContent = 'Up Next';
+    nowTitle.textContent = nxt.title;
+    nowMeta.textContent  = (nxt.room || '') + (mins > 0 && mins <= 90 ? ' · in ' + mins + ' min' : '');
+    nbNextCol.style.display = 'none';
+  }
+}
+
+// ── SESSION STATUS BADGES ──
+function updateSessionStatus() {
+  const now = new Date();
+  const { curIdx, nextIdx } = findCurNext(now);
+
+  SCHED.forEach((s, i) => {
+    const el = document.querySelector('[data-sid="' + s.sid + '"]');
+    if (!el) return;
+    const old = el.querySelector('.sess-status');
+    if (old) old.remove();
+    el.classList.remove('done');
+
+    const { end } = sessDate(s);
+    let html = '';
+    if (i === curIdx) {
+      html = '<span class="sess-status s-now"><span class="sd"></span>Now</span>';
+    } else if (i === nextIdx) {
+      html = '<span class="sess-status s-next"><span class="sd"></span>Up Next</span>';
+    } else if (now >= end) {
+      el.classList.add('done');
+      html = '<span class="sess-status s-done"><span class="sd"></span>Complete</span>';
+    }
+    if (html) el.querySelector('.sess-body').insertAdjacentHTML('afterbegin', html);
+  });
+}
+
+// ── DAY TABS ──
+function switchDay(day) {
+  document.querySelectorAll('.day-tab').forEach(t => {
+    const active = t.id === 'tab-d' + day;
+    t.classList.toggle('active', active);
+    t.setAttribute('aria-selected', active ? 'true' : 'false');
+  });
+  document.querySelectorAll('.day-panel').forEach(p => {
+    p.classList.toggle('active', p.id === 'panel-d' + day);
+  });
+}
+
+function autoSelectDay() {
+  const now = new Date();
+  switchDay(now >= new Date(2026, 5, 19) ? 2 : 1);
+}
+
+// ── INIT ──
+autoSelectDay();
+updateNowBanner();
+updateSessionStatus();
+setInterval(() => { updateNowBanner(); updateSessionStatus(); }, 60000);
 </script>
 
 </body>
