@@ -309,32 +309,40 @@ nav.scrolled {
 .stl-advisory a:hover { border-bottom-color: var(--orange); }
 .stl-grid {
   display: grid; grid-template-columns: repeat(3,1fr);
-  border-top: 1px solid var(--rule);
+  gap: 2px; background: var(--rule);
 }
 .stl-card {
-  display: flex; flex-direction: column; gap: .875rem;
-  padding: 2.25rem 2rem; position: relative; overflow: hidden;
-  border: 2px solid transparent; border-top: none;
-  transition: background .25s, border-color .25s;
+  position: relative; min-height: 300px; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: flex-end;
 }
-.stl-card + .stl-card { border-left: 1px solid var(--rule); }
-.stl-card:nth-child(3n+1) { border-left: none; }
-.stl-card:nth-child(n+4) { border-top: 1px solid var(--rule); }
-.stl-card::after {
-  content: ''; position: absolute; top: 0; right: 0;
-  width: 0; height: 0; border-style: solid;
-  border-width: 0 16px 16px 0;
-  border-color: transparent rgba(232,112,26,.4) transparent transparent;
-  opacity: 0; transition: opacity .25s;
+.stl-card::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: var(--img); background-size: cover; background-position: center;
+  transition: transform .5s ease;
 }
-.stl-card:hover { background: rgba(232,112,26,.04); border-color: rgba(232,112,26,.22); }
-.stl-card:hover::after { opacity: 1; }
+.stl-card:hover::before { transform: scale(1.05); }
+.stl-card-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(10,8,5,.92) 0%, rgba(10,8,5,.5) 55%, rgba(10,8,5,.08) 100%);
+}
+.stl-card-content {
+  position: relative; z-index: 1;
+  padding: 1.75rem 1.5rem;
+  display: flex; flex-direction: column; gap: .4rem;
+}
 .stl-cat {
-  font-family: 'Cinzel', serif; font-size: .56rem; font-weight: 700;
-  letter-spacing: .18em; text-transform: uppercase; color: var(--orange); opacity: .6;
+  font-family: 'Cinzel', serif; font-size: .5rem; font-weight: 700;
+  letter-spacing: .18em; text-transform: uppercase; color: var(--orange);
 }
-.stl-name { font-family: 'Cinzel', serif; font-size: 1.1rem; font-weight: 700; color: var(--cream); }
-.stl-desc { font-size: .875rem; font-style: italic; color: var(--muted); line-height: 1.65; }
+.stl-name { font-family: 'Cinzel', serif; font-size: 1.125rem; font-weight: 700; color: var(--cream); }
+.stl-desc { font-size: .8rem; font-style: italic; color: rgba(242,235,218,.72); line-height: 1.6; }
+.wc-badge {
+  display: inline-flex; align-items: center; gap: .35rem;
+  font-family: 'Cinzel', serif; font-size: .48rem; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: #fff; background: rgba(232,112,26,.9);
+  padding: .22rem .6rem; margin-top: .3rem; width: fit-content;
+}
 
 /* ── LOGISTICS ── */
 .logistics-header {
@@ -479,10 +487,6 @@ footer {
   .sched-day:last-child { padding: 3rem 5vw; border-top: 1px solid var(--rule); }
   .speakers-grid { grid-template-columns: 1fr; }
   .stl-grid { grid-template-columns: 1fr 1fr; }
-  .stl-card:nth-child(3n+1) { border-left: 1px solid var(--rule); }
-  .stl-card:nth-child(odd) { border-left: none; }
-  .stl-card:nth-child(n+4) { border-top: none; }
-  .stl-card:nth-child(n+3) { border-top: 1px solid var(--rule); }
   .charity-inner { grid-template-columns: 1fr; }
   .logistics-grid { grid-template-columns: 1fr; }
   .logi-panel { border-right: none; border-bottom: 1px solid var(--rule); padding-right: 5vw; }
@@ -497,8 +501,6 @@ footer {
   .qr-cell:nth-child(even) { border-right: none; }
   .qr-cell:nth-child(n+3) { border-top: 1px solid rgba(232,112,26,.14); }
   .stl-grid { grid-template-columns: 1fr; }
-  .stl-card { border-left: none !important; border-top: 1px solid var(--rule) !important; }
-  .stl-card:first-child { border-top: none !important; }
   .contact-strip { gap: 2rem; }
 }
 @media (max-width: 480px) {
@@ -731,12 +733,6 @@ section[id], #pay { scroll-margin-top: 128px; }
 }
 .speaker-card:hover {
   box-shadow: 0 8px 48px rgba(232,112,26,.10), 0 4px 20px rgba(0,0,0,.38);
-}
-.stl-card {
-  box-shadow: 0 2px 18px rgba(0,0,0,.35);
-}
-.stl-card:hover {
-  box-shadow: 0 6px 32px rgba(232,112,26,.09), 0 2px 10px rgba(0,0,0,.32);
 }
 .quick-ref {
   box-shadow: 0 10px 52px rgba(0,0,0,.52), 0 2px 10px rgba(0,0,0,.32);
@@ -1492,64 +1488,58 @@ section[id], #pay { scroll-margin-top: 128px; }
     <p class="stl-advisory"><strong style="color:var(--cream)">Driving advisory —</strong> I-44 through downtown St. Louis is currently closed due to a major sinkhole, with no confirmed reopening date. Check your navigation before heading in and give yourself extra time. <a href="https://www.stlpr.org/government-politics-issues/2026-06-14/huge-hole-closed-interstate-44-downtown-st-louis" target="_blank" rel="noopener">Full story &rarr;</a></p>
   </div>
   <div class="stl-grid">
-    <div class="stl-card">
-      <div class="stl-cat">Tonight &nbsp;·&nbsp; Eat &amp; Drink</div>
-      <div class="stl-name">Ballpark Village</div>
-      <p class="stl-desc">5-minute walk from the Hyatt. An entire entertainment district attached to Busch Stadium — Cardinals Nation restaurant, TOASTED bar, live music, outdoor patios. Electric on game nights and naturally where the city ends up. No reservation needed.</p>
-    </div>
-    <div class="stl-card">
-      <div class="stl-cat">Tonight &nbsp;·&nbsp; Watch</div>
-      <div class="stl-name">The Wheelhouse</div>
-      <p class="stl-desc">8-minute walk. One of STL's most popular sports bars — hundreds of screens, solid food, great crowd. If the Cardinals are playing and you want to watch with the city rather than alone in your room, this is where to be.</p>
-    </div>
-    <div class="stl-card">
-      <div class="stl-cat">See &nbsp;·&nbsp; 3 min walk</div>
-      <div class="stl-name">Gateway Arch</div>
-      <p class="stl-desc">630 feet over the Mississippi — the view reaches 30 miles on a clear day. Trams depart every 15 minutes from the underground museum, 4-minute ride. Practically in your backyard.</p>
-      <div class="arch-live-row">
-        <span class="arch-tram-badge" id="arch-tram-badge">—</span>
-        <a href="https://www.gatewayarch.com/tram-ride/" target="_blank" rel="noopener" class="arch-ticket-link">Book Tickets &rarr;</a>
+    <div class="stl-card" style="--img:url('https://explorestlouis.com/wp-content/uploads/2024/06/The-Pitch-at-St.-Louis-Union-Station.jpg')">
+      <div class="stl-card-overlay"></div>
+      <div class="stl-card-content">
+        <div class="stl-cat">Tonight &nbsp;·&nbsp; Soccer Bar</div>
+        <div class="stl-name">The Pitch</div>
+        <p class="stl-desc">9,200 sq ft European-style soccer pub inside Union Station. Walls covered in St. Louis soccer history. Directly across from CityPark. This is where you watch the World Cup.</p>
+        <div class="wc-badge">&#9917; USA vs Australia &nbsp;&middot;&nbsp; Fri 3 pm ET &nbsp;&middot;&nbsp; Group Stage</div>
       </div>
     </div>
-    <div class="stl-card">
-      <div class="stl-cat">See</div>
-      <div class="stl-name">City Museum</div>
-      <p class="stl-desc">Part playground, part art installation, part fever dream. An absolute must for anyone who thought they'd outgrown wonder. Go at night — it's a different experience entirely.</p>
+    <div class="stl-card" style="--img:url('https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Ballpark_Village_Phase_One_and_Two.jpg/1200px-Ballpark_Village_Phase_One_and_Two.jpg')">
+      <div class="stl-card-overlay"></div>
+      <div class="stl-card-content">
+        <div class="stl-cat">Tonight &nbsp;·&nbsp; Eat &amp; Drink</div>
+        <div class="stl-name">Ballpark Village</div>
+        <p class="stl-desc">5-minute walk from the Hyatt. Entertainment district attached to Busch Stadium — Cardinals Nation, TOASTED bar, outdoor patios, live music. No reservation needed.</p>
+      </div>
     </div>
-    <div class="stl-card">
-      <div class="stl-cat">See</div>
-      <div class="stl-name">Forest Park</div>
-      <p class="stl-desc">1,371 acres. The Art Museum, Zoo, and History Museum — all free. Bigger than Central Park. Come early, stay for hours, spend nothing.</p>
+    <div class="stl-card" style="--img:url('https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/City_Museum_outdoor_structures.jpg/1200px-City_Museum_outdoor_structures.jpg')">
+      <div class="stl-card-overlay"></div>
+      <div class="stl-card-content">
+        <div class="stl-cat">See</div>
+        <div class="stl-name">City Museum</div>
+        <p class="stl-desc">Part playground, part art installation, part fever dream. An absolute must for anyone who thought they'd outgrown wonder. Go at night — it's a different experience entirely.</p>
+      </div>
     </div>
-    <div class="stl-card">
-      <div class="stl-cat">Eat</div>
-      <div class="stl-name">The Hill</div>
-      <p class="stl-desc">STL's Italian neighborhood. Old-school red sauce, bocce courts. Charlie Gitto's or Trattoria Marcella for the full experience. ~10 min from the hotel. (You'll also get a taste at Thursday's lunch.)</p>
+    <div class="stl-card" style="--img:url('https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Gateway_Arch%2C_Gateway_Arch_National_Park%2C_St._Louis%2C_MO_-_53052550346.jpg/1200px-Gateway_Arch%2C_Gateway_Arch_National_Park%2C_St._Louis%2C_MO_-_53052550346.jpg')">
+      <div class="stl-card-overlay"></div>
+      <div class="stl-card-content">
+        <div class="stl-cat">See &nbsp;·&nbsp; 3 min walk</div>
+        <div class="stl-name">Gateway Arch</div>
+        <p class="stl-desc">630 feet over the Mississippi. Trams depart every 15 minutes, 4-minute ride to the top. Practically in your backyard.</p>
+        <div class="arch-live-row">
+          <span class="arch-tram-badge" id="arch-tram-badge">—</span>
+          <a href="https://www.gatewayarch.com/tram-ride/" target="_blank" rel="noopener" class="arch-ticket-link">Book Tickets &rarr;</a>
+        </div>
+      </div>
     </div>
-    <div class="stl-card">
-      <div class="stl-cat">Eat</div>
-      <div class="stl-name">Broadway Oyster Bar</div>
-      <p class="stl-desc">Live music nightly, Cajun and seafood, ice-cold drinks. A true St. Louis original. ~5 min drive from the Hyatt. No reservations — walk in, find a spot, stay too long.</p>
+    <div class="stl-card" style="--img:url('https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/St._Louis_Aquarium_at_Union_Station_Entrance.jpg/1200px-St._Louis_Aquarium_at_Union_Station_Entrance.jpg')">
+      <div class="stl-card-overlay"></div>
+      <div class="stl-card-content">
+        <div class="stl-cat">See</div>
+        <div class="stl-name">Union Station Aquarium</div>
+        <p class="stl-desc">120,000 sq ft aquarium built inside an 1894 train station. The Great Hall's historic architecture is intact above the exhibits. Sharks, rays, and genuine wonder.</p>
+      </div>
     </div>
-    <div class="stl-card">
-      <div class="stl-cat">Eat</div>
-      <div class="stl-name">Soulard</div>
-      <p class="stl-desc">Cobblestones, live blues, and one of the oldest farmers markets in America running since 1779. McGurk's Irish Pub for a pint and a plate. The city's soul in one neighborhood.</p>
-    </div>
-    <div class="stl-card">
-      <div class="stl-cat">Eat</div>
-      <div class="stl-name">Imo's Pizza</div>
-      <p class="stl-desc">STL-style thin crust with Provel cheese. Controversial outside Missouri. Non-negotiable if you're in town. Multiple locations. It's fine — it's actually great.</p>
-    </div>
-    <div class="stl-card">
-      <div class="stl-cat">Eat</div>
-      <div class="stl-name">Sugarfire Smoke House</div>
-      <p class="stl-desc">Award-winning BBQ. Ribs, brisket, housemade sides. Multiple STL locations. The line moves. Worth it.</p>
-    </div>
-    <div class="stl-card">
-      <div class="stl-cat">Watch</div>
-      <div class="stl-name">Cardinals at Busch Stadium</div>
-      <p class="stl-desc">June is peak baseball. Busch Stadium is one of the most beautiful parks in the National League — walkable from the hotel. Check the schedule before you go. The city will be loud.</p>
+    <div class="stl-card" style="--img:url('https://explorestlouis.com/wp-content/uploads/2023/01/Pickles-Deli-Web-1.jpg')">
+      <div class="stl-card-overlay"></div>
+      <div class="stl-card-content">
+        <div class="stl-cat">Eat &nbsp;·&nbsp; Downtown</div>
+        <div class="stl-name">Pickles Deli</div>
+        <p class="stl-desc">200 N. Broadway — five minutes from the hotel. Classic STL deli. High-quality sandwiches, real breakfast, no shortcuts. Go early, go often.</p>
+      </div>
     </div>
   </div>
 </section>
