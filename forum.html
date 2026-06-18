@@ -587,6 +587,38 @@ footer {
 @media (max-width: 700px) { .gallery-grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 450px) { .gallery-grid { grid-template-columns: 1fr; } }
 
+/* ── PEOPLE DIRECTORY ── */
+.people-search-wrap {
+  max-width: 420px; margin: 0 auto 2.5rem;
+}
+.people-search {
+  width: 100%; padding: .7rem 1.1rem;
+  background: rgba(255,255,255,.06); border: 1px solid rgba(232,112,26,.3);
+  border-radius: 4px; color: var(--cream); font-size: .9375rem;
+  font-family: inherit; outline: none;
+}
+.people-search::placeholder { color: rgba(242,235,218,.3); }
+.people-search:focus { border-color: var(--orange); background: rgba(255,255,255,.09); }
+.people-group-label {
+  font-size: .65rem; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--orange); font-family: 'Cinzel', serif; font-weight: 700;
+  margin: 2rem 0 .75rem; padding-bottom: .4rem;
+  border-bottom: 1px solid rgba(232,112,26,.22);
+}
+.people-group-label:first-of-type { margin-top: 0; }
+.person-row {
+  display: flex; align-items: baseline; gap: .75rem;
+  padding: .6rem 0; border-bottom: 1px solid rgba(242,235,218,.07);
+}
+.person-row.hidden { display: none; }
+.person-name { font-size: .9375rem; font-weight: 600; color: var(--cream); min-width: 0; flex-shrink: 0; }
+.person-detail { font-size: .8125rem; color: var(--muted); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.person-detail .sep { margin: 0 .4em; opacity: .4; }
+@media (max-width: 500px) {
+  .person-row { flex-direction: column; gap: .15rem; }
+  .person-detail { white-space: normal; }
+}
+
 /* ── PASSWORD GATE ── */
 .pw-gate {
   position: fixed; inset: 0; z-index: 9999;
@@ -847,6 +879,7 @@ section[id], #pay { scroll-margin-top: 128px; }
     <li><a href="#schedule">Schedule</a></li>
     <li><a href="#materials">Materials</a></li>
     <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#people">People</a></li>
     <li><a href="#explore">Explore</a></li>
     <li><a href="#logistics">Logistics</a></li>
     <li><a href="#pay" class="nav-pay">Pay</a></li>
@@ -864,7 +897,7 @@ section[id], #pay { scroll-margin-top: 128px; }
   <button id="overlay-close" class="overlay-close" aria-label="Close menu">✕</button>
   <a href="#schedule">Schedule</a>
   <a href="#materials">Materials</a>
-  <a href="#gallery">Gallery</a>
+  <a href="#people">People</a>
   <a href="#explore">Explore</a>
   <a href="#logistics">Logistics</a>
   <a href="#pay">Pay</a>
@@ -1251,12 +1284,12 @@ section[id], #pay { scroll-margin-top: 128px; }
 
     <div class="speaker-card">
       <div class="speaker-avatar">
-        <span class="speaker-initials">CJ</span>
+        <img src="images/caleb-jones-shibu.jpg" alt="Caleb Jones Shibu" style="width:100%;height:100%;object-fit:cover;object-position:top center;display:block;"/>
       </div>
       <div class="speaker-name">Caleb Jones Shibu</div>
-      <div class="speaker-role">Founding Engineer &nbsp;&middot;&nbsp; Page Technologies</div>
+      <div class="speaker-role">Founding Software Engineer &nbsp;&middot;&nbsp; Page Technologies</div>
       <span class="speaker-session-tag">Day Two &nbsp;&middot;&nbsp; AI Panel</span>
-      <p class="speaker-bio">Founding engineer at Page Technologies and former researcher at the Allen Institute for Neural Dynamics. Caleb's work decodes brain signals — fNIRS, EEG, voltage imaging — and builds the real-time systems and models that turn those signals into something usable. His graduate research at the University of Arizona focused on emotional response decoding through neuroimaging. He works at the literal intersection of the human brain and software — which makes his perspective on keeping the human touch in AI something other than a metaphor.</p>
+      <p class="speaker-bio">Founding Software Engineer at Page Technologies, building the systems that make AI practical rather than theoretical. He brings a builder's perspective to the AI panel — focused on what it actually takes to deploy intelligent tools in real businesses and keep the human element intact when you do.</p>
     </div>
 
   </div>
@@ -1459,6 +1492,209 @@ section[id], #pay { scroll-margin-top: 128px; }
   </div>
   <div class="gallery-grid" id="gallery-grid">
     <div class="gallery-empty">Photos coming soon.</div>
+  </div>
+</section>
+
+<!-- ── PEOPLE DIRECTORY ── -->
+<section class="sect sect-a" id="people">
+  <div class="sect-label">Who's Here</div>
+  <h2>Attendees</h2>
+  <p style="font-size:.9375rem;color:var(--muted);margin-bottom:2rem;">Everyone in the room — 44 people, 30+ companies.</p>
+  <div class="people-search-wrap">
+    <input class="people-search" id="people-search" type="search" placeholder="Search by name or company…" autocomplete="off"/>
+  </div>
+
+  <div id="people-list">
+
+    <div class="people-group-label" data-group="speakers">Speakers</div>
+    <div class="person-row" data-search="dale cooper safe slide restoration cooper's consulting visionary conference host">
+      <span class="person-name">Dale Cooper</span>
+      <span class="person-detail">Safe Slide Restoration / Cooper's Consulting<span class="sep">·</span>Visionary / Conference Host</span>
+    </div>
+    <div class="person-row" data-search="adam hill extra life enterprises visionary">
+      <span class="person-name">Adam Hill</span>
+      <span class="person-detail">Extra Life Enterprises<span class="sep">·</span>Visionary</span>
+    </div>
+    <div class="person-row" data-search="marie hill extra life enterprises relationship intimacy coach">
+      <span class="person-name">Marie Hill</span>
+      <span class="person-detail">Extra Life Enterprises<span class="sep">·</span>Relationship &amp; Intimacy Coach</span>
+    </div>
+    <div class="person-row" data-search="marcus truman archangel performance coaching founder">
+      <span class="person-name">Marcus Truman</span>
+      <span class="person-detail">Archangel Performance Coaching<span class="sep">·</span>Founder</span>
+    </div>
+    <div class="person-row" data-search="ben kelley eos worldwide certified eos implementer">
+      <span class="person-name">Ben Kelley</span>
+      <span class="person-detail">EOS Worldwide<span class="sep">·</span>Certified EOS Implementer</span>
+    </div>
+    <div class="person-row" data-search="bailey gilder gr insurance associates integrator">
+      <span class="person-name">Bailey Gilder</span>
+      <span class="person-detail">GR Insurance Associates Inc.<span class="sep">·</span>Integrator</span>
+    </div>
+    <div class="person-row" data-search="greg rogers gr insurance associates visionary">
+      <span class="person-name">Greg Rogers</span>
+      <span class="person-detail">GR Insurance Associates Inc.<span class="sep">·</span>Visionary</span>
+    </div>
+    <div class="person-row" data-search="mark mcmullin alliant ltc pharmacy owner">
+      <span class="person-name">Mark McMullin</span>
+      <span class="person-detail">Alliant LTC Pharmacy<span class="sep">·</span>Owner</span>
+    </div>
+    <div class="person-row" data-search="mary wilkinson hope center indy integrator">
+      <span class="person-name">Mary Wilkinson</span>
+      <span class="person-detail">Hope Center Indy<span class="sep">·</span>Integrator</span>
+    </div>
+    <div class="person-row" data-search="troy wilkinson outdoorsiness integrator">
+      <span class="person-name">Troy Wilkinson</span>
+      <span class="person-detail">Outdoorsiness<span class="sep">·</span>Integrator</span>
+    </div>
+    <div class="person-row" data-search="alan thomas duramata mirascope founding software engineer">
+      <span class="person-name">Alan Thomas</span>
+      <span class="person-detail">Duramata / Mirascope<span class="sep">·</span>Founding Software Engineer</span>
+    </div>
+    <div class="person-row" data-search="caleb jones shibu page technologies founding software engineer">
+      <span class="person-name">Caleb Jones Shibu</span>
+      <span class="person-detail">Page Technologies<span class="sep">·</span>Founding Software Engineer</span>
+    </div>
+
+    <div class="people-group-label" data-group="attendees">Attendees</div>
+    <div class="person-row" data-search="allison perry tap business development owner">
+      <span class="person-name">Allison Perry</span>
+      <span class="person-detail">TAP Business Development<span class="sep">·</span>Owner</span>
+    </div>
+    <div class="person-row" data-search="anna renaud renaud carpentry contracting finance hr">
+      <span class="person-name">Anna Renaud</span>
+      <span class="person-detail">Renaud Carpentry &amp; Contracting LLC<span class="sep">·</span>Finance / HR</span>
+    </div>
+    <div class="person-row" data-search="arielle bohnert victory spinal care chiropractor">
+      <span class="person-name">Arielle Bohnert</span>
+      <span class="person-detail">Victory Spinal Care<span class="sep">·</span>Chiropractor</span>
+    </div>
+    <div class="person-row" data-search="ben renaud renaud carpentry contracting visionary">
+      <span class="person-name">Ben Renaud</span>
+      <span class="person-detail">Renaud Carpentry &amp; Contracting LLC<span class="sep">·</span>Visionary</span>
+    </div>
+    <div class="person-row" data-search="billy taylor alliant ltc pharmacy integrator">
+      <span class="person-name">Billy Taylor</span>
+      <span class="person-detail">Alliant LTC Pharmacy<span class="sep">·</span>Integrator</span>
+    </div>
+    <div class="person-row" data-search="brian davis safe slide restoration director of operations">
+      <span class="person-name">Brian Davis</span>
+      <span class="person-detail">Safe Slide Restoration<span class="sep">·</span>Director of Operations</span>
+    </div>
+    <div class="person-row" data-search="cody sutton stonewater financial group integrator">
+      <span class="person-name">Cody Sutton</span>
+      <span class="person-detail">Stonewater Financial Group<span class="sep">·</span>Integrator</span>
+    </div>
+    <div class="person-row" data-search="craig mills melvin mills roofing visionary">
+      <span class="person-name">Craig Mills</span>
+      <span class="person-detail">Melvin Mills Roofing, LLC<span class="sep">·</span>Visionary</span>
+    </div>
+    <div class="person-row" data-search="curtis klieger stonewater financial group visionary">
+      <span class="person-name">Curtis Klieger</span>
+      <span class="person-detail">Stonewater Financial Group<span class="sep">·</span>Visionary</span>
+    </div>
+    <div class="person-row" data-search="dusty gilder gr insurance associates director of growth">
+      <span class="person-name">Dusty Gilder</span>
+      <span class="person-detail">GR Insurance Associates Inc.<span class="sep">·</span>Director of Growth</span>
+    </div>
+    <div class="person-row" data-search="eric meyer meyer schmelzle custom creations visionary">
+      <span class="person-name">Eric Meyer</span>
+      <span class="person-detail">Meyer &amp; Schmelzle Custom Creations<span class="sep">·</span>Visionary</span>
+    </div>
+    <div class="person-row" data-search="eugene gura gura construction visionary">
+      <span class="person-name">Eugene Gura</span>
+      <span class="person-detail">Gura Construction<span class="sep">·</span>Visionary</span>
+    </div>
+    <div class="person-row" data-search="jay cooper aj cooper corporation visionary">
+      <span class="person-name">Jay Cooper</span>
+      <span class="person-detail">AJ Cooper Corporation<span class="sep">·</span>Visionary</span>
+    </div>
+    <div class="person-row" data-search="jennifer gura gura construction finance hr">
+      <span class="person-name">Jennifer Gura</span>
+      <span class="person-detail">Gura Construction<span class="sep">·</span>Finance / HR</span>
+    </div>
+    <div class="person-row" data-search="joel cooper cooper's consulting executive assistant">
+      <span class="person-name">Joel Cooper</span>
+      <span class="person-detail">Cooper's Consulting<span class="sep">·</span>Executive Assistant</span>
+    </div>
+    <div class="person-row" data-search="joseph nelson stewardship investment owner">
+      <span class="person-name">Joseph Nelson</span>
+      <span class="person-detail">Stewardship Investment, Inc.<span class="sep">·</span>Owner</span>
+    </div>
+    <div class="person-row" data-search="kelly miller advantage innovations owner">
+      <span class="person-name">Kelly Miller</span>
+      <span class="person-detail">Advantage Innovations<span class="sep">·</span>Owner</span>
+    </div>
+    <div class="person-row" data-search="kimberly earl victory spinal care integrator">
+      <span class="person-name">Kimberly Earl</span>
+      <span class="person-detail">Victory Spinal Care<span class="sep">·</span>Integrator</span>
+    </div>
+    <div class="person-row" data-search="levi kinnard clearwater recovery institute visionary">
+      <span class="person-name">Levi Kinnard</span>
+      <span class="person-detail">Clearwater Recovery Institute<span class="sep">·</span>Visionary</span>
+    </div>
+    <div class="person-row" data-search="marjie miller advantage innovations controller">
+      <span class="person-name">Marjie Miller</span>
+      <span class="person-detail">Advantage Innovations<span class="sep">·</span>Controller</span>
+    </div>
+    <div class="person-row" data-search="nick zerwig steady ops advisors visionary">
+      <span class="person-name">Nick Zerwig</span>
+      <span class="person-detail">Steady Ops Advisors<span class="sep">·</span>Visionary</span>
+    </div>
+    <div class="person-row" data-search="renee cooper aj cooper corporation finance hr">
+      <span class="person-name">Ren&eacute;e Cooper</span>
+      <span class="person-detail">AJ Cooper Corporation<span class="sep">·</span>Finance / HR</span>
+    </div>
+    <div class="person-row" data-search="richard blyudzhyus delta roofing visionary">
+      <span class="person-name">Richard Blyudzhyus</span>
+      <span class="person-detail">Delta Roofing<span class="sep">·</span>Visionary</span>
+    </div>
+    <div class="person-row" data-search="ryan cooper liberty fencing visionary">
+      <span class="person-name">Ryan Cooper</span>
+      <span class="person-detail">Liberty Fencing<span class="sep">·</span>Visionary</span>
+    </div>
+    <div class="person-row" data-search="scott parsons liberty fencing integrator">
+      <span class="person-name">Scott Parsons</span>
+      <span class="person-detail">Liberty Fencing<span class="sep">·</span>Integrator</span>
+    </div>
+    <div class="person-row" data-search="seth golding safe slide restoration director of finance">
+      <span class="person-name">Seth Golding</span>
+      <span class="person-detail">Safe Slide Restoration<span class="sep">·</span>Director of Finance</span>
+    </div>
+    <div class="person-row" data-search="steven cooper safe slide restoration field operations manager">
+      <span class="person-name">Steven Cooper</span>
+      <span class="person-detail">Safe Slide Restoration<span class="sep">·</span>Field Operations Manager</span>
+    </div>
+    <div class="person-row" data-search="suzi patterson alliant ltc pharmacy">
+      <span class="person-name">Suzi Patterson</span>
+      <span class="person-detail">Alliant LTC Pharmacy</span>
+    </div>
+    <div class="person-row" data-search="tabitha lundstrom stewardship investments integrator">
+      <span class="person-name">Tabitha Lundstrom</span>
+      <span class="person-detail">Stewardship Investments<span class="sep">·</span>Integrator</span>
+    </div>
+    <div class="person-row" data-search="taylor lindeman law office mark mcmullin integrator">
+      <span class="person-name">Taylor Lindeman</span>
+      <span class="person-detail">Law Office of Mark McMullin<span class="sep">·</span>Integrator</span>
+    </div>
+    <div class="person-row" data-search="tony perry safe slide restoration cofounder">
+      <span class="person-name">Tony Perry</span>
+      <span class="person-detail">Safe Slide Restoration<span class="sep">·</span>Cofounder</span>
+    </div>
+    <div class="person-row" data-search="troy mcclanahan collin mcclanahan company operations manager">
+      <span class="person-name">Troy McClanahan</span>
+      <span class="person-detail">The Collin McClanahan Company<span class="sep">·</span>Operations Manager</span>
+    </div>
+    <div class="person-row" data-search="whitney mcclanahan collin mcclanahan company">
+      <span class="person-name">Whitney McClanahan</span>
+      <span class="person-detail">The Collin McClanahan Company</span>
+    </div>
+    <div class="person-row" data-search="zac abell tzg visionary">
+      <span class="person-name">Zac Abell</span>
+      <span class="person-detail">TZG<span class="sep">·</span>Visionary</span>
+    </div>
+
+    <div id="people-no-results" style="display:none;padding:2rem 0;font-size:.875rem;font-style:italic;color:var(--muted);">No matches found.</div>
   </div>
 </section>
 
@@ -1741,6 +1977,26 @@ function fetchCardinals() {
       if (el) el.textContent = 'mlb.com';
     });
 }
+
+// ── PEOPLE SEARCH ──
+(function () {
+  const input = document.getElementById('people-search');
+  if (!input) return;
+  const rows = document.querySelectorAll('#people-list .person-row');
+  const labels = document.querySelectorAll('#people-list .people-group-label');
+  const noRes = document.getElementById('people-no-results');
+  input.addEventListener('input', function () {
+    const q = this.value.trim().toLowerCase();
+    let anyVisible = false;
+    rows.forEach(row => {
+      const match = !q || row.dataset.search.includes(q);
+      row.classList.toggle('hidden', !match);
+      if (match) anyVisible = true;
+    });
+    labels.forEach(lbl => { lbl.style.display = q ? 'none' : ''; });
+    noRes.style.display = anyVisible ? 'none' : 'block';
+  });
+})();
 
 // ── INIT ──
 autoSelectDay();
