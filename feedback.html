@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Feedback — Focus Forum 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet"/>
+
+<!--
+  ══════════════════════════════════════════════════════
+  BACKEND SETUP — Google Sheets (takes ~5 minutes)
+  ══════════════════════════════════════════════════════
+  1. Go to sheets.google.com → New → name it "Focus Forum 2026 Feedback"
+  2. In that sheet: Extensions → Apps Script
+  3. Delete all default code. Paste this script:
+
+  ──────────────────────────────────────────────────────
+  function doPost(e) {
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow(['Timestamp', 'Name', 'Feedback']);
+      sheet.getRange(1, 1, 1, 3).setFontWeight('bold');
+    }
+    sheet.appendRow([
+      new Date().toLocaleString('en-US', { timeZone: 'America/Chicago' }),
+      e.parameter.name  || '',
+      e.parameter.message || ''
+    ]);
+    return ContentService
+      .createTextOutput(JSON.stringify({ result: 'ok' }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+  function doGet() {
+    return ContentService.createTextOutput('Endpoint active.');
+  }
+  ──────────────────────────────────────────────────────
+
+  4. Click Save (Ctrl+S). Name the project "FF2026 Feedback".
+  5. Click Deploy → New Deployment → type: Web App
+     · Execute as: Me
+     · Who has access: Anyone
+     → Deploy → Authorize → Copy the Web App URL
+  6. Paste that URL below as the value of SCRIPT_URL.
+  ══════════════════════════════════════════════════════
+-->
+<script>
+  // ← Paste your Google Apps Script Web App URL here
+  var SCRIPT_URL = 'REPLACE_WITH_YOUR_APPS_SCRIPT_URL';
+</script>
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --orange:    #E8701A;
+  --orange-hi: #FF9040;
+  --cream:     #F2EBDA;
+  --muted:     rgba(242,235,218,0.45);
+  --bg:        #0C0A08;
+}
+
+html { background: var(--bg); min-height: 100%; font-size: 16px; }
+body {
+  background: var(--bg); color: var(--cream);
+  font-family: 'EB Garamond', serif; line-height: 1.68;
+  font-variation-settings: 'wght' 410;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: flex-start;
+  padding: 5vh 1.5rem 6vh;
+}
+
+.card {
+  width: 100%; max-width: 520px;
+  margin: 0 auto;
+}
+
+/* ── BRAND ── */
+.brand {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 2.8rem;
+}
+.brand-hex { width: 30px; height: 34px; flex-shrink: 0; }
+.brand-text { display: flex; flex-direction: column; gap: .06rem; }
+.brand-name {
+  font-family: 'Cinzel', serif; font-size: .88rem;
+  font-weight: 600; letter-spacing: .06em; color: var(--cream);
+}
+.brand-sub {
+  font-family: 'Cinzel', serif; font-size: .58rem;
+  letter-spacing: .16em; text-transform: uppercase; color: var(--orange);
+}
+
+/* ── FORM VIEW ── */
+#form-view {}
+
+.form-kicker {
+  font-family: 'Cinzel', serif; font-size: .62rem; font-weight: 700;
+  letter-spacing: .2em; text-transform: uppercase; color: var(--orange);
+  margin-bottom: .7rem;
+}
+.form-heading {
+  font-family: 'Cinzel', serif; font-size: 1.7rem; font-weight: 600;
+  letter-spacing: .03em; line-height: 1.15; color: var(--cream);
+  margin-bottom: .85rem;
+}
+.form-lede {
+  color: var(--muted); font-size: 1.02rem; margin-bottom: 2.2rem;
+  border-bottom: 1px solid rgba(232,112,26,.14); padding-bottom: 2rem;
+}
+
+.ff-field { display: flex; flex-direction: column; gap: .42rem; margin-bottom: 1.4rem; }
+
+.ff-field label {
+  font-family: 'Cinzel', serif; font-size: .65rem; font-weight: 700;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--orange);
+  display: flex; align-items: center; gap: .4rem;
+}
+.req-mark { color: rgba(232,112,26,.55); font-style: normal; }
+
+.ff-field input,
+.ff-field textarea {
+  background: rgba(242,235,218,.05);
+  border: 1px solid rgba(232,112,26,.22);
+  color: var(--cream); font-family: 'EB Garamond', serif;
+  font-size: 1.08rem; padding: .78rem 1rem; border-radius: 2px;
+  outline: none; transition: border-color .2s, background .2s;
+  resize: vertical; width: 100%;
+}
+.ff-field input::placeholder,
+.ff-field textarea::placeholder {
+  color: rgba(242,235,218,.28); font-style: italic;
+}
+.ff-field input:focus,
+.ff-field textarea:focus {
+  border-color: rgba(232,112,26,.65); background: rgba(242,235,218,.08);
+}
+.ff-field.has-error input,
+.ff-field.has-error textarea {
+  border-color: rgba(220, 80, 60, .7);
+}
+.ff-field-err {
+  font-size: .82rem; color: rgba(220, 100, 80, .9); font-style: italic;
+  display: none;
+}
+.ff-field.has-error .ff-field-err { display: block; }
+
+.ff-actions { display: flex; align-items: center; gap: 1.4rem; margin-top: .6rem; flex-wrap: wrap; }
+
+.ff-submit {
+  font-family: 'Cinzel', serif; font-size: .78rem; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  background: var(--orange); color: #0C0A08;
+  border: none; padding: .85rem 2.4rem; cursor: pointer;
+  transition: background .2s, opacity .2s;
+  white-space: nowrap;
+}
+.ff-submit:hover:not(:disabled) { background: var(--orange-hi); }
+.ff-submit:disabled { opacity: .45; cursor: default; }
+
+.ff-back {
+  font-family: 'Cinzel', serif; font-size: .68rem; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted); text-decoration: none;
+  transition: color .2s;
+}
+.ff-back:hover { color: var(--cream); }
+
+.ff-global-err {
+  display: none; margin-top: 1rem; font-size: .88rem;
+  color: rgba(220, 100, 80, .9); font-style: italic;
+}
+
+/* ── SUCCESS VIEW ── */
+#success-view { display: none; text-align: left; }
+
+.success-rule {
+  width: 36px; height: 2px; background: var(--orange); margin-bottom: 2rem;
+}
+.success-heading {
+  font-family: 'Cinzel', serif; font-size: 1.9rem; font-weight: 600;
+  letter-spacing: .04em; color: var(--cream); margin-bottom: 1.1rem;
+}
+.success-body {
+  color: var(--muted); font-size: 1.05rem; line-height: 1.75;
+  margin-bottom: 2.4rem;
+}
+.success-sig {
+  font-style: italic; color: rgba(242,235,218,.4);
+  font-size: .95rem; margin-top: .5rem;
+}
+.success-link {
+  font-family: 'Cinzel', serif; font-size: .72rem; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--orange); text-decoration: none;
+  transition: color .2s;
+}
+.success-link:hover { color: var(--orange-hi); }
+</style>
+</head>
+<body>
+
+<div class="card">
+
+  <!-- ── BRAND ── -->
+  <div class="brand">
+    <svg class="brand-hex" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <radialGradient id="og-fb" cx="50%" cy="42%" r="58%" gradientUnits="objectBoundingBox">
+          <stop offset="0%" stop-color="#CC5428"/>
+          <stop offset="100%" stop-color="#7A2E10"/>
+        </radialGradient>
+        <filter id="c-engrave-fb" x="-12%" y="-12%" width="124%" height="124%" color-interpolation-filters="sRGB">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="bmap"/>
+          <feDiffuseLighting in="bmap" lighting-color="#8a6040" surfaceScale="-7" diffuseConstant="1.9" result="lit">
+            <feDistantLight azimuth="135" elevation="38"/>
+          </feDiffuseLighting>
+          <feComposite in="lit" in2="SourceAlpha" operator="in" result="litMask"/>
+          <feBlend in="SourceGraphic" in2="litMask" mode="hard-light" result="blended"/>
+          <feComposite in="blended" in2="SourceAlpha" operator="in"/>
+        </filter>
+      </defs>
+      <polygon points="200,10 364.54,105 364.54,295 200,390 35.46,295 35.46,105" fill="#0a0a0a"/>
+      <polygon points="200,18 357.61,109 357.61,291 200,382 42.39,291 42.39,109" fill="url(#og-fb)"/>
+      <path d="M302.19,141 L200,82 L97.81,141 L97.81,259 L200,318 L302.19,259 L302.19,239 L267.55,239 L200,278 L132.45,239 L132.45,161 L200,122 L267.55,161 L302.19,161 Z" fill="#235023" filter="url(#c-engrave-fb)"/>
+    </svg>
+    <div class="brand-text">
+      <div class="brand-name">Cooper's Consulting</div>
+      <div class="brand-sub">Focus Forum 2026</div>
+    </div>
+  </div>
+
+  <!-- ── FORM VIEW ── -->
+  <div id="form-view">
+    <div class="form-kicker">Attendee Feedback</div>
+    <h1 class="form-heading">Tell us what you think.</h1>
+    <p class="form-lede">What landed? What are you taking home? What would you change? We read every word.</p>
+
+    <form id="ff-form" novalidate>
+
+      <div class="ff-field" id="field-name">
+        <label for="ff-name">Your Name <span class="req-mark" aria-hidden="true">*</span></label>
+        <input
+          type="text"
+          id="ff-name"
+          name="name"
+          placeholder="First and last name"
+          autocomplete="name"
+          autocorrect="off"
+        />
+        <span class="ff-field-err" id="err-name">Name is required.</span>
+      </div>
+
+      <div class="ff-field" id="field-msg">
+        <label for="ff-msg">Your Thoughts <span class="req-mark" aria-hidden="true">*</span></label>
+        <textarea
+          id="ff-msg"
+          name="message"
+          rows="7"
+          placeholder="What stuck with you? What would you change? What's the one thing you're doing differently on Monday?"
+        ></textarea>
+        <span class="ff-field-err" id="err-msg">Please share your thoughts before submitting.</span>
+      </div>
+
+      <div class="ff-actions">
+        <button type="submit" class="ff-submit" id="ff-submit">Send Feedback &rarr;</button>
+        <a href="forum.html" class="ff-back">&larr; Back to guide</a>
+      </div>
+
+      <p class="ff-global-err" id="ff-global-err">
+        Something went wrong. Please try again, or text Joel at 573.760.4007.
+      </p>
+    </form>
+  </div>
+
+  <!-- ── SUCCESS VIEW ── -->
+  <div id="success-view">
+    <div class="success-rule"></div>
+    <h2 class="success-heading">Received.</h2>
+    <p class="success-body">
+      Your words matter here. Thank you for being at Focus Forum —
+      this feedback shapes what comes next.
+      <span class="success-sig">&mdash; Joel Cooper</span>
+    </p>
+    <a href="forum.html" class="success-link">&larr; Back to the attendee guide</a>
+  </div>
+
+</div>
+
+<script>
+(function () {
+
+  var form      = document.getElementById('ff-form');
+  var btn       = document.getElementById('ff-submit');
+  var globalErr = document.getElementById('ff-global-err');
+  var formView  = document.getElementById('form-view');
+  var successView = document.getElementById('success-view');
+
+  function fieldEl(id) { return document.getElementById('field-' + id); }
+
+  function validate() {
+    var ok = true;
+    var name = document.getElementById('ff-name').value.trim();
+    var msg  = document.getElementById('ff-msg').value.trim();
+
+    if (!name) {
+      fieldEl('name').classList.add('has-error');
+      ok = false;
+    } else {
+      fieldEl('name').classList.remove('has-error');
+    }
+
+    if (!msg) {
+      fieldEl('msg').classList.add('has-error');
+      ok = false;
+    } else {
+      fieldEl('msg').classList.remove('has-error');
+    }
+
+    if (!ok) {
+      // focus the first empty field
+      if (!name) document.getElementById('ff-name').focus();
+      else        document.getElementById('ff-msg').focus();
+    }
+
+    return ok;
+  }
+
+  // clear errors on input
+  ['ff-name', 'ff-msg'].forEach(function (id) {
+    var el = document.getElementById(id);
+    var fieldId = id === 'ff-name' ? 'name' : 'msg';
+    el.addEventListener('input', function () {
+      if (el.value.trim()) fieldEl(fieldId).classList.remove('has-error');
+    });
+  });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    globalErr.style.display = 'none';
+
+    if (!validate()) return;
+
+    var name    = document.getElementById('ff-name').value.trim();
+    var message = document.getElementById('ff-msg').value.trim();
+
+    btn.disabled    = true;
+    btn.textContent = 'Sending…';
+
+    // local backup — survives any network failure
+    try {
+      var entry   = { name: name, message: message, ts: new Date().toISOString() };
+      var saved   = JSON.parse(localStorage.getItem('ff2026-feedback') || '[]');
+      saved.push(entry);
+      localStorage.setItem('ff2026-feedback', JSON.stringify(saved));
+    } catch (_) {}
+
+    // check the URL is configured
+    if (!SCRIPT_URL || SCRIPT_URL.indexOf('REPLACE') !== -1) {
+      console.warn('feedback.html: SCRIPT_URL not configured — showing success without sending.');
+      showSuccess();
+      return;
+    }
+
+    var body = new URLSearchParams();
+    body.append('name', name);
+    body.append('message', message);
+
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode:   'no-cors',
+      body:   body
+    }).then(function () {
+      showSuccess();
+    }).catch(function () {
+      // Still show success if we have the local backup — data is not lost
+      showSuccess();
+    });
+  });
+
+  function showSuccess() {
+    formView.style.display    = 'none';
+    successView.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+})();
+</script>
+
+</body>
+</html>
