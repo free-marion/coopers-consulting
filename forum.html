@@ -1745,6 +1745,86 @@ section[id], #pay { scroll-margin-top: 128px; }
     </div>
 
   </div>
+
+  <!-- ── AI ECOSYSTEM SHOWCASE ── -->
+  <div class="ai-showcase">
+    <div class="ai-showcase-label">What I built</div>
+    <div class="ai-showcase-title">A private AI ecosystem.<br>Running 24 hours a day. Costing $0/month.</div>
+    <p class="ai-showcase-sub">Every tool here runs on a single machine in my house. No cloud bill. No third-party data handling. The AI knows Dale's business because I built it to — and it's been running unattended since March.</p>
+
+    <div class="ai-showcase-cols">
+
+      <!-- Canvas + chips + stats -->
+      <div class="ai-canvas-panel">
+        <div class="ai-canvas-eyebrow">The Morning Brief Pipeline &nbsp;&middot;&nbsp; Live every day at 6 AM</div>
+        <div class="ai-flow-wrap">
+          <canvas id="razorCanvas" height="130"></canvas>
+          <div class="ai-flow-label">Razor &nbsp;&middot;&nbsp; Automated email intelligence</div>
+        </div>
+
+        <div class="ai-tools-label">Connected via Claude Code &nbsp;&middot;&nbsp; 9 live integrations</div>
+        <div class="ai-tools-grid">
+          <div class="ai-tool-chip"><div class="ai-tool-dot"></div>Gmail</div>
+          <div class="ai-tool-chip"><div class="ai-tool-dot"></div>Google Drive</div>
+          <div class="ai-tool-chip"><div class="ai-tool-dot"></div>Calendar</div>
+          <div class="ai-tool-chip"><div class="ai-tool-dot"></div>Nutshell CRM</div>
+          <div class="ai-tool-chip"><div class="ai-tool-dot"></div>QuickBooks</div>
+          <div class="ai-tool-chip"><div class="ai-tool-dot"></div>Trello</div>
+          <div class="ai-tool-chip"><div class="ai-tool-dot"></div>Cherrywood Drive</div>
+          <div class="ai-tool-chip"><div class="ai-tool-dot"></div>Safe Slide Drive</div>
+          <div class="ai-tool-chip"><div class="ai-tool-dot"></div>Success.co</div>
+        </div>
+
+        <div class="ai-stat-row">
+          <div class="ai-stat"><div class="ai-stat-num" id="ctr-workflows">0</div><div class="ai-stat-lbl">n8n Workflows</div></div>
+          <div class="ai-stat"><div class="ai-stat-num" id="ctr-tools">0</div><div class="ai-stat-lbl">MCP Tools</div></div>
+          <div class="ai-stat"><div class="ai-stat-num" id="ctr-models">0</div><div class="ai-stat-lbl">Local AI Models</div></div>
+          <div class="ai-stat"><div class="ai-stat-num" id="ctr-cost">$0</div><div class="ai-stat-lbl">Monthly API Cost</div></div>
+        </div>
+      </div>
+
+      <!-- Phone mockup -->
+      <div class="ai-phone-wrap">
+        <div class="ai-phone-eyebrow">What Dale sees at 6:03 AM</div>
+        <div class="ai-phone">
+          <div class="ai-phone-notch"></div>
+          <div class="ai-phone-screen">
+            <div class="ai-tg-header">
+              <div class="ai-tg-avatar">R</div>
+              <div>
+                <div class="ai-tg-name">Razor</div>
+                <div class="ai-tg-status">active</div>
+              </div>
+            </div>
+            <div class="ai-tg-body">
+              <div class="ai-tg-bubble" id="razorBriefText"></div>
+              <div class="ai-tg-time">6:03 AM</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Query carousel -->
+  <div class="ai-queries-section">
+    <div class="ai-queries-header">
+      <div class="ai-queries-header-left">
+        <div class="ai-showcase-label">Real questions. Real answers.</div>
+        <div class="ai-queries-title">What it looks like when a contractor asks the right question.</div>
+        <p class="ai-queries-sub">These aren't demos. They're things that actually happened — asked in plain English, answered in minutes.</p>
+      </div>
+      <div class="ai-queries-dots" id="aiQDots"></div>
+    </div>
+    <div class="ai-query-stage" id="aiQueryStage"></div>
+    <div class="ai-queries-nav">
+      <button class="ai-q-nav-btn" id="aiQPrev">&#8592; Prev</button>
+      <div class="ai-q-counter" id="aiQCounter"></div>
+      <button class="ai-q-nav-btn" id="aiQNext">Next &#8594;</button>
+    </div>
+  </div>
+
 </section>
 
 <!-- ── EXPLORE STL ── -->
@@ -2613,5 +2693,189 @@ setInterval(fetchCardinals, 300000);
   </a>
 </nav>
 
+<script>
+// ── RAZOR FLOW CANVAS ──────────────────────────────────────────
+(function() {
+  const canvas = document.getElementById('razorCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = 700, H = 130;
+  canvas.width = W; canvas.height = H;
+
+  const NODES = [
+    { x: 68,  y: 58, label: 'Gmail',    sub: 'dale@safeslides.com' },
+    { x: 252, y: 58, label: 'n8n',      sub: 'Zephyr · ZR node'  },
+    { x: 448, y: 58, label: 'Ollama',   sub: 'Gemma 4 · local'    },
+    { x: 632, y: 58, label: 'Telegram', sub: "Dale’s phone"         },
+  ];
+  const R = 26;
+  const ORANGE = '#E8701A', CREAM = '#F2EBDA', MUTED = 'rgba(242,235,218,0.35)';
+
+  function Packet(delay) { this.t = -(delay || 0); this.edgeIdx = 0; this.pausing = 0; this.done = false; }
+  Packet.prototype.update = function(dt) {
+    if (this.done) return;
+    if (this.t < 0) { this.t += dt; return; }
+    if (this.pausing > 0) { this.pausing -= dt; return; }
+    this.t += 0.36 * dt;
+    if (this.t >= 1) { this.t = 0; this.edgeIdx++; if (this.edgeIdx >= NODES.length - 1) { this.done = true; return; } this.pausing = 0.28; }
+  };
+  Packet.prototype.getPos = function() {
+    if (this.t < 0 || this.done) return null;
+    const a = NODES[this.edgeIdx], b = NODES[this.edgeIdx + 1];
+    if (!a || !b) return null;
+    return { x: a.x + (b.x - a.x) * this.t, y: a.y };
+  };
+
+  var packets = [], spawnTimer = 0, last = null, activeNode = -1;
+  const SPAWN = 2.4;
+
+  function drawNode(n, active) {
+    if (active) {
+      ctx.save(); ctx.shadowColor = ORANGE; ctx.shadowBlur = 18;
+      ctx.beginPath(); ctx.arc(n.x, n.y, R, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(232,112,26,0.12)'; ctx.fill(); ctx.restore();
+    }
+    ctx.beginPath(); ctx.arc(n.x, n.y, R, 0, Math.PI*2);
+    ctx.strokeStyle = active ? ORANGE : 'rgba(232,112,26,0.35)';
+    ctx.lineWidth = active ? 1.5 : 1; ctx.stroke();
+    ctx.beginPath(); ctx.arc(n.x, n.y, R-1, 0, Math.PI*2);
+    ctx.fillStyle = active ? 'rgba(232,112,26,0.1)' : 'rgba(232,112,26,0.04)'; ctx.fill();
+    ctx.fillStyle = active ? CREAM : 'rgba(242,235,218,0.75)';
+    ctx.font = 'bold 10px Cinzel, serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(n.label, n.x, n.y);
+    ctx.fillStyle = MUTED; ctx.font = '8px Georgia, serif';
+    ctx.fillText(n.sub, n.x, n.y + R + 13);
+  }
+  function drawEdge(a, b) {
+    ctx.beginPath(); ctx.moveTo(a.x+R, a.y); ctx.lineTo(b.x-R, b.y);
+    ctx.strokeStyle = 'rgba(232,112,26,0.18)'; ctx.lineWidth = 1;
+    ctx.setLineDash([4,5]); ctx.stroke(); ctx.setLineDash([]);
+    var ex = b.x-R-6, ey = b.y;
+    ctx.beginPath(); ctx.moveTo(ex, ey-4); ctx.lineTo(ex+6, ey); ctx.lineTo(ex, ey+4);
+    ctx.strokeStyle = 'rgba(232,112,26,0.3)'; ctx.lineWidth = 1; ctx.stroke();
+  }
+  function drawPacket(pos) {
+    if (!pos) return;
+    ctx.save(); ctx.shadowColor = ORANGE; ctx.shadowBlur = 12;
+    ctx.beginPath(); ctx.arc(pos.x, pos.y, 5, 0, Math.PI*2);
+    ctx.fillStyle = ORANGE; ctx.fill();
+    ctx.beginPath(); ctx.arc(pos.x-6, pos.y, 3, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(232,112,26,0.3)'; ctx.fill(); ctx.restore();
+  }
+  function frame(ts) {
+    var now = ts/1000, dt = last ? Math.min(now-last, 0.05) : 0; last = now;
+    spawnTimer += dt;
+    if (spawnTimer >= SPAWN) { spawnTimer = 0; packets.push(new Packet(0)); }
+    packets.forEach(function(p){ p.update(dt); });
+    packets = packets.filter(function(p){ return !p.done; });
+    activeNode = -1;
+    packets.forEach(function(p){ if (p.t<0) return; if (p.pausing>0) activeNode=p.edgeIdx+1; else if (p.edgeIdx===0 && p.t<0.15) activeNode=0; });
+    ctx.clearRect(0,0,W,H);
+    for (var i=0; i<NODES.length-1; i++) drawEdge(NODES[i], NODES[i+1]);
+    NODES.forEach(function(n,i){ drawNode(n, i===activeNode); });
+    packets.forEach(function(p){ drawPacket(p.getPos()); });
+    requestAnimationFrame(frame);
+  }
+  packets.push(new Packet(0));
+  requestAnimationFrame(frame);
+})();
+
+// ── PHONE TYPEWRITER ──────────────────────────────────────────
+(function() {
+  var el = document.getElementById('razorBriefText');
+  if (!el) return;
+  var brief = "🌅 Dale — Good morning.\n\nINBOX  ·  3 flagged\n————————————————————\n⚡ REQUIRES RESPONSE\n  Ben Kelley — Focus Forum\n  Session materials ready?\n\n📩 Darrell Mims\n  “Proposal looks strong.\n  Call when you can.”\n\n📩 Encore AV · Devin F.\n  “Screen confirmed —\n  Gateway East. You're set.”\n\nTODAY\n————————————————————\n 9:00 AM  Focus Forum Day 2\n 2:00 PM  AI Panel\n\n————————————————————\nRazor · Zephyr AI · ZR";
+  var cursor = document.createElement('span');
+  cursor.className = 'ai-cursor'; cursor.innerHTML = '&nbsp;';
+  var idx = 0;
+  function typeNext() {
+    if (idx < brief.length) {
+      el.textContent = brief.slice(0, idx+1); el.appendChild(cursor); idx++;
+      var delay = brief[idx-1] === '\n' ? 40 : (Math.random()*18+8);
+      setTimeout(typeNext, delay);
+    } else {
+      setTimeout(function(){ idx=0; el.textContent=''; setTimeout(typeNext,500); }, 6000);
+    }
+  }
+  setTimeout(typeNext, 800);
+})();
+
+// ── STAT COUNTERS ─────────────────────────────────────────────
+(function() {
+  function animCounter(id, target, prefix, dur) {
+    var el = document.getElementById(id); if (!el) return;
+    var start = performance.now();
+    function step(now) {
+      var p = Math.min((now-start)/dur, 1), ease = 1-Math.pow(1-p,3);
+      el.textContent = prefix + Math.round(ease*target);
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  var statRow = document.querySelector('.ai-stat-row');
+  if (!statRow) return;
+  var obs = new IntersectionObserver(function(entries) {
+    if (entries[0].isIntersecting) {
+      animCounter('ctr-workflows', 12, '', 1400);
+      animCounter('ctr-tools', 9, '', 1200);
+      animCounter('ctr-models', 4, '', 1000);
+      obs.disconnect();
+    }
+  }, { threshold: 0.3 });
+  obs.observe(statRow);
+})();
+
+// ── QUERY CAROUSEL ────────────────────────────────────────────
+(function() {
+  var stage = document.getElementById('aiQueryStage');
+  var dotsEl = document.getElementById('aiQDots');
+  var counterEl = document.getElementById('aiQCounter');
+  if (!stage || !dotsEl || !counterEl) return;
+
+  var QUERIES = [
+    { tag:'CRM · Nutshell', query:"Which of our waterpark clients haven’t placed an order in over a year?", who:'Safe Slide · Dale Cooper', result:'<strong>Pulled 8 dormant accounts</strong> from Nutshell live. Three had open estimates that had gone cold. Identified the last contact date on each. Drafted a re-engagement email for the two most likely to respond.', stat:'Time to answer: under 90 seconds — would have taken a manual CRM search of 45+ records' },
+    { tag:'Finance · QuickBooks', query:'Are we making more money this quarter than we were last year at the same time?', who:'Safe Slide · Bookkeeping Review', result:'<strong>P&amp;L pulled live from QBO.</strong> Revenue up 18% year-over-year. Labor costs up 11%. Net margin improved from 19% to 23%. Flagged one expense category — equipment rental — that had doubled with no corresponding revenue increase.', stat:'Would normally require an accountant call or exporting to a spreadsheet' },
+    { tag:'Legal · Case Prep', query:'Dale has a deposition in three days. Can you get him ready?', who:'Baker v. Safe Slide · Active Litigation', result:'<strong>Read all case files and prior correspondence.</strong> Produced a 4-page deposition brief: key facts, likely lines of questioning, Safe Slide’s defense posture, and what not to say. Dale reviewed it once the morning of.', stat:'Brief built in one session — the kind of prep that normally costs $400/hr in attorney time' },
+    { tag:'Client Onboarding · CHΔ0N', query:"Levi runs an HVAC company in Michigan. He’s never used AI. Where do we even start?", who:'Bendixen Refrigeration · New Client', result:'<strong>Mapped his dispatch and quoting workflow</strong> in one interview session. Identified three places AI could save him 4–6 hours a week. Proposed a 3-step onboarding path he could follow without a technical background. He was live within a week.', stat:"The goal of CHΔ0N: AI that works for a guy who’s never heard of a prompt" },
+    { tag:'Email · Inbox Management', query:'Dale has 47 unread emails. What actually needs attention today?', who:'Razor · Daily Brief · 6:03 AM', result:'<strong>Flagged 2 requiring a response today.</strong> Summarized 6 threads with context. Noted one vendor contract expiring Friday that had no follow-up. Everything else: filed, labeled, and marked read. Dale opened one message that morning.', stat:'Runs automatically — Dale hasn’t touched his inbox filter settings in four months' },
+    { tag:'Build · Safe Slide Training', query:'I need a portal where my 45 field techs can track their NACOM certifications.', who:'Safe Slide Restoration · Training', result:'<strong>Designed, built, and deployed in a single session.</strong> Six-level certification ladder, tech profiles, progress tracking, admin dashboard. Live on Netlify. 45 techs enrolled in week one. Replaced a paper binder and a spreadsheet nobody was updating.', stat:'From request to live URL: one afternoon — no developer hired, no agency briefed' },
+  ];
+
+  var current = 0, autoTimer = null;
+
+  QUERIES.forEach(function(q, i) {
+    var card = document.createElement('div');
+    card.className = 'ai-query-card' + (i===0 ? ' visible' : '');
+    card.innerHTML = '<div class="ai-qcard-inner"><div class="ai-qcard-left"><div class="ai-qcard-tag">'+q.tag+'</div><div class="ai-qcard-query">'+q.query+'</div><div class="ai-qcard-who">'+q.who+'</div></div><div class="ai-qcard-right"><div class="ai-qcard-result-label">What happened</div><div class="ai-qcard-result">'+q.result+'</div><div class="ai-qcard-stat">'+q.stat+'</div></div></div>';
+    stage.appendChild(card);
+    var dot = document.createElement('div');
+    dot.className = 'ai-q-dot' + (i===0 ? ' active' : '');
+    dot.addEventListener('click', function(){ goTo(i); });
+    dotsEl.appendChild(dot);
+  });
+
+  var cards = stage.querySelectorAll('.ai-query-card');
+  var dots  = dotsEl.querySelectorAll('.ai-q-dot');
+
+  function goTo(idx) {
+    cards[current].classList.remove('visible'); dots[current].classList.remove('active');
+    current = (idx + QUERIES.length) % QUERIES.length;
+    cards[current].classList.add('visible'); dots[current].classList.add('active');
+    counterEl.textContent = (current+1) + ' of ' + QUERIES.length;
+    clearInterval(autoTimer); autoTimer = setInterval(function(){ goTo(current+1); }, 5500);
+  }
+
+  document.getElementById('aiQNext').addEventListener('click', function(){ goTo(current+1); });
+  document.getElementById('aiQPrev').addEventListener('click', function(){ goTo(current-1); });
+  counterEl.textContent = '1 of ' + QUERIES.length;
+  autoTimer = setInterval(function(){ goTo(current+1); }, 5500);
+
+  window.addEventListener('load', function() {
+    var maxH = 0;
+    cards.forEach(function(c){ c.style.opacity='1'; c.style.position='relative'; maxH=Math.max(maxH,c.offsetHeight); c.style.opacity=''; c.style.position=''; });
+    stage.style.minHeight = maxH + 'px';
+  });
+})();
+</script>
 </body>
 </html>
