@@ -1,0 +1,2883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Focus Forum 2027 — Attendee Guide</title>
+<link rel="canonical" href="https://coopersconsulting.com/forum-2027"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --orange:    #E8701A;
+  --orange-hi: #FF9040;
+  --orange-dk: #C4520A;
+  --cream:     #F2EBDA;
+  --muted:     rgba(242,235,218,0.52);
+  --rule:      rgba(232,112,26,0.14);
+  --bg:        #0C0A08;
+  --sect-a:    rgba(15,11,8,0.86);
+  --sect-b:    rgba(22,16,10,0.84);
+}
+
+html { scroll-behavior: smooth; font-size: 16px; background: var(--bg); }
+body {
+  background: var(--bg); color: var(--cream);
+  font-family: 'EB Garamond', serif; line-height: 1.68;
+  font-variation-settings: 'wght' 410;
+  font-feature-settings: 'onum' 1, 'kern' 1;
+  -webkit-font-smoothing: antialiased; overflow-x: hidden;
+}
+h1,h2,h3 { font-family: 'Cinzel', serif; line-height: 1.12; font-weight: 600; letter-spacing: 0.04em; }
+
+.skip-link {
+  position: absolute; top: -120px; left: 16px;
+  background: var(--orange); color: #0C0A08;
+  padding: 8px 16px; font-family: 'Cinzel', serif; font-size: .875rem;
+  text-decoration: none; z-index: 9999; transition: top .2s;
+}
+.skip-link:focus { top: 16px; }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200; height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 5vw;
+  transition: background .35s, border-color .35s;
+  border-bottom: 1px solid transparent;
+}
+nav.scrolled {
+  background: rgba(18,13,8,0.97);
+  border-bottom-color: rgba(232,112,26,0.22);
+  backdrop-filter: blur(8px);
+}
+.nav-mark { display: flex; align-items: center; gap: 11px; text-decoration: none; }
+.nav-hex  { width: 28px; height: 32px; flex-shrink: 0; }
+.nav-wordmark {
+  display: flex; flex-direction: column; gap: .1rem;
+  font-family: 'Cinzel', serif; font-size: .9rem;
+  letter-spacing: .06em; color: var(--cream);
+}
+.nav-sub { font-size: .62rem; letter-spacing: .14em; color: var(--orange); }
+.nav-links { list-style: none; display: flex; gap: 2rem; }
+.nav-links a {
+  font-family: 'Cinzel', serif; font-size: .78rem; font-weight: 500;
+  letter-spacing: .07em; text-transform: uppercase;
+  color: rgba(242,235,218,.72); text-decoration: none;
+  position: relative; transition: color .2s;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
+  height: 1px; background: var(--orange);
+  transform: scaleX(0); transform-origin: left; transition: transform .2s;
+}
+.nav-links a:hover { color: var(--cream); }
+.nav-links a:hover::after { transform: scaleX(1); }
+.nav-links a.nav-pay { color: rgba(232,112,26,.65); font-size: .7rem; }
+.nav-burger { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
+.nav-overlay {
+  display: none; position: fixed; inset: 0; z-index: 190;
+  background: rgba(10,8,5,0.98);
+  flex-direction: column; justify-content: center; align-items: center; gap: 2.5rem;
+}
+.nav-overlay.open { display: flex; }
+.nav-overlay a {
+  font-family: 'Cinzel', serif; font-size: 1.5rem; font-weight: 700;
+  color: var(--cream); text-decoration: none; letter-spacing: .08em; transition: color .2s;
+}
+.nav-overlay a:hover { color: var(--orange); }
+.overlay-close {
+  position: absolute; top: 20px; right: 24px;
+  background: none; border: none; cursor: pointer;
+  font-family: 'Cinzel', serif; font-size: 1.2rem;
+  color: rgba(242,235,218,.5); padding: 8px;
+}
+
+/* ── HERO ── */
+.hero {
+  position: relative; z-index: 1;
+  padding: 8rem 5vw 4rem;
+  display: flex; flex-direction: column; align-items: center;
+  background: radial-gradient(ellipse at 50% 0%, rgba(232,112,26,0.08) 0%, transparent 65%);
+  border-bottom: 1px solid var(--rule);
+}
+.hero-inner {
+  display: flex; flex-direction: column; align-items: center; gap: 1rem;
+  text-align: center;
+}
+.hero-kicker {
+  font-family: 'Cinzel', serif; font-size: clamp(.68rem,1.3vw,.82rem);
+  letter-spacing: .22em; text-transform: uppercase;
+  color: rgba(242,235,218,.45);
+}
+.hero-logo {
+  width: clamp(200px, 28vw, 320px);
+  mix-blend-mode: screen;
+  filter: drop-shadow(0 0 20px rgba(232,112,26,.40)) drop-shadow(0 0 50px rgba(196,82,10,.20));
+}
+.hero-date {
+  font-family: 'Cinzel', serif; font-size: clamp(1rem,2vw,1.25rem);
+  letter-spacing: .14em; color: var(--cream); font-weight: 600;
+}
+.hero-venue {
+  font-family: 'Cinzel', serif; font-size: clamp(.72rem,1.3vw,.88rem);
+  letter-spacing: .12em; text-transform: uppercase;
+  color: rgba(242,235,218,.45);
+}
+
+/* ── QUICK REF ── */
+.quick-ref {
+  width: 100%; max-width: 860px; margin-top: 2.75rem;
+  border: 1px solid rgba(232,112,26,0.28);
+  background: rgba(232,112,26,0.04);
+  display: grid; grid-template-columns: repeat(4,1fr);
+}
+.qr-cell {
+  padding: 1.25rem 1.5rem;
+  display: flex; flex-direction: column; gap: .3rem;
+  border-right: 1px solid rgba(232,112,26,0.14);
+}
+.qr-cell:last-child { border-right: none; }
+.qr-label {
+  font-family: 'Cinzel', serif; font-size: .56rem; font-weight: 500;
+  letter-spacing: .18em; text-transform: uppercase; color: var(--orange); opacity: .85;
+}
+.qr-value {
+  font-family: 'Cinzel', serif; font-size: .95rem; font-weight: 700;
+  color: var(--cream); line-height: 1.3;
+}
+.qr-value a { color: var(--orange); text-decoration: none; }
+.qr-value a:hover { color: var(--orange-hi); }
+.qr-sub {
+  font-size: .78rem; font-style: italic; color: var(--muted); line-height: 1.5;
+}
+.qr-btn {
+  display: inline-block; margin-top: .4rem;
+  font-family: 'Cinzel', serif; font-size: .62rem; font-weight: 600;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--bg); background: var(--orange);
+  padding: .45rem .95rem; text-decoration: none;
+  transition: background .2s; align-self: flex-start;
+}
+.qr-btn:hover { background: var(--orange-hi); }
+
+/* ── DUALITY RULE ── */
+.duality-rule {
+  position: relative; z-index: 1; height: 3px;
+  background: linear-gradient(90deg, var(--orange-dk), var(--orange), var(--orange-dk));
+}
+
+/* ── SECTION BASE ── */
+.sect { position: relative; z-index: 1; border-bottom: 1px solid var(--rule); }
+.sect-a { background: var(--sect-a); }
+.sect-b { background: var(--sect-b); }
+
+.sect-label {
+  font-family: 'Cinzel', serif; font-size: .63rem; font-weight: 500;
+  letter-spacing: .16em; text-transform: uppercase; color: var(--orange);
+  display: flex; align-items: center; gap: .75rem;
+}
+.sect-label::after { content: ''; flex: 1; max-width: 44px; height: 1px; background: var(--orange); opacity: .38; }
+
+/* ── SCHEDULE ── */
+.schedule-header {
+  padding: 4rem 5vw 2.5rem;
+  display: flex; flex-direction: column; gap: .75rem;
+  border-bottom: 1px solid var(--rule);
+}
+.schedule-header h2 { font-size: clamp(1.5rem,2.5vw,2.5rem); }
+.schedule-header p { font-size: .9375rem; font-style: italic; color: var(--muted); }
+.schedule-grid { display: grid; grid-template-columns: 1fr 1px 1fr; }
+.sched-vdiv { background: var(--rule); }
+.sched-day { padding: 3rem 4rem 3.5rem 5vw; }
+.sched-day:last-child { padding: 3rem 5vw 3.5rem 4rem; }
+.sched-day-label {
+  font-family: 'Cinzel', serif; font-size: .66rem; font-weight: 700;
+  letter-spacing: .2em; text-transform: uppercase; color: var(--orange);
+  margin-bottom: 2rem;
+  display: flex; align-items: center; gap: .75rem;
+}
+.sched-day-label::after { content: ''; flex: 1; height: 1px; background: var(--orange); opacity: .22; }
+.session {
+  display: grid; grid-template-columns: 76px 1fr;
+  gap: .75rem; padding: .875rem 0;
+  border-bottom: 1px solid rgba(232,112,26,.07);
+}
+.session:last-child { border-bottom: none; }
+.sess-time {
+  font-family: 'Cinzel', serif; font-size: .58rem;
+  letter-spacing: .07em; text-transform: uppercase;
+  color: var(--orange); padding-top: .22rem;
+}
+.sess-body { display: flex; flex-direction: column; gap: .18rem; }
+.sess-title {
+  font-family: 'Cinzel', serif; font-size: .875rem; font-weight: 600;
+  letter-spacing: .03em; color: var(--cream);
+}
+.sess-speaker { font-size: .82rem; font-style: italic; color: var(--muted); }
+.sess-room {
+  font-family: 'Cinzel', serif; font-size: .54rem; letter-spacing: .12em;
+  text-transform: uppercase; color: rgba(232,112,26,.50); margin-top: .1rem;
+}
+.sess-tag {
+  display: inline-block; margin-top: .2rem;
+  font-family: 'Cinzel', serif; font-size: .56rem; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--orange);
+  border: 1px solid rgba(232,112,26,.28); padding: .12rem .4rem;
+  align-self: flex-start;
+}
+
+/* ── SCHEDULE EVE ── */
+.sched-eve {
+  padding: 2rem 5vw 2.5rem;
+  border-bottom: 1px solid var(--rule);
+}
+.sched-eve .sched-day-label { margin-bottom: 1.5rem; }
+.terrace-img {
+  display: block; width: 100%; max-height: 240px;
+  object-fit: cover; object-position: center 55%;
+  border: 1px solid rgba(232,112,26,.18);
+  margin-top: 1rem;
+}
+
+/* ── SPEAKERS ── */
+.speakers-header {
+  padding: 4rem 5vw 2.75rem;
+  display: flex; flex-direction: column; gap: .75rem;
+  border-bottom: 1px solid var(--rule);
+}
+.speakers-header h2 { font-size: clamp(1.5rem,2.5vw,2.5rem); }
+.speakers-header p { font-size: .9375rem; font-style: italic; color: var(--muted); }
+.speakers-grid {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  border-top: 1px solid var(--rule);
+}
+.speaker-card {
+  display: flex; flex-direction: column; gap: 1.25rem;
+  padding: 2.5rem 2.25rem;
+  position: relative; overflow: hidden;
+  border: 2px solid transparent; border-top: none;
+  transition: background .25s, box-shadow .25s, border-color .25s;
+}
+.speaker-card + .speaker-card { border-left: 1px solid var(--rule); }
+.speaker-card::after {
+  content: ''; position: absolute; top: 0; right: 0;
+  width: 0; height: 0; border-style: solid;
+  border-width: 0 20px 20px 0;
+  border-color: transparent rgba(232,112,26,.5) transparent transparent;
+  opacity: 0; transition: opacity .25s;
+}
+.speaker-card:hover { background: rgba(232,112,26,.05); box-shadow: 0 0 40px rgba(232,112,26,.06); border-color: rgba(232,112,26,.28); z-index: 1; }
+.speaker-card:hover::after { opacity: 1; }
+.speaker-avatar {
+  width: 72px; height: 72px; flex-shrink: 0;
+  background: rgba(232,112,26,.09);
+  border: 1px solid rgba(232,112,26,.2);
+  overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+.speaker-initials { font-family: 'Cinzel', serif; font-size: 1.375rem; font-weight: 700; color: var(--orange); opacity: .6; }
+.speaker-name { font-family: 'Cinzel', serif; font-size: 1.25rem; font-weight: 700; color: var(--cream); }
+.speaker-role { font-family: 'Cinzel', serif; font-size: .63rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.speaker-session-tag {
+  font-family: 'Cinzel', serif; font-size: .58rem; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--orange);
+  border: 1px solid rgba(232,112,26,.28); padding: .14rem .44rem;
+  align-self: flex-start;
+}
+.speaker-bio { font-size: .875rem; font-style: italic; color: rgba(242,235,218,.45); line-height: 1.65; flex: 1; }
+
+/* ── EXPLORE STL ── */
+.stl-header {
+  padding: 4rem 5vw 2.75rem;
+  display: flex; flex-direction: column; gap: .875rem;
+  border-bottom: 1px solid var(--rule);
+}
+.stl-header h2 { font-size: clamp(1.5rem,2.5vw,2.5rem); }
+.stl-header p { font-size: .9375rem; font-style: italic; color: var(--muted); max-width: 680px; }
+.stl-advisory {
+  font-size: .875rem; line-height: 1.72; color: rgba(242,235,218,.5);
+  border-left: 2px solid rgba(232,112,26,.35); padding-left: 1.1rem;
+  max-width: 680px;
+}
+.stl-advisory a {
+  color: var(--orange); text-decoration: none;
+  border-bottom: 1px solid rgba(232,112,26,.32); transition: border-color .2s;
+}
+.stl-advisory a:hover { border-bottom-color: var(--orange); }
+.stl-grid {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 2px; background: var(--rule);
+}
+.stl-card {
+  position: relative; min-height: 300px; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: flex-end;
+}
+.stl-card::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: var(--img); background-size: cover; background-position: center;
+  transition: transform .5s ease;
+}
+.stl-card:hover::before { transform: scale(1.05); }
+.stl-card-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(10,8,5,.92) 0%, rgba(10,8,5,.5) 55%, rgba(10,8,5,.08) 100%);
+}
+.stl-card-content {
+  position: relative; z-index: 1;
+  padding: 1.75rem 1.5rem;
+  display: flex; flex-direction: column; gap: .4rem;
+}
+.stl-cat {
+  font-family: 'Cinzel', serif; font-size: .5rem; font-weight: 700;
+  letter-spacing: .18em; text-transform: uppercase; color: var(--orange);
+}
+.stl-name { font-family: 'Cinzel', serif; font-size: 1.125rem; font-weight: 700; color: var(--cream); }
+.stl-desc { font-size: .8rem; font-style: italic; color: rgba(242,235,218,.72); line-height: 1.6; }
+.wc-badge {
+  display: inline-flex; align-items: center; gap: .35rem;
+  font-family: 'Cinzel', serif; font-size: .48rem; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: #fff; background: rgba(232,112,26,.9);
+  padding: .22rem .6rem; margin-top: .3rem; width: fit-content;
+}
+
+/* ── LOGISTICS ── */
+.logistics-header {
+  padding: 4rem 5vw 2.5rem;
+  display: flex; flex-direction: column; gap: .75rem;
+  border-bottom: 1px solid var(--rule);
+}
+.logistics-header h2 { font-size: clamp(1.5rem,2.5vw,2.5rem); }
+.logistics-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+}
+.logi-panel {
+  padding: 2.75rem 3rem 3rem;
+  display: flex; flex-direction: column; gap: 1.5rem;
+  border-right: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+.logi-panel:nth-child(odd) { padding-left: 5vw; }
+.logi-panel:nth-child(even) { border-right: none; padding-right: 5vw; }
+.logi-panel:nth-last-child(-n+2) { border-bottom: none; }
+.logi-label {
+  font-family: 'Cinzel', serif; font-size: .63rem; font-weight: 500;
+  letter-spacing: .16em; text-transform: uppercase; color: var(--orange);
+}
+.logi-title { font-family: 'Cinzel', serif; font-size: 1.1rem; font-weight: 700; color: var(--cream); line-height: 1.3; }
+.logi-body { display: flex; flex-direction: column; gap: 1rem; }
+.logi-item { display: flex; flex-direction: column; gap: .18rem; }
+.logi-item-label {
+  font-family: 'Cinzel', serif; font-size: .56rem; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--muted);
+}
+.logi-item-val {
+  font-family: 'Cinzel', serif; font-size: .9rem; font-weight: 600; color: var(--cream); line-height: 1.4;
+}
+.logi-item-note { font-size: .82rem; font-style: italic; color: var(--muted); line-height: 1.6; }
+.btn-maps {
+  display: inline-block; text-decoration: none;
+  font-family: 'Cinzel', serif; font-size: .68rem; font-weight: 600;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--orange); border: 1px solid rgba(232,112,26,.38);
+  padding: .6rem 1.1rem; transition: background .2s, border-color .2s;
+  align-self: flex-start;
+}
+.btn-maps:hover { background: rgba(232,112,26,.08); border-color: var(--orange); }
+
+/* ── CONTACT STRIP ── */
+.contact-strip {
+  background: rgba(232,112,26,.05);
+  border-top: 1px solid rgba(232,112,26,.14);
+  border-bottom: 1px solid rgba(232,112,26,.14);
+  padding: 2rem 5vw;
+  display: flex; align-items: center; justify-content: center;
+  gap: 4rem; flex-wrap: wrap;
+}
+.contact-item { display: flex; flex-direction: column; align-items: center; gap: .3rem; }
+.contact-label {
+  font-family: 'Cinzel', serif; font-size: .56rem; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--muted);
+}
+.contact-val {
+  font-family: 'Cinzel', serif; font-size: 1.1rem; font-weight: 700; color: var(--cream);
+}
+.contact-val a { color: var(--orange); text-decoration: none; }
+.contact-val a:hover { color: var(--orange-hi); }
+
+/* ── CHARITY ── */
+.charity-inner {
+  display: grid; grid-template-columns: 1fr 2fr;
+  gap: clamp(3rem,6vw,8rem); padding: 4rem 5vw;
+}
+.charity-label { display: flex; flex-direction: column; gap: 1.5rem; }
+.charity-label h2 { font-size: clamp(1.75rem,3vw,2.5rem); }
+.charity-label h2 .h-accent { color: var(--orange); }
+.charity-label p { font-size: .875rem; font-style: italic; line-height: 1.72; color: var(--muted); }
+.charity-link {
+  display: inline-block; font-family: 'Cinzel', serif; font-size: .7rem;
+  font-weight: 500; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--orange); text-decoration: none;
+  border-bottom: 1px solid rgba(232,112,26,.32); transition: border-color .2s;
+}
+.charity-link:hover { border-bottom-color: var(--orange); }
+.charity-body { display: flex; flex-direction: column; gap: 1.25rem; }
+.charity-body p { font-size: .9375rem; line-height: 1.82; color: rgba(242,235,218,.68); }
+.charity-body p strong { color: var(--cream); }
+
+/* ── PAY FOOTER ── */
+.pay-strip {
+  background: rgba(8,6,4,.92);
+  border-top: 1px solid var(--rule);
+  padding: 2rem 5vw;
+  display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;
+}
+.pay-strip-label {
+  font-family: 'Cinzel', serif; font-size: .6rem; font-weight: 500;
+  letter-spacing: .18em; text-transform: uppercase; color: var(--muted); flex-shrink: 0;
+}
+.pay-strip-text { font-size: .9rem; font-style: italic; color: var(--muted); flex: 1; min-width: 200px; }
+.pay-strip-text strong { color: var(--cream); font-style: normal; }
+.btn-pay {
+  display: inline-block; text-decoration: none;
+  font-family: 'Cinzel', serif; font-size: .7rem; font-weight: 600;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--bg); background: var(--orange);
+  padding: .75rem 1.5rem; flex-shrink: 0;
+  transition: background .25s;
+}
+.btn-pay:hover { background: var(--orange-hi); }
+
+/* ── FOOTER ── */
+footer {
+  background: rgba(8,6,4,.93);
+  padding: 2.75rem 5vw 2.25rem;
+  border-top: 1px solid rgba(232,112,26,.14);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 1.5rem;
+}
+.footer-brand {
+  font-family: 'Cinzel', serif; font-size: .75rem;
+  letter-spacing: .12em; text-transform: uppercase; color: rgba(242,235,218,.4);
+}
+.footer-contact {
+  font-family: 'Cinzel', serif; font-size: .7rem;
+  letter-spacing: .1em; text-align: center; color: rgba(242,235,218,.32);
+}
+.footer-contact a { color: var(--orange); text-decoration: none; transition: color .2s; }
+.footer-contact a:hover { color: var(--orange-hi); }
+.footer-copy { font-family: 'Cinzel', serif; font-size: .66rem; letter-spacing: .12em; color: rgba(242,235,218,.18); }
+
+/* ── PAGE FRAME ── */
+.page-frame {
+  max-width: 980px; margin: 0 auto;
+  border-left:  1px solid rgba(232,112,26,0.1);
+  border-right: 1px solid rgba(232,112,26,0.1);
+}
+@media (max-width: 980px) { .page-frame { border-left: none; border-right: none; } }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1000px) { .speakers-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 900px) {
+  .schedule-grid { grid-template-columns: 1fr; }
+  .sched-vdiv { display: none; }
+  .sched-day:last-child { padding: 3rem 5vw; border-top: 1px solid var(--rule); }
+  .speakers-grid { grid-template-columns: 1fr; }
+  .stl-grid { grid-template-columns: 1fr 1fr; }
+  .charity-inner { grid-template-columns: 1fr; }
+  .logistics-grid { grid-template-columns: 1fr; }
+  .logi-panel { border-right: none; border-bottom: 1px solid var(--rule); padding-right: 5vw; }
+  .logi-panel:nth-last-child(-n+2) { border-bottom: 1px solid var(--rule); }
+  .logi-panel:last-child { border-bottom: none; }
+  nav .nav-links { display: none; }
+  .nav-burger { display: block; }
+  footer { flex-direction: column; text-align: center; }
+}
+@media (max-width: 700px) {
+  .quick-ref { grid-template-columns: 1fr 1fr; }
+  .qr-cell:nth-child(even) { border-right: none; }
+  .qr-cell:nth-child(n+3) { border-top: 1px solid rgba(232,112,26,.14); }
+  .stl-grid { grid-template-columns: 1fr; }
+  .contact-strip { gap: 2rem; }
+}
+@media (max-width: 480px) {
+  .quick-ref { grid-template-columns: 1fr; }
+  .qr-cell { border-right: none; border-top: 1px solid rgba(232,112,26,.14); }
+  .qr-cell:first-child { border-top: none; }
+}
+
+/* ── MATERIALS ── */
+.mat-header {
+  padding: 4rem 5vw 2.5rem;
+  display: flex; flex-direction: column; gap: .75rem;
+  border-bottom: 1px solid var(--rule);
+}
+.mat-header h2 { font-size: clamp(1.5rem,2.5vw,2.5rem); }
+.mat-header p { font-size: .9375rem; font-style: italic; color: var(--muted); }
+.mat-day-label {
+  font-family: 'Cinzel', serif; font-size: .63rem; font-weight: 700;
+  letter-spacing: .18em; text-transform: uppercase; color: var(--orange);
+  padding: .9rem 5vw .6rem;
+  border-bottom: 1px solid var(--rule);
+  display: flex; align-items: center; gap: .75rem;
+}
+.mat-day-label::after { content: ''; flex: 1; height: 1px; background: var(--orange); opacity: .18; }
+.mat-row {
+  display: grid; grid-template-columns: clamp(180px,28%,260px) 1fr;
+  gap: 1.5rem; padding: 1.1rem 5vw;
+  border-bottom: 1px solid rgba(232,112,26,.06);
+  align-items: flex-start;
+}
+.mat-row:last-child { border-bottom: none; }
+.mat-sess-name {
+  font-family: 'Cinzel', serif; font-size: .8rem; font-weight: 600;
+  letter-spacing: .03em; color: var(--cream); line-height: 1.4;
+}
+.mat-sess-speaker { font-size: .75rem; font-style: italic; color: var(--muted); margin-top: .2rem; }
+.mat-links { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; }
+.mat-link {
+  display: inline-flex; align-items: center; gap: .35rem;
+  font-family: 'Cinzel', serif; font-size: .65rem; font-weight: 600;
+  letter-spacing: .06em; text-transform: uppercase;
+  color: var(--orange); text-decoration: none;
+  border: 1px solid rgba(232,112,26,.32); padding: .3rem .72rem;
+  transition: background .2s, border-color .2s;
+}
+.mat-link:hover { background: rgba(232,112,26,.08); border-color: var(--orange); }
+.mat-link svg { width: 11px; height: 11px; flex-shrink: 0; }
+.mat-empty { font-size: .8rem; font-style: italic; color: rgba(242,235,218,.2); }
+@media (max-width: 600px) {
+  .mat-row { grid-template-columns: 1fr; gap: .5rem; }
+}
+
+/* ── GALLERY ── */
+.gallery-header {
+  padding: 4rem 5vw 2.75rem;
+  display: flex; flex-direction: column; gap: .75rem;
+  border-bottom: 1px solid var(--rule);
+}
+.gallery-header h2 { font-size: clamp(1.5rem,2.5vw,2.5rem); }
+.gallery-header p { font-size: .9375rem; font-style: italic; color: var(--muted); }
+.slideshow-wrap { padding: 0 5vw 3rem; }
+.slideshow-stage {
+  position: relative; width: 100%; aspect-ratio: 16/9;
+  background: #0d0b07; overflow: hidden;
+  border: 1px solid var(--rule);
+  user-select: none;
+}
+.slide-img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; opacity: 0;
+  transition: opacity .35s ease;
+  z-index: 1;
+}
+.slide-img.slide-active { opacity: 1; z-index: 2; }
+.slide-caption {
+  position: absolute; bottom: 0; left: 0; right: 0; z-index: 4;
+  background: linear-gradient(transparent, rgba(10,8,5,.85));
+  padding: 2.5rem 4rem .75rem;
+  font-family: 'Cinzel', serif; font-size: .6rem; font-weight: 500;
+  letter-spacing: .12em; text-transform: uppercase; color: rgba(242,235,218,.65);
+  min-height: 2.5rem;
+}
+.slide-counter {
+  position: absolute; top: .75rem; right: 1rem; z-index: 5;
+  font-family: 'Cinzel', serif; font-size: .62rem; letter-spacing: .1em;
+  color: rgba(242,235,218,.35);
+}
+.slide-btn {
+  position: absolute; top: 50%; transform: translateY(-50%); z-index: 6;
+  background: rgba(10,8,5,.45); border: 1px solid rgba(232,112,26,.22);
+  color: var(--burnt); font-size: 2.2rem; line-height: 1;
+  width: 3rem; height: 5rem;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background .2s, border-color .2s;
+  padding: 0; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+}
+.slide-btn:hover { background: rgba(232,112,26,.18); border-color: rgba(232,112,26,.6); }
+.slide-prev { left: 0; border-left: none; border-radius: 0 4px 4px 0; }
+.slide-next { right: 0; border-right: none; border-radius: 4px 0 0 4px; }
+.gallery-empty {
+  padding: 4rem 0; text-align: center;
+  font-size: .9rem; font-style: italic; color: rgba(242,235,218,.18);
+  font-family: 'Cinzel', serif; letter-spacing: .06em;
+}
+
+/* ── IDS LIST ── */
+.ids-list { list-style: none; margin: 0; padding: 0; }
+.ids-item {
+  display: flex; align-items: center; gap: 1rem;
+  padding: .9rem 0; border-bottom: 1px solid rgba(242,235,218,.08);
+  cursor: pointer; user-select: none;
+}
+.ids-item:hover { background: rgba(242,235,218,.02); }
+.ids-num {
+  font-family: 'Cinzel', serif; font-size: .75rem; font-weight: 700;
+  color: var(--orange); min-width: 1.8rem; flex-shrink: 0;
+  transition: color .25s;
+}
+.ids-body { flex: 1; }
+.ids-title { font-size: .9375rem; color: var(--cream); line-height: 1.45; transition: color .25s; }
+.ids-owner {
+  font-size: .75rem; color: var(--muted); margin-top: .2rem;
+  font-style: italic; letter-spacing: .03em; transition: color .25s;
+}
+.ids-solved-badge {
+  font-family: 'Cinzel', serif; font-size: .6rem; font-weight: 700;
+  letter-spacing: .14em; color: var(--orange); text-transform: uppercase;
+  flex-shrink: 0; opacity: 0; transition: opacity .25s;
+}
+.ids-item.solved .ids-num { color: rgba(242,235,218,.25); }
+.ids-item.solved .ids-title { color: rgba(242,235,218,.3); text-decoration: line-through; }
+.ids-item.solved .ids-owner { color: rgba(242,235,218,.18); }
+.ids-item.solved .ids-solved-badge { opacity: 1; }
+.ids-empty {
+  font-size: .875rem; font-style: italic; color: rgba(242,235,218,.2);
+  padding: 2rem 0; font-family: 'Cinzel', serif; letter-spacing: .06em;
+}
+
+/* ── PEOPLE DIRECTORY ── */
+.people-search-wrap {
+  max-width: 420px; margin: 0 auto 2.5rem;
+}
+.people-search {
+  width: 100%; padding: .7rem 1.1rem;
+  background: rgba(255,255,255,.06); border: 1px solid rgba(232,112,26,.3);
+  border-radius: 4px; color: var(--cream); font-size: .9375rem;
+  font-family: inherit; outline: none;
+}
+.people-search::placeholder { color: rgba(242,235,218,.3); }
+.people-search:focus { border-color: var(--orange); background: rgba(255,255,255,.09); }
+.people-group-label {
+  font-size: .65rem; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--orange); font-family: 'Cinzel', serif; font-weight: 700;
+  margin: 2rem 0 .75rem; padding-bottom: .4rem;
+  border-bottom: 1px solid rgba(232,112,26,.22);
+}
+.people-group-label:first-of-type { margin-top: 0; }
+.person-row {
+  display: flex; align-items: baseline; gap: .75rem;
+  padding: .6rem 0; border-bottom: 1px solid rgba(242,235,218,.07);
+}
+.person-row.hidden { display: none; }
+.person-name { font-size: .9375rem; font-weight: 600; color: var(--cream); min-width: 0; flex-shrink: 0; }
+.person-detail { font-size: .8125rem; color: var(--muted); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.person-detail .sep { margin: 0 .4em; opacity: .4; }
+@media (max-width: 500px) {
+  .person-row { flex-direction: column; gap: .15rem; }
+  .person-detail { white-space: normal; }
+}
+
+/* ── PASSWORD GATE ── */
+.pw-gate {
+  position: fixed; inset: 0; z-index: 9999;
+  background: var(--bg);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 2rem;
+}
+.pw-gate.unlocked { display: none; }
+.pw-inner {
+  display: flex; flex-direction: column; align-items: center; gap: 1.5rem;
+  width: 100%; max-width: 340px;
+}
+.pw-logo { width: 52px; height: 58px; }
+.pw-heading {
+  font-family: 'Cinzel', serif; font-size: clamp(1rem,3vw,1.4rem);
+  font-weight: 600; letter-spacing: .08em; color: var(--cream); text-align: center;
+}
+.pw-sub { font-size: .875rem; font-style: italic; color: var(--muted); text-align: center; margin-top: -.75rem; }
+.pw-input {
+  width: 100%; padding: .9rem 1.25rem;
+  background: rgba(242,235,218,.04); border: 1px solid rgba(232,112,26,.28);
+  color: var(--cream); font-family: 'Cinzel', serif;
+  font-size: 1.1rem; font-weight: 700; letter-spacing: .28em; text-align: center;
+  outline: none; transition: border-color .2s; -webkit-appearance: none;
+}
+.pw-input:focus { border-color: var(--orange); }
+.pw-input::placeholder { font-weight: 400; letter-spacing: .12em; color: rgba(242,235,218,.22); }
+.pw-btn {
+  width: 100%; padding: .88rem;
+  background: var(--orange); border: none; cursor: pointer;
+  font-family: 'Cinzel', serif; font-size: .78rem; font-weight: 700;
+  letter-spacing: .18em; text-transform: uppercase; color: var(--bg);
+  transition: background .2s;
+}
+.pw-btn:hover { background: var(--orange-hi); }
+.pw-error {
+  font-family: 'Cinzel', serif; font-size: .7rem; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--orange);
+  opacity: 0; transition: opacity .2s; margin-top: -.75rem;
+}
+.pw-error.show { opacity: 1; }
+
+/* ── SCROLL MARGIN (accounts for fixed nav + sticky banner) ── */
+section[id], #pay { scroll-margin-top: 128px; }
+
+/* ── DEPTH OF FIELD ── */
+/* Hero: side + bottom vignette creates lens-like focal plane */
+.hero::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse 55% 100% at 0%   50%, rgba(0,0,0,.40) 0%, transparent 100%),
+    radial-gradient(ellipse 55% 100% at 100% 50%, rgba(0,0,0,.40) 0%, transparent 100%),
+    radial-gradient(ellipse 100% 38% at 50% 100%, rgba(0,0,0,.50) 0%, transparent 100%);
+}
+.hero-inner, .quick-ref { position: relative; z-index: 1; }
+
+/* Card elevation — physical depth on interactive surfaces */
+.speaker-card {
+  box-shadow: 0 4px 28px rgba(0,0,0,.42), 0 1px 6px rgba(0,0,0,.28);
+}
+.speaker-card:hover {
+  box-shadow: 0 8px 48px rgba(232,112,26,.10), 0 4px 20px rgba(0,0,0,.38);
+}
+.quick-ref {
+  box-shadow: 0 10px 52px rgba(0,0,0,.52), 0 2px 10px rgba(0,0,0,.32);
+}
+
+/* Section depth: content recedes into page edges */
+.sect-a {
+  background:
+    radial-gradient(ellipse 110% 60% at 50% 0%, transparent 55%, rgba(0,0,0,.14) 100%),
+    var(--sect-a);
+}
+.sect-b {
+  background:
+    radial-gradient(ellipse 110% 60% at 50% 0%, transparent 55%, rgba(0,0,0,.14) 100%),
+    var(--sect-b);
+}
+
+/* ── MARGIN FIX — sections with zero horizontal padding ── */
+#ids    { padding: 3.5rem max(24px, 5vw); }
+#people { padding: 3.5rem max(24px, 5vw); }
+
+/* ── MOBILE — 24px floor so text never crowds the edge ── */
+@media (max-width: 420px) {
+  nav { padding-left: 16px; padding-right: 16px; }
+  .schedule-header, .speakers-header, .stl-header,
+  .logistics-header, .mat-header, .gallery-header,
+  .sched-eve, .day-panel  { padding-left: 24px; padding-right: 24px; }
+  .mat-row, .mat-day-label { padding-left: 24px; padding-right: 24px; }
+  .charity-inner  { padding-left: 24px; padding-right: 24px; }
+  .contact-strip  { padding-left: 24px; padding-right: 24px; }
+  .pay-strip      { padding-left: 24px; padding-right: 24px; }
+  footer          { padding-left: 24px; padding-right: 24px; }
+  .stl-live-bar   { padding-left: 24px; padding-right: 24px; }
+  .now-banner     { padding-left: 24px; padding-right: 24px; }
+  .slideshow-wrap { padding-left: 24px; padding-right: 24px; padding-right: 24px; }
+}
+
+/* ── STL LIVE BAR ── */
+.stl-live-bar {
+  background: rgba(12,9,6,.96); border-bottom: 1px solid rgba(232,112,26,.12);
+  padding: .65rem 5vw; display: flex; align-items: center; gap: 0;
+}
+.slb-cell {
+  display: flex; flex-direction: column; gap: .12rem;
+  flex: 1; padding-right: 1.25rem;
+}
+.slb-cell:not(:first-child) { padding-left: 1.25rem; border-left: 1px solid rgba(232,112,26,.12); }
+.slb-label {
+  font-family: 'Cinzel', serif; font-size: .5rem; font-weight: 600;
+  letter-spacing: .2em; text-transform: uppercase; color: rgba(232,112,26,.68);
+  display: flex; align-items: center; gap: .35rem;
+}
+.slb-live-dot {
+  width: 5px; height: 5px; border-radius: 50%; background: var(--orange); flex-shrink: 0;
+  animation: pulse-pip 1.6s ease-in-out infinite;
+}
+.slb-value {
+  font-family: 'Cinzel', serif; font-size: .77rem; font-weight: 600;
+  letter-spacing: .02em; color: var(--cream); line-height: 1.3;
+}
+@media (max-width: 620px) {
+  .slb-cell { padding-right: .7rem; }
+  .slb-cell:not(:first-child) { padding-left: .7rem; }
+  .slb-value { font-size: .65rem; }
+  .slb-label { font-size: .44rem; letter-spacing: .14em; }
+}
+
+/* ── ARCH CARD LIVE ROW ── */
+.arch-live-row { display: flex; align-items: center; gap: .9rem; margin-top: .65rem; flex-wrap: wrap; }
+.arch-tram-badge {
+  font-family: 'Cinzel', serif; font-size: .58rem; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: var(--orange); border: 1px solid rgba(232,112,26,.42); padding: .12rem .45rem;
+}
+.arch-ticket-link {
+  font-family: 'Cinzel', serif; font-size: .6rem; font-weight: 600;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: rgba(242,235,218,.5); text-decoration: none;
+  border-bottom: 1px solid rgba(242,235,218,.2); transition: color .2s, border-color .2s;
+}
+.arch-ticket-link:hover { color: var(--cream); border-bottom-color: var(--cream); }
+
+/* ── APP BOTTOM NAV (mobile only) ── */
+.app-bottom-nav {
+  display: none;
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 160;
+  background: rgba(10,8,5,.97); border-top: 1px solid rgba(232,112,26,.22);
+  backdrop-filter: blur(14px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.app-bottom-nav a {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: .22rem;
+  padding: .62rem .25rem .52rem; text-decoration: none;
+  font-family: 'Cinzel', serif; font-size: .5rem; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: rgba(242,235,218,.35); transition: color .2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.app-bottom-nav a:active { color: var(--orange); }
+.app-bottom-nav svg { width: 20px; height: 20px; }
+@media (max-width: 780px) {
+  .app-bottom-nav { display: flex; }
+  body { padding-bottom: calc(70px + env(safe-area-inset-bottom, 0px)); }
+}
+
+/* ── NOW BANNER ── */
+.now-banner {
+  position: sticky; top: 64px; z-index: 180;
+  background: rgba(10,8,5,0.97); border-bottom: 1px solid rgba(232,112,26,0.30);
+  backdrop-filter: blur(10px);
+  padding: .7rem 5vw;
+  display: flex; align-items: stretch; gap: 0;
+  min-height: 56px;
+}
+.now-banner.hidden { display: none; }
+.nb-current, .nb-next {
+  display: flex; flex-direction: column; justify-content: center; gap: .12rem;
+  flex: 1; padding: .2rem 1.5rem .2rem 0;
+}
+.nb-next {
+  padding: .2rem 0 .2rem 1.5rem;
+  border-left: 1px solid rgba(232,112,26,0.14);
+}
+.nb-pip {
+  font-family: 'Cinzel', serif; font-size: .52rem; font-weight: 700;
+  letter-spacing: .22em; text-transform: uppercase;
+  display: flex; align-items: center; gap: .4rem;
+}
+.nb-pip .pip-dot {
+  width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+}
+.nb-current .nb-pip { color: var(--orange); }
+.nb-current .nb-pip .pip-dot { background: var(--orange); animation: pulse-pip 1.6s ease-in-out infinite; }
+.nb-next .nb-pip { color: rgba(242,235,218,.38); }
+.nb-next .nb-pip .pip-dot { background: rgba(242,235,218,.3); }
+@keyframes pulse-pip {
+  0%,100% { opacity:1; transform:scale(1); }
+  50%      { opacity:.4; transform:scale(.72); }
+}
+.nb-title {
+  font-family: 'Cinzel', serif; font-size: .84rem; font-weight: 600;
+  letter-spacing: .02em; color: var(--cream); line-height: 1.25;
+}
+.nb-next .nb-title { color: rgba(242,235,218,.55); font-size: .78rem; }
+.nb-meta { font-size: .72rem; font-style: italic; color: var(--muted); }
+@media (max-width: 600px) {
+  .now-banner { flex-direction: column; gap: .5rem; }
+  .nb-next { border-left: none; border-top: 1px solid rgba(232,112,26,0.14); padding: .4rem 0 0; }
+}
+
+/* ── DAY TABS ── */
+.day-tabs {
+  display: flex; border-bottom: 1px solid var(--rule);
+}
+.day-tab {
+  flex: 1; padding: .9rem 2rem;
+  font-family: 'Cinzel', serif; font-size: .72rem; font-weight: 600;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: rgba(242,235,218,.38); background: none; border: none; cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color .2s, border-color .2s;
+  position: relative; bottom: -1px;
+}
+.day-tab.active { color: var(--orange); border-bottom-color: var(--orange); }
+.day-tab:hover:not(.active) { color: rgba(242,235,218,.65); }
+.day-panel { display: none; padding: 2.5rem 5vw 3.5rem; }
+.day-panel.active { display: block; }
+
+/* ── SESSION STATUS BADGES ── */
+.sess-status {
+  display: inline-flex; align-items: center; gap: .35rem;
+  font-family: 'Cinzel', serif; font-size: .52rem; font-weight: 700;
+  letter-spacing: .16em; text-transform: uppercase;
+  padding: .1rem .4rem; margin-bottom: .12rem; align-self: flex-start;
+}
+.sess-status.s-now  { color: var(--orange);            border: 1px solid rgba(232,112,26,.5); }
+.sess-status.s-next { color: rgba(242,235,218,.6);     border: 1px solid rgba(242,235,218,.22); }
+.sess-status.s-done { color: rgba(242,235,218,.2);     border: 1px solid rgba(242,235,218,.08); }
+.sess-status .sd    { width: 5px; height: 5px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+.sess-status.s-now .sd { animation: pulse-pip 1.6s ease-in-out infinite; }
+.session.done .sess-title { color: rgba(242,235,218,.28); }
+.session.done .sess-speaker,
+.session.done .sess-room,
+.session.done .sess-tag { opacity: .25; }
+
+/* ── FEEDBACK ── */
+.feedback-inner { max-width: 560px; margin: 0 auto; padding: 0 5vw; }
+.ff-lede { margin: .75rem 0 2rem; color: rgba(242,235,218,.68); }
+.ff-btn {
+  display: inline-block;
+  font-family: 'Cinzel', serif; font-size: .78rem; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  background: var(--orange); color: #0C0A08;
+  padding: .85rem 2.4rem; text-decoration: none;
+  transition: background .2s;
+}
+.ff-btn:hover { background: var(--orange-hi); }
+
+/* ── AI ECOSYSTEM SHOWCASE ── */
+.speaker-card.highlighted { border-color: rgba(232,112,26,.25); background: rgba(232,112,26,.04); }
+
+.ai-showcase {
+  border-top: 1px solid var(--rule);
+  padding: 3.5rem 5vw 4rem;
+}
+.ai-showcase-label {
+  font-family: 'Cinzel', serif; font-size: .6rem; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--orange); margin-bottom: 1rem;
+}
+.ai-showcase-title {
+  font-family: 'Cinzel', serif; font-size: clamp(1.1rem, 2vw, 1.6rem);
+  font-weight: 600; color: var(--cream); letter-spacing: .03em; margin-bottom: .6rem;
+}
+.ai-showcase-sub {
+  font-size: .9375rem; font-style: italic;
+  color: var(--muted); max-width: 580px; margin-bottom: 3rem;
+}
+.ai-showcase-cols {
+  display: grid;
+  grid-template-columns: 1fr 260px;
+  gap: 3rem;
+  align-items: start;
+  margin-bottom: 2.5rem;
+}
+@media (max-width: 720px) {
+  .ai-showcase-cols { grid-template-columns: 1fr; }
+}
+.ai-canvas-panel { display: flex; flex-direction: column; gap: 0; }
+.ai-canvas-eyebrow {
+  font-family: 'Cinzel', serif; font-size: .58rem; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: .875rem;
+}
+.ai-flow-wrap {
+  border: 1px solid var(--rule);
+  background: rgba(255,255,255,0.018);
+  padding: 1.5rem 1rem 1rem;
+  margin-bottom: 1.5rem;
+}
+#razorCanvas { width: 100%; display: block; }
+.ai-flow-label {
+  text-align: center; font-family: 'Cinzel', serif;
+  font-size: .6rem; letter-spacing: .12em; text-transform: uppercase;
+  color: rgba(232,112,26,.6); margin-top: .75rem;
+}
+.ai-tools-label {
+  font-family: 'Cinzel', serif; font-size: .58rem; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: .875rem; margin-top: .25rem;
+}
+.ai-tools-grid { display: flex; flex-wrap: wrap; gap: .5rem; }
+.ai-tool-chip {
+  display: flex; align-items: center; gap: .45rem;
+  padding: .3rem .65rem;
+  border: 1px solid var(--rule);
+  background: rgba(232,112,26,.06);
+  font-family: 'Cinzel', serif; font-size: .62rem; color: var(--muted);
+  letter-spacing: .02em;
+}
+.ai-tool-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--orange); flex-shrink: 0;
+  animation: aiChipPulse 2.4s ease-in-out infinite;
+}
+.ai-tool-chip:nth-child(2) .ai-tool-dot { animation-delay: .3s; }
+.ai-tool-chip:nth-child(3) .ai-tool-dot { animation-delay: .6s; }
+.ai-tool-chip:nth-child(4) .ai-tool-dot { animation-delay: .9s; }
+.ai-tool-chip:nth-child(5) .ai-tool-dot { animation-delay: 1.2s; }
+.ai-tool-chip:nth-child(6) .ai-tool-dot { animation-delay: 1.5s; }
+.ai-tool-chip:nth-child(7) .ai-tool-dot { animation-delay: 1.8s; }
+.ai-tool-chip:nth-child(8) .ai-tool-dot { animation-delay: 2.1s; }
+.ai-tool-chip:nth-child(9) .ai-tool-dot { animation-delay: 2.4s; }
+@keyframes aiChipPulse {
+  0%, 100% { opacity: .35; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.5); }
+}
+.ai-stat-row {
+  display: flex; gap: 2.5rem; flex-wrap: wrap;
+  border-top: 1px solid var(--rule);
+  padding-top: 2rem; margin-top: .5rem;
+}
+.ai-stat { display: flex; flex-direction: column; gap: .2rem; }
+.ai-stat-num {
+  font-family: 'Cinzel', serif; font-size: 2rem; font-weight: 700;
+  color: var(--orange); line-height: 1;
+}
+.ai-stat-lbl {
+  font-family: 'Cinzel', serif; font-size: .58rem; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted);
+}
+
+/* Phone mockup */
+.ai-phone-wrap { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+.ai-phone-eyebrow {
+  font-family: 'Cinzel', serif; font-size: .58rem; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--muted); align-self: flex-start;
+}
+.ai-phone {
+  width: 230px; background: #1a1a1a; border-radius: 38px;
+  padding: 14px 10px 20px; border: 2px solid #2a2a2a;
+  box-shadow: 0 0 0 1px #111, 0 0 0 7px #0a0a0a,
+    0 28px 64px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.06);
+  flex-shrink: 0;
+}
+.ai-phone-notch {
+  width: 80px; height: 6px; background: #000;
+  border-radius: 3px; margin: 0 auto 8px;
+}
+.ai-phone-screen {
+  background: #000; border-radius: 26px;
+  overflow: hidden; min-height: 380px;
+  display: flex; flex-direction: column;
+}
+.ai-tg-header {
+  background: #1f1f1f; padding: .55rem .8rem;
+  display: flex; align-items: center; gap: .5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.ai-tg-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: linear-gradient(135deg, #E8701A, #c05010);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: white;
+  font-family: sans-serif; flex-shrink: 0;
+}
+.ai-tg-name { font-size: 10px; font-weight: 600; color: #fff; font-family: sans-serif; }
+.ai-tg-status { font-size: 8px; color: #5ac97e; font-family: sans-serif; }
+.ai-tg-body { flex: 1; padding: .6rem .7rem; display: flex; flex-direction: column; gap: .4rem; }
+.ai-tg-bubble {
+  background: #1f2937; border-radius: 12px 12px 12px 3px;
+  padding: .55rem .7rem; font-size: 8.5px; line-height: 1.55;
+  color: #e2e8f0; font-family: 'SF Mono', 'Courier New', monospace;
+  white-space: pre; max-width: 100%; word-break: break-word;
+}
+.ai-tg-time { font-size: 7px; color: #666; font-family: sans-serif; text-align: right; margin-top: 2px; }
+.ai-cursor {
+  display: inline-block; width: 5px; height: 9px;
+  background: var(--orange); animation: aiBlink .8s step-end infinite;
+  vertical-align: text-bottom; margin-left: 1px;
+}
+@keyframes aiBlink { 50% { opacity: 0; } }
+
+/* Query carousel */
+.ai-queries-section {
+  border-top: 1px solid var(--rule);
+  padding: 3.5rem 5vw 4rem;
+  background: rgba(255,255,255,0.012);
+}
+.ai-queries-header {
+  display: flex; align-items: baseline; justify-content: space-between;
+  flex-wrap: wrap; gap: 1rem; margin-bottom: 2.75rem;
+}
+.ai-queries-header-left { display: flex; flex-direction: column; gap: .5rem; }
+.ai-queries-title {
+  font-family: 'Cinzel', serif; font-size: clamp(1rem, 2vw, 1.4rem);
+  font-weight: 600; color: var(--cream); letter-spacing: .02em;
+}
+.ai-queries-sub { font-size: .875rem; font-style: italic; color: var(--muted); max-width: 520px; }
+.ai-queries-dots { display: flex; gap: .5rem; align-items: center; flex-shrink: 0; }
+.ai-q-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(232,112,26,0.25);
+  cursor: pointer; transition: background .2s, transform .2s;
+}
+.ai-q-dot.active { background: var(--orange); transform: scale(1.4); }
+.ai-query-stage { position: relative; min-height: 220px; }
+.ai-query-card {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; gap: 0;
+  opacity: 0; transition: opacity .5s ease; pointer-events: none;
+}
+.ai-query-card.visible { opacity: 1; pointer-events: auto; }
+.ai-qcard-inner {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0; border: 1px solid var(--rule); min-height: 200px;
+}
+@media (max-width: 640px) { .ai-qcard-inner { grid-template-columns: 1fr; } }
+.ai-qcard-left {
+  padding: 2rem 2.25rem; border-right: 1px solid var(--rule);
+  display: flex; flex-direction: column; gap: 1rem;
+  position: relative; overflow: hidden;
+}
+.ai-qcard-left::before {
+  content: ''; position: absolute; top: 0; left: 0;
+  width: 3px; height: 100%; background: var(--orange); opacity: .7;
+}
+.ai-qcard-tag {
+  font-family: 'Cinzel', serif; font-size: .56rem; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--orange);
+}
+.ai-qcard-query {
+  font-size: 1.05rem; color: var(--cream);
+  line-height: 1.5; font-style: italic;
+  font-family: 'EB Garamond', serif;
+}
+.ai-qcard-query::before { content: '\201C'; }
+.ai-qcard-query::after  { content: '\201D'; }
+.ai-qcard-who {
+  font-family: 'Cinzel', serif; font-size: .62rem; letter-spacing: .06em;
+  color: var(--muted); text-transform: uppercase; margin-top: auto;
+}
+.ai-qcard-right {
+  padding: 2rem 2.25rem;
+  display: flex; flex-direction: column; gap: .875rem;
+  background: rgba(232,112,26,.025);
+}
+.ai-qcard-result-label {
+  font-family: 'Cinzel', serif; font-size: .56rem; letter-spacing: .16em;
+  text-transform: uppercase; color: rgba(232,112,26,.5);
+}
+.ai-qcard-result {
+  font-size: .9rem; color: rgba(242,235,218,.8);
+  line-height: 1.65; font-family: 'EB Garamond', serif;
+}
+.ai-qcard-result strong { color: var(--cream); font-weight: 700; font-style: normal; }
+.ai-qcard-stat {
+  margin-top: auto; padding-top: .875rem;
+  border-top: 1px solid var(--rule);
+  font-size: .78rem; color: var(--muted);
+  font-family: 'EB Garamond', serif; font-style: italic;
+}
+.ai-queries-nav {
+  display: flex; justify-content: space-between; align-items: center; margin-top: 1.25rem;
+}
+.ai-q-nav-btn {
+  background: none; border: 1px solid var(--rule);
+  color: var(--muted); padding: .4rem .9rem;
+  cursor: pointer; font-family: 'Cinzel', serif; font-size: .72rem;
+  transition: border-color .2s, color .2s;
+}
+.ai-q-nav-btn:hover { border-color: rgba(232,112,26,.4); color: var(--cream); }
+.ai-q-counter {
+  font-family: 'Cinzel', serif; font-size: .62rem; letter-spacing: .1em;
+  color: var(--muted); text-transform: uppercase;
+}
+</style>
+</head>
+<body>
+
+<!-- ── PASSWORD GATE ── -->
+<div class="pw-gate" id="pw-gate" role="dialog" aria-modal="true" aria-label="Enter password">
+  <div class="pw-inner">
+    <svg class="pw-logo" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <radialGradient id="og-pw" cx="50%" cy="42%" r="58%" gradientUnits="objectBoundingBox">
+          <stop offset="0%" stop-color="#CC5428"/><stop offset="100%" stop-color="#7A2E10"/>
+        </radialGradient>
+        <filter id="c-pw" x="-12%" y="-12%" width="124%" height="124%" color-interpolation-filters="sRGB">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="b"/>
+          <feDiffuseLighting in="b" lighting-color="#8a6040" surfaceScale="-7" diffuseConstant="1.9" result="l">
+            <feDistantLight azimuth="135" elevation="38"/>
+          </feDiffuseLighting>
+          <feComposite in="l" in2="SourceAlpha" operator="in" result="lm"/>
+          <feBlend in="SourceGraphic" in2="lm" mode="hard-light" result="bl"/>
+          <feComposite in="bl" in2="SourceAlpha" operator="in"/>
+        </filter>
+      </defs>
+      <polygon points="200,10 364.54,105 364.54,295 200,390 35.46,295 35.46,105" fill="#0a0a0a"/>
+      <polygon points="200,18 357.61,109 357.61,291 200,382 42.39,291 42.39,109" fill="url(#og-pw)"/>
+      <path d="M302.19,141 L200,82 L97.81,141 L97.81,259 L200,318 L302.19,259 L302.19,239 L267.55,239 L200,278 L132.45,239 L132.45,161 L200,122 L267.55,161 L302.19,161 Z" fill="#235023" filter="url(#c-pw)"/>
+    </svg>
+    <div class="pw-heading">Focus Forum 2027</div>
+    <p class="pw-sub">Attendee access only</p>
+    <input class="pw-input" id="pw-input" type="text" placeholder="Password" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false"/>
+    <button class="pw-btn" id="pw-btn">Enter &rarr;</button>
+    <div class="pw-error" id="pw-error">Incorrect password</div>
+  </div>
+</div>
+
+<a href="#main" class="skip-link">Skip to content</a>
+
+<!-- ── NAV ── -->
+<nav id="nav" aria-label="Main navigation">
+  <a href="/" class="nav-mark" aria-label="Cooper's Consulting — home">
+    <svg class="nav-hex" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <radialGradient id="og-ff" cx="50%" cy="42%" r="58%" gradientUnits="objectBoundingBox">
+          <stop offset="0%" stop-color="#CC5428"/>
+          <stop offset="100%" stop-color="#7A2E10"/>
+        </radialGradient>
+        <filter id="c-engrave-ff" x="-12%" y="-12%" width="124%" height="124%" color-interpolation-filters="sRGB">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="4" result="bmap"/>
+          <feDiffuseLighting in="bmap" lighting-color="#8a6040" surfaceScale="-7" diffuseConstant="1.9" result="lit">
+            <feDistantLight azimuth="135" elevation="38"/>
+          </feDiffuseLighting>
+          <feComposite in="lit" in2="SourceAlpha" operator="in" result="litMask"/>
+          <feBlend in="SourceGraphic" in2="litMask" mode="hard-light" result="blended"/>
+          <feComposite in="blended" in2="SourceAlpha" operator="in"/>
+        </filter>
+      </defs>
+      <polygon points="200,10 364.54,105 364.54,295 200,390 35.46,295 35.46,105" fill="#0a0a0a"/>
+      <polygon points="200,18 357.61,109 357.61,291 200,382 42.39,291 42.39,109" fill="url(#og-ff)"/>
+      <path d="M302.19,141 L200,82 L97.81,141 L97.81,259 L200,318 L302.19,259 L302.19,239 L267.55,239 L200,278 L132.45,239 L132.45,161 L200,122 L267.55,161 L302.19,161 Z" fill="#235023" filter="url(#c-engrave-ff)"/>
+    </svg>
+    <span class="nav-wordmark">
+      Cooper's Consulting
+      <span class="nav-sub">Focus Forum 2027</span>
+    </span>
+  </a>
+  <ul class="nav-links" role="list">
+    <li><a href="#schedule">Schedule</a></li>
+    <li><a href="#materials">Materials</a></li>
+    <li><a href="#ids">IDS</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#people">People</a></li>
+    <li><a href="#ai">AI Features</a></li>
+    <li><a href="#explore">Explore</a></li>
+    <li><a href="#logistics">Logistics</a></li>
+    <li><a href="#feedback">Feedback</a></li>
+    <li><a href="#pay" class="nav-pay">Pay</a></li>
+  </ul>
+  <button class="nav-burger" id="burger-btn" aria-expanded="false" aria-controls="nav-overlay" aria-label="Open navigation menu">
+    <svg width="26" height="17" viewBox="0 0 26 17" fill="none" aria-hidden="true">
+      <line x1="0" y1="1"  x2="26" y2="1"  stroke="#F2EBDA" stroke-width="1.5"/>
+      <line x1="0" y1="8.5" x2="26" y2="8.5" stroke="#F2EBDA" stroke-width="1.5"/>
+      <line x1="0" y1="16" x2="26" y2="16" stroke="#F2EBDA" stroke-width="1.5"/>
+    </svg>
+  </button>
+</nav>
+
+<div id="nav-overlay" class="nav-overlay" role="dialog" aria-modal="true" aria-label="Navigation menu">
+  <button id="overlay-close" class="overlay-close" aria-label="Close menu">✕</button>
+  <a href="#schedule">Schedule</a>
+  <a href="#materials">Materials</a>
+  <a href="#ids">IDS</a>
+  <a href="#gallery">Gallery</a>
+  <a href="#people">People</a>
+  <a href="#ai">AI Features</a>
+  <a href="#explore">Explore</a>
+  <a href="#logistics">Logistics</a>
+  <a href="#feedback">Feedback</a>
+  <a href="#pay">Pay</a>
+</div>
+
+<!-- ── NOW BANNER ── -->
+<div id="now-banner" class="now-banner hidden" role="status" aria-live="polite">
+  <div class="nb-current">
+    <div class="nb-pip"><span class="pip-dot"></span><span id="nb-now-label">Now</span></div>
+    <div class="nb-title" id="nb-now-title"></div>
+    <div class="nb-meta" id="nb-now-meta"></div>
+  </div>
+  <div class="nb-next" id="nb-next-col">
+    <div class="nb-pip"><span class="pip-dot"></span><span>Up Next</span></div>
+    <div class="nb-title" id="nb-next-title"></div>
+    <div class="nb-meta" id="nb-next-meta"></div>
+  </div>
+</div>
+
+<div class="page-frame">
+
+<!-- ── HERO ── -->
+<section class="hero" id="main">
+  <div class="hero-inner">
+    <p class="hero-kicker">You're In &nbsp;&middot;&nbsp; Cooper's Consulting Presents</p>
+    <img src="images/logo-forum.png" alt="Focus Forum 2027" class="hero-logo"/>
+    <p class="hero-date">2027 &mdash; Date TBD</p>
+    <p class="hero-venue">Hyatt Regency at The Arch &nbsp;&middot;&nbsp; St. Louis, Missouri</p>
+  </div>
+
+  <div class="quick-ref" role="complementary" aria-label="Quick reference">
+    <div class="qr-cell">
+      <div class="qr-label">Sessions Begin</div>
+      <div class="qr-value">8:00 AM</div>
+      <div class="qr-sub">Breakfast from 7:00–8:00 AM</div>
+    </div>
+    <div class="qr-cell">
+      <div class="qr-label">Main Room</div>
+      <div class="qr-value">Gateway East</div>
+      <div class="qr-sub">Meals &amp; breakouts: Gateway West</div>
+    </div>
+    <div class="qr-cell">
+      <div class="qr-label">Questions? Call Joel</div>
+      <div class="qr-value"><a href="tel:5737604007">573.760.4007</a></div>
+      <div class="qr-sub">Joel Cooper, Coordinator</div>
+    </div>
+    <div class="qr-cell">
+      <div class="qr-label">Attendee Group</div>
+      <div class="qr-value" style="font-size:.85rem;letter-spacing:.03em;">WhatsApp Community</div>
+      <a href="https://chat.whatsapp.com/DfqVSaCDkCNAsK6UI6zoj5" target="_blank" rel="noopener" class="qr-btn">Join Group &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<div class="duality-rule"></div>
+
+<!-- ── STL LIVE BAR ── -->
+<div class="stl-live-bar">
+  <div class="slb-cell">
+    <div class="slb-label"><span class="slb-live-dot"></span>St. Louis</div>
+    <div class="slb-value" id="slb-weather">—</div>
+  </div>
+  <div class="slb-cell">
+    <div class="slb-label"><span class="slb-live-dot"></span>Cardinals</div>
+    <div class="slb-value" id="slb-cards">—</div>
+  </div>
+  <div class="slb-cell">
+    <div class="slb-label">Arch Tram</div>
+    <div class="slb-value" id="slb-arch">—</div>
+  </div>
+</div>
+
+<!-- ── SCHEDULE ── -->
+<section class="sect sect-b" id="schedule">
+  <div class="schedule-header">
+    <div class="sect-label">The Agenda</div>
+    <h2>Full Schedule</h2>
+    <p>All sessions in Gateway East. Breakfast and lunch in Gateway West.</p>
+  </div>
+
+  <div class="sched-eve">
+    <div class="sched-day-label">Wednesday Evening &nbsp;&middot;&nbsp; June 17</div>
+    <div class="session">
+      <div class="sess-time">7:00–9:00 PM</div>
+      <div class="sess-body">
+        <div class="sess-title">Welcome Cocktail Hour</div>
+        <div class="sess-speaker">Full bar &amp; hors d'oeuvres</div>
+        <div class="sess-room">The Terrace &nbsp;&middot;&nbsp; 18th Floor</div>
+        <img class="terrace-img" src="images/Gateway-Terrace-at-Night-1000x660.jpg" alt="The Terrace — Hyatt Regency St. Louis at The Arch"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="day-tabs" role="tablist">
+    <button class="day-tab" id="tab-d1" role="tab" aria-selected="false" aria-controls="panel-d1" onclick="switchDay(1)">Day 1 &nbsp;&middot;&nbsp; June 18</button>
+    <button class="day-tab" id="tab-d2" role="tab" aria-selected="false" aria-controls="panel-d2" onclick="switchDay(2)">Day 2 &nbsp;&middot;&nbsp; June 19</button>
+  </div>
+
+  <div class="day-panel" id="panel-d1" role="tabpanel" aria-labelledby="tab-d1">
+    <div class="session" data-sid="d1-0">
+      <div class="sess-time">7:00–8:00 AM</div>
+      <div class="sess-body">
+        <div class="sess-title">Breakfast</div>
+        <div class="sess-room">Gateway West</div>
+      </div>
+    </div>
+    <div class="session" data-sid="d1-1">
+      <div class="sess-time">8:00 AM</div>
+      <div class="sess-body">
+        <div class="sess-title">Opening &amp; Ice Breaker</div>
+        <div class="sess-speaker">Dale Cooper</div>
+        <span class="sess-tag">Interview a Stranger</span>
+        <div class="sess-room">Gateway East</div>
+      </div>
+    </div>
+    <div class="session" data-sid="d1-2">
+      <div class="sess-time">9:00 AM</div>
+      <div class="sess-body">
+        <div class="sess-title">Reignite the SPARK: Build a 10/10 Relationship That Fuels Everything Else</div>
+        <div class="sess-speaker">Adam &amp; Marie Hill</div>
+        <span class="sess-tag">Couples Workshop</span>
+        <div class="sess-room">Gateway East</div>
+      </div>
+    </div>
+    <div class="session" data-sid="d1-3">
+      <div class="sess-time">10:00–10:30 AM</div>
+      <div class="sess-body">
+        <div class="sess-title">Break</div>
+      </div>
+    </div>
+    <div class="session" data-sid="d1-4">
+      <div class="sess-time">10:30 AM</div>
+      <div class="sess-body">
+        <div class="sess-title">Emotional Intelligence</div>
+        <div class="sess-speaker">Marcus Truman</div>
+        <div class="sess-room">Gateway East</div>
+      </div>
+    </div>
+    <div class="session" data-sid="d1-5">
+      <div class="sess-time">11:30 AM</div>
+      <div class="sess-body">
+        <div class="sess-title">Lunch &nbsp;&middot;&nbsp; The Hill Menu</div>
+        <div class="sess-room">Gateway West</div>
+      </div>
+    </div>
+    <div class="session" data-sid="d1-6">
+      <div class="sess-time">1:00 PM</div>
+      <div class="sess-body">
+        <div class="sess-title">EOS Panel</div>
+        <div class="sess-speaker">Adam Hill &nbsp;&middot;&nbsp; Ben Kelley &nbsp;&middot;&nbsp; Dale Cooper</div>
+        <span class="sess-tag">Panel</span>
+        <div class="sess-room">Gateway East</div>
+      </div>
+    </div>
+    <div class="session" data-sid="d1-7">
+      <div class="sess-time">2:00 PM</div>
+      <div class="sess-body">
+        <div class="sess-title">Visionary / Integrator Breakout</div>
+        <div class="sess-speaker">Greg Rogers &nbsp;&middot;&nbsp; Bailey Gilder</div>
+        <span class="sess-tag">Breakout</span>
+        <div class="sess-room">Gateway East &amp; West</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="day-panel" id="panel-d2" role="tabpanel" aria-labelledby="tab-d2">
+    <div class="session" data-sid="d2-0">
+      <div class="sess-time">7:00–8:00 AM</div>
+      <div class="sess-body">
+        <div class="sess-title">Breakfast</div>
+        <div class="sess-room">Gateway West</div>
+      </div>
+    </div>
+    <div class="session" data-sid="d2-1">
+      <div class="sess-time">8:00 AM</div>
+      <div class="sess-body">
+        <div class="sess-title">The Healthy Visionary</div>
+        <div class="sess-speaker">Dale Cooper</div>
+        <div class="sess-room">Gateway East</div>
+      </div>
+    </div>
+    <div class="session" data-sid="d2-2">
+      <div class="sess-time">9:00 AM</div>
+      <div class="sess-body">
+        <div class="sess-title">How to Make Your Kids Hate You</div>
+        <div class="sess-speaker">Mark McMullin</div>
+        <span class="sess-tag">Legacy Planning</span>
+        <div class="sess-room">Gateway East</div>
+      </div>
+    </div>
+    <div class="session" data-sid="d2-3">
+      <div class="sess-time">10:00–10:30 AM</div>
+      <div class="sess-body">
+        <div class="sess-title">Break</div>
+      </div>
+    </div>
+    <div class="session" data-sid="d2-4">
+      <div class="sess-time">10:30 AM</div>
+      <div class="sess-body">
+        <div class="sess-title">The VTO Flight Path: Launching Bold Vision and Creative Ascent</div>
+        <div class="sess-speaker">Ben Kelley</div>
+        <div class="sess-room">Gateway East</div>
+      </div>
+    </div>
+    <div class="session" data-sid="d2-5">
+      <div class="sess-time">11:30 AM</div>
+      <div class="sess-body">
+        <div class="sess-title">Lunch &nbsp;&middot;&nbsp; Soulard Menu</div>
+        <div class="sess-room">Gateway West</div>
+      </div>
+    </div>
+    <div class="session" data-sid="d2-6">
+      <div class="sess-time">1:00 PM</div>
+      <div class="sess-body">
+        <div class="sess-title">The New Co-Worker: Integrating AI Without Losing the Human Touch</div>
+        <div class="sess-speaker">Alan Thomas &nbsp;&middot;&nbsp; Caleb Jones</div>
+        <span class="sess-tag">AI Panel</span>
+        <div class="sess-room">Gateway East</div>
+      </div>
+    </div>
+    <div class="session" data-sid="d2-7">
+      <div class="sess-time">2:00 PM</div>
+      <div class="sess-body">
+        <div class="sess-title">Charity &amp; Close</div>
+        <div class="sess-speaker">Mary Wilkinson &nbsp;&middot;&nbsp; Hope Center Indy</div>
+        <div class="sess-room">Gateway East</div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ── MATERIALS ── -->
+<section class="sect sect-a" id="materials">
+  <div class="mat-header">
+    <div class="sect-label">Session Materials</div>
+    <h2>Downloads &amp; Docs</h2>
+    <p>Slide decks and handouts added here as sessions complete. Menu always available below.</p>
+    <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-top:.5rem">
+      <a href="menu.pdf" target="_blank" rel="noopener" class="mat-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Conference Menu (PDF)
+      </a>
+      <a href="menu.html" target="_blank" rel="noopener" class="mat-link" style="color:rgba(242,235,218,.5);border-color:rgba(242,235,218,.18)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        View as Page
+      </a>
+    </div>
+  </div>
+
+  <div class="mat-day-label">Day One &nbsp;&middot;&nbsp; June 18</div>
+
+  <div class="mat-row" data-sid="d1-1">
+    <div class="mat-sess-name">Opening &amp; Ice Breaker<div class="mat-sess-speaker">Dale Cooper</div></div>
+    <div class="mat-links"><span class="mat-empty">Link coming</span></div>
+  </div>
+  <div class="mat-row" data-sid="d1-2">
+    <div class="mat-sess-name">Reignite the SPARK<div class="mat-sess-speaker">Adam &amp; Marie Hill</div></div>
+    <div class="mat-links">
+      <a href="https://game.estherperel.com/products/where-should-we-begin-a-game-of-stories-2nd-edition" target="_blank" rel="noopener" class="mat-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Where Should We Begin — Esther Perel
+      </a>
+      <a href="https://www.amazon.com/gp/product/1544508123" target="_blank" rel="noopener" class="mat-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Vivid Vision — Cameron Herold
+      </a>
+      <a href="https://www.startupspouses.co/free-workbook-download" target="_blank" rel="noopener" class="mat-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Weekly Connection Workbook — Startup Spouses
+      </a>
+    </div>
+  </div>
+  <div class="mat-row" data-sid="d1-4">
+    <div class="mat-sess-name">Emotional Intelligence<div class="mat-sess-speaker">Marcus Truman</div></div>
+    <div class="mat-links">
+      <a href="https://drive.google.com/file/d/15_HEHwO_1zr2w6k8Sbt3uUH8W220YPyX/view?usp=drivesdk" target="_blank" rel="noopener" class="mat-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Tactical EQ Slides — Coach T
+      </a>
+      <a href="https://www.amazon.com/Emotional-Intelligence-2-0-Travis-Bradberry/dp/0974320625" target="_blank" rel="noopener" class="mat-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Emotional Intelligence 2.0 — Travis Bradberry
+      </a>
+      <a href="https://www.amazon.com/Emotional-Intelligence-Habits-Travis-Bradberry/dp/0974719374" target="_blank" rel="noopener" class="mat-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Emotional Intelligence Habits — Travis Bradberry
+      </a>
+    </div>
+  </div>
+  <div class="mat-row" data-sid="d1-6">
+    <div class="mat-sess-name">EOS Panel<div class="mat-sess-speaker">Hill &nbsp;&middot;&nbsp; Kelley &nbsp;&middot;&nbsp; Cooper</div></div>
+    <div class="mat-links">
+      <a href="https://www.amazon.com/Culture-Code-Secrets-Highly-Successful/dp/0804176981" target="_blank" rel="noopener" class="mat-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        The Culture Code — Daniel Coyle
+      </a>
+    </div>
+  </div>
+  <div class="mat-row" data-sid="d1-7">
+    <div class="mat-sess-name">Visionary / Integrator Breakout<div class="mat-sess-speaker">Greg Rogers &nbsp;&middot;&nbsp; Bailey Gilder</div></div>
+    <div class="mat-links">
+      <a href="https://www.amazon.com/Rocket-Fuel-Essential-Combination-Business/dp/1942952317" target="_blank" rel="noopener" class="mat-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Rocket Fuel — Wickman &amp; Winters
+      </a>
+      <a href="https://www.amazon.com/dp/B09BK342ZW" target="_blank" rel="noopener" class="mat-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Crucial Conversations — Patterson et al.
+      </a>
+    </div>
+  </div>
+
+  <div class="mat-day-label">Day Two &nbsp;&middot;&nbsp; June 19</div>
+
+  <div class="mat-row" data-sid="d2-1">
+    <div class="mat-sess-name">The Healthy Visionary<div class="mat-sess-speaker">Dale Cooper</div></div>
+    <div class="mat-links"><span class="mat-empty">Nothing yet</span></div>
+  </div>
+  <div class="mat-row" data-sid="d2-2">
+    <div class="mat-sess-name">How to Make Your Kids Hate You<div class="mat-sess-speaker">Mark McMullin</div></div>
+    <div class="mat-links">
+      <a href="https://www.amazon.com/Entrusted-Building-Legacy-That-Lasts/dp/0692558268" target="_blank" rel="noopener" class="mat-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Entrusted — Howell &amp; York
+      </a>
+    </div>
+  </div>
+  <div class="mat-row" data-sid="d2-4">
+    <div class="mat-sess-name">The VTO Flight Path<div class="mat-sess-speaker">Ben Kelley</div></div>
+    <div class="mat-links"><span class="mat-empty">Link coming</span></div>
+  </div>
+  <div class="mat-row" data-sid="d2-6">
+    <div class="mat-sess-name">AI Panel: The New Co-Worker<div class="mat-sess-speaker">Alan Thomas &nbsp;&middot;&nbsp; Caleb Jones Shibu</div></div>
+    <div class="mat-links"><span class="mat-empty">Nothing yet</span></div>
+  </div>
+  <div class="mat-row" data-sid="d2-7">
+    <div class="mat-sess-name">Charity &amp; Close<div class="mat-sess-speaker">Mary Wilkinson</div></div>
+    <div class="mat-links"><span class="mat-empty">Nothing yet</span></div>
+  </div>
+</section>
+
+<!-- ── IDS LIST ── -->
+<section class="sect sect-a" id="ids">
+  <div class="sect-label">Identify · Discuss · Solve</div>
+  <h2>IDS List</h2>
+  <p style="font-size:.9375rem;color:var(--muted);margin-bottom:2rem;">Issues captured during Focus Forum 2027. Tap any issue to mark it solved.</p>
+  <ol class="ids-list" id="ids-list">
+    <li class="ids-item" data-id="1">
+      <span class="ids-num">1</span>
+      <div class="ids-body">
+        <div class="ids-title">Marketing that resonates with my clientele</div>
+        <div class="ids-owner">Who — unknown</div>
+      </div>
+      <span class="ids-solved-badge">Solved</span>
+    </li>
+    <li class="ids-item" data-id="2">
+      <span class="ids-num">2</span>
+      <div class="ids-body">
+        <div class="ids-title">Developing a shared vision with my 3 partners</div>
+        <div class="ids-owner">Who — Eric Meyer</div>
+      </div>
+      <span class="ids-solved-badge">Solved</span>
+    </li>
+    <li class="ids-item" data-id="3">
+      <span class="ids-num">3</span>
+      <div class="ids-body">
+        <div class="ids-title">People are worried about becoming irrelevant / left behind as we embrace change</div>
+        <div class="ids-owner">Who — Bailey Gilder</div>
+      </div>
+      <span class="ids-solved-badge">Solved</span>
+    </li>
+    <li class="ids-item" data-id="4">
+      <span class="ids-num">4</span>
+      <div class="ids-body">
+        <div class="ids-title">Too big of a vision — too many irons in the fire; afraid of losing control of growth</div>
+        <div class="ids-owner">Who — Levi Kinnard</div>
+      </div>
+      <span class="ids-solved-badge">Solved</span>
+    </li>
+    <li class="ids-item" data-id="5">
+      <span class="ids-num">5</span>
+      <div class="ids-body">
+        <div class="ids-title">Overly dependent on a single person — Mark at one location, Billy at the other</div>
+        <div class="ids-owner">Who — Mark McMullin</div>
+      </div>
+      <span class="ids-solved-badge">Solved</span>
+    </li>
+    <li class="ids-item" data-id="6">
+      <span class="ids-num">6</span>
+      <div class="ids-body">
+        <div class="ids-title">Overly dependent on a single person</div>
+        <div class="ids-owner">Who — Troy Wilkinson</div>
+      </div>
+      <span class="ids-solved-badge">Solved</span>
+    </li>
+    <li class="ids-item" data-id="7">
+      <span class="ids-num">7</span>
+      <div class="ids-body">
+        <div class="ids-title">Decision fatigue — too many people seeking affirmation; need to teach people to decide on their own</div>
+        <div class="ids-owner">Who — Zac Abell</div>
+      </div>
+      <span class="ids-solved-badge">Solved</span>
+    </li>
+  </ol>
+</section>
+
+<!-- ── SPEAKERS ── -->
+<section class="sect sect-a" id="speakers">
+  <div class="speakers-header">
+    <div class="sect-label">The Speakers</div>
+    <h2>Featured Voices</h2>
+    <p>The people in front of the room — and what they're bringing to it.</p>
+  </div>
+  <div class="speakers-grid">
+
+    <div class="speaker-card">
+      <div class="speaker-avatar">
+        <img src="https://safeslide.com/wp-content/uploads/2024/08/DaleCooper-1024x1024.png" alt="Dale Cooper" style="width:100%;height:100%;object-fit:cover;object-position:top center;display:block;"/>
+      </div>
+      <div class="speaker-name">Dale Cooper</div>
+      <div class="speaker-role">Founder &nbsp;&middot;&nbsp; Safe Slide Restoration &amp; Cooper's Consulting</div>
+      <span class="speaker-session-tag">Opening &nbsp;&middot;&nbsp; Healthy Visionary &nbsp;&middot;&nbsp; EOS Panel &nbsp;&middot;&nbsp; MC</span>
+      <p class="speaker-bio">Dale built Safe Slide Restoration over thirty years from a regional outfit into a global operation — 400+ projects a year, an industry-recognized training program, and clients spanning waterparks on every continent. He also founded Cherrywood Farm &amp; Golf Club. The Focus Forum was his idea, built for the business owners he's watched grind without the right framework for far too long. Husband to Cherry, father of 12.</p>
+    </div>
+
+    <div class="speaker-card">
+      <div class="speaker-avatar">
+        <img src="images/adam-marie-hill.jpg" alt="Adam &amp; Marie Hill" style="width:100%;height:100%;object-fit:cover;object-position:top center;display:block;"/>
+      </div>
+      <div class="speaker-name">Adam &amp; Marie Hill</div>
+      <div class="speaker-role">Professional EOS Implementer</div>
+      <span class="speaker-session-tag">Day One &nbsp;&middot;&nbsp; SPARK Session &nbsp;&middot;&nbsp; EOS Panel</span>
+      <p class="speaker-bio">Marie is a Relationship &amp; Intimacy Coach who works with high-performing couples navigating the specific pressures that ambition puts on a marriage. Adam is a former fourth-generation CEO who scaled to 9 figures and grew revenue by $40M within two years of running EOS — and an Ironman finisher. Together they built the SPARK framework: a practical system for couples who lead together to rebuild trust, communicate honestly, and build a shared vision that actually holds up under the weight of a real business.</p>
+    </div>
+
+    <div class="speaker-card">
+      <div class="speaker-avatar">
+        <img src="https://implementer.eosworldwide.com/wp-content/uploads/2026/04/Ben-blue-shirt-headshot.jpg" alt="Ben Kelley" style="width:100%;height:100%;object-fit:cover;object-position:top center;display:block;"/>
+      </div>
+      <div class="speaker-name">Ben Kelley</div>
+      <div class="speaker-role">Certified EOS Implementer</div>
+      <span class="speaker-session-tag">Day Two &nbsp;&middot;&nbsp; VTO Flight Path &nbsp;&middot;&nbsp; EOS Panel</span>
+      <p class="speaker-bio">5+ years guiding leadership teams through EOS. Ben's background spans product design, real estate, and running a design company — a practitioner's lens on the same challenges his clients face. His focus: helping owners work less in the business and earn more, without burning out.</p>
+    </div>
+
+    <div class="speaker-card">
+      <div class="speaker-avatar">
+        <img src="https://kajabi-storefronts-production.kajabi-cdn.com/kajabi-storefronts-production/file-uploads/themes/2160956438/settings_images/2f23445-3c2-165c-d3e8-c8016dec4e_Marcus-Truman.png" alt="Marcus Truman" style="width:100%;height:100%;object-fit:cover;object-position:top center;display:block;"/>
+      </div>
+      <div class="speaker-name">Marcus Truman</div>
+      <div class="speaker-role">Leadership Performance Coach &nbsp;&middot;&nbsp; Archangel Performance</div>
+      <span class="speaker-session-tag">Day One &nbsp;&middot;&nbsp; Emotional Intelligence</span>
+      <p class="speaker-bio">Former Special Warfare leader with two decades of military service. Marcus coaches elite performers on mental resilience, emotional strength, and leading without losing yourself. He doesn't coach from theory — he coaches from the fire.</p>
+    </div>
+
+    <div class="speaker-card">
+      <div class="speaker-avatar">
+        <img src="https://capegirardeaulaw.com/wp-content/uploads/Cape-Girardeau-Missouri-Attorney-Mark-McMullin.jpg" alt="Mark McMullin" style="width:100%;height:100%;object-fit:cover;object-position:top center;display:block;"/>
+      </div>
+      <div class="speaker-name">Mark McMullin</div>
+      <div class="speaker-role">Attorney at Law &nbsp;&middot;&nbsp; Estate Planning &amp; Elder Law</div>
+      <span class="speaker-session-tag">Day Two &nbsp;&middot;&nbsp; Legacy Planning</span>
+      <p class="speaker-bio">Founder of the Law Office of Mark McMullin in Cape Girardeau, MO. Mark began in finance before pursuing law at Mizzou — finding his calling in estate planning. He helps people be intentional about what happens to them, their family, and everything they've worked to build.</p>
+    </div>
+
+    <div class="speaker-card">
+      <div class="speaker-avatar">
+        <img src="https://github.com/alanchrt.png" alt="Alan Thomas" style="width:100%;height:100%;object-fit:cover;object-position:top center;display:block;"/>
+      </div>
+      <div class="speaker-name">Alan Thomas</div>
+      <div class="speaker-role">Software Engineer &nbsp;&middot;&nbsp; Smallstep</div>
+      <span class="speaker-session-tag">Day Two &nbsp;&middot;&nbsp; AI Panel</span>
+      <p class="speaker-bio">Builds the infrastructure and tooling that reliable systems run on. Alan's work spans certificate automation at Smallstep and LLM application development at Mirascope — practical experience constructing the systems that AI actually needs to function in the real world. He brings a builder's perspective to the session: what does it take to make these tools trustworthy, maintainable, and genuinely useful rather than just impressive.</p>
+    </div>
+
+    <div class="speaker-card">
+      <div class="speaker-avatar">
+        <img src="images/caleb-jones-shibu.jpg" alt="Caleb Jones Shibu" style="width:100%;height:100%;object-fit:cover;object-position:top center;display:block;"/>
+      </div>
+      <div class="speaker-name">Caleb Jones Shibu</div>
+      <div class="speaker-role">Founding Software Engineer &nbsp;&middot;&nbsp; Page Technologies</div>
+      <span class="speaker-session-tag">Day Two &nbsp;&middot;&nbsp; AI Panel</span>
+      <p class="speaker-bio">Founding Software Engineer at Page Technologies, building the systems that make AI practical rather than theoretical. He brings a builder's perspective to the AI panel — focused on what it actually takes to deploy intelligent tools in real businesses and keep the human element intact when you do.</p>
+    </div>
+
+  </div>
+
+  <!-- ── AI ECOSYSTEM SHOWCASE ── -->
+  <div class="ai-showcase" id="ai">
+    <div class="ai-showcase-label">What I built</div>
+    <div class="ai-showcase-title">A private AI ecosystem.<br>Running 24 hours a day. Costing $0/month.</div>
+    <p class="ai-showcase-sub">Every tool here runs on a single machine in my house. No cloud bill. No third-party data handling. The AI knows Dale's business because I built it to — and it's been running unattended since March.</p>
+
+    <div class="ai-showcase-cols">
+
+      <!-- Canvas + chips + stats -->
+      <div class="ai-canvas-panel">
+        <div class="ai-canvas-eyebrow">The Morning Brief Pipeline &nbsp;&middot;&nbsp; Live every day at 6 AM</div>
+        <div class="ai-flow-wrap">
+          <canvas id="razorCanvas" height="130"></canvas>
+          <div class="ai-flow-label">Razor &nbsp;&middot;&nbsp; Automated email intelligence</div>
+        </div>
+
+        <div class="ai-tools-label">Connected via Claude Code &nbsp;&middot;&nbsp; 9 live integrations</div>
+        <div class="ai-tools-grid">
+          <div class="ai-tool-chip"><div class="ai-tool-dot"></div>Gmail</div>
+          <div class="ai-tool-chip"><div class="ai-tool-dot"></div>Google Drive</div>
+          <div class="ai-tool-chip"><div class="ai-tool-dot"></div>Calendar</div>
+          <div class="ai-tool-chip"><div class="ai-tool-dot"></div>Nutshell CRM</div>
+          <div class="ai-tool-chip"><div class="ai-tool-dot"></div>QuickBooks</div>
+          <div class="ai-tool-chip"><div class="ai-tool-dot"></div>Trello</div>
+          <div class="ai-tool-chip"><div class="ai-tool-dot"></div>Cherrywood Drive</div>
+          <div class="ai-tool-chip"><div class="ai-tool-dot"></div>Safe Slide Drive</div>
+          <div class="ai-tool-chip"><div class="ai-tool-dot"></div>Success.co</div>
+        </div>
+
+        <div class="ai-stat-row">
+          <div class="ai-stat"><div class="ai-stat-num" id="ctr-workflows">0</div><div class="ai-stat-lbl">n8n Workflows</div></div>
+          <div class="ai-stat"><div class="ai-stat-num" id="ctr-tools">0</div><div class="ai-stat-lbl">MCP Tools</div></div>
+          <div class="ai-stat"><div class="ai-stat-num" id="ctr-models">0</div><div class="ai-stat-lbl">Local AI Models</div></div>
+          <div class="ai-stat"><div class="ai-stat-num" id="ctr-cost">$0</div><div class="ai-stat-lbl">Monthly API Cost</div></div>
+        </div>
+      </div>
+
+      <!-- Phone mockup -->
+      <div class="ai-phone-wrap">
+        <div class="ai-phone-eyebrow">What Dale sees at 6:03 AM</div>
+        <div class="ai-phone">
+          <div class="ai-phone-notch"></div>
+          <div class="ai-phone-screen">
+            <div class="ai-tg-header">
+              <div class="ai-tg-avatar">R</div>
+              <div>
+                <div class="ai-tg-name">Razor</div>
+                <div class="ai-tg-status">active</div>
+              </div>
+            </div>
+            <div class="ai-tg-body">
+              <div class="ai-tg-bubble" id="razorBriefText"></div>
+              <div class="ai-tg-time">6:03 AM</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Query carousel -->
+  <div class="ai-queries-section">
+    <div class="ai-queries-header">
+      <div class="ai-queries-header-left">
+        <div class="ai-showcase-label">Real questions. Real answers.</div>
+        <div class="ai-queries-title">What it looks like when a contractor asks the right question.</div>
+        <p class="ai-queries-sub">These aren't demos. They're things that actually happened — asked in plain English, answered in minutes.</p>
+      </div>
+      <div class="ai-queries-dots" id="aiQDots"></div>
+    </div>
+    <div class="ai-query-stage" id="aiQueryStage"></div>
+    <div class="ai-queries-nav">
+      <button class="ai-q-nav-btn" id="aiQPrev">&#8592; Prev</button>
+      <div class="ai-q-counter" id="aiQCounter"></div>
+      <button class="ai-q-nav-btn" id="aiQNext">Next &#8594;</button>
+    </div>
+  </div>
+
+</section>
+
+<!-- ── EXPLORE STL ── -->
+<section class="sect sect-b" id="explore">
+  <div class="stl-header">
+    <div class="sect-label">While You're Here</div>
+    <h2>Explore St. Louis</h2>
+    <p>You're in one of the most underrated cities in America. Use the time you have.</p>
+    <p class="stl-advisory"><strong style="color:var(--cream)">Driving advisory —</strong> I-44 through downtown St. Louis is currently closed due to a major sinkhole, with no confirmed reopening date. Check your navigation before heading in and give yourself extra time. <a href="https://www.stlpr.org/government-politics-issues/2026-06-14/huge-hole-closed-interstate-44-downtown-st-louis" target="_blank" rel="noopener">Full story &rarr;</a></p>
+  </div>
+  <div class="stl-grid">
+    <div class="stl-card" style="--img:url('https://explorestlouis.com/wp-content/uploads/2024/06/The-Pitch-at-St.-Louis-Union-Station.jpg')">
+      <div class="stl-card-overlay"></div>
+      <div class="stl-card-content">
+        <div class="stl-cat">Tonight &nbsp;·&nbsp; Soccer Bar</div>
+        <div class="stl-name">The Pitch</div>
+        <p class="stl-desc">9,200 sq ft European-style soccer pub inside Union Station. Walls covered in St. Louis soccer history. Directly across from CityPark. This is where you watch the World Cup.</p>
+        <div class="wc-badge">&#9917; USA vs Australia &nbsp;&middot;&nbsp; Fri 3 pm ET &nbsp;&middot;&nbsp; Group Stage</div>
+      </div>
+    </div>
+    <div class="stl-card" style="--img:url('images/stl-ballpark-village.jpg')">
+      <div class="stl-card-overlay"></div>
+      <div class="stl-card-content">
+        <div class="stl-cat">Tonight &nbsp;·&nbsp; Eat &amp; Drink</div>
+        <div class="stl-name">Ballpark Village</div>
+        <p class="stl-desc">5-minute walk from the Hyatt. Entertainment district attached to Busch Stadium — Cardinals Nation, TOASTED bar, outdoor patios, live music. No reservation needed.</p>
+      </div>
+    </div>
+    <div class="stl-card" style="--img:url('images/stl-city-museum.jpg')">
+      <div class="stl-card-overlay"></div>
+      <div class="stl-card-content">
+        <div class="stl-cat">See</div>
+        <div class="stl-name">City Museum</div>
+        <p class="stl-desc">Part playground, part art installation, part fever dream. An absolute must for anyone who thought they'd outgrown wonder. Go at night — it's a different experience entirely.</p>
+      </div>
+    </div>
+    <div class="stl-card" style="--img:url('images/stl-gateway-arch.jpg')">
+      <div class="stl-card-overlay"></div>
+      <div class="stl-card-content">
+        <div class="stl-cat">See &nbsp;·&nbsp; 3 min walk</div>
+        <div class="stl-name">Gateway Arch</div>
+        <p class="stl-desc">630 feet over the Mississippi. Trams depart every 15 minutes, 4-minute ride to the top. Practically in your backyard.</p>
+        <div class="arch-live-row">
+          <span class="arch-tram-badge" id="arch-tram-badge">—</span>
+          <a href="https://www.gatewayarch.com/tram-ride/" target="_blank" rel="noopener" class="arch-ticket-link">Book Tickets &rarr;</a>
+        </div>
+      </div>
+    </div>
+    <div class="stl-card" style="--img:url('images/stl-union-station-aquarium.jpg')">
+      <div class="stl-card-overlay"></div>
+      <div class="stl-card-content">
+        <div class="stl-cat">See</div>
+        <div class="stl-name">Union Station Aquarium</div>
+        <p class="stl-desc">120,000 sq ft aquarium built inside an 1894 train station. The Great Hall's historic architecture is intact above the exhibits. Sharks, rays, and genuine wonder.</p>
+      </div>
+    </div>
+    <div class="stl-card" style="--img:url('https://explorestlouis.com/wp-content/uploads/2023/01/Pickles-Deli-Web-1.jpg')">
+      <div class="stl-card-overlay"></div>
+      <div class="stl-card-content">
+        <div class="stl-cat">Eat &nbsp;·&nbsp; Downtown</div>
+        <div class="stl-name">Pickles Deli</div>
+        <p class="stl-desc">200 N. Broadway — five minutes from the hotel. Classic STL deli. High-quality sandwiches, real breakfast, no shortcuts. Go early, go often.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── LOGISTICS ── -->
+<section class="sect sect-a" id="logistics">
+  <div class="logistics-header">
+    <div class="sect-label">Know Before You Go</div>
+    <h2>Logistics</h2>
+  </div>
+  <div class="logistics-grid">
+
+    <div class="logi-panel">
+      <div class="logi-label">Getting Here</div>
+      <div class="logi-title">Hyatt Regency St. Louis at The Arch</div>
+      <div class="logi-body">
+        <div class="logi-item">
+          <div class="logi-item-label">Address</div>
+          <div class="logi-item-val">315 Chestnut Street<br>St. Louis, MO 63102</div>
+        </div>
+        <a href="https://maps.google.com/?q=Hyatt+Regency+St+Louis+at+The+Arch,+315+Chestnut+Street,+St+Louis,+MO+63102" target="_blank" rel="noopener" class="btn-maps">Open in Google Maps &rarr;</a>
+        <div class="logi-item">
+          <div class="logi-item-label">Hotel Check-In</div>
+          <div class="logi-item-val">4:00 PM</div>
+        </div>
+        <div class="logi-item">
+          <div class="logi-item-label">Hotel Check-Out</div>
+          <div class="logi-item-val">11:00 AM</div>
+        </div>
+        <div class="logi-item">
+          <div class="logi-item-note">I-44 through downtown is currently closed due to a sinkhole. Check your navigation app before driving in.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="logi-panel">
+      <div class="logi-label">Parking</div>
+      <div class="logi-title">Options Near the Hotel</div>
+      <div class="logi-body">
+        <div class="logi-item">
+          <div class="logi-item-label">Hotel Valet</div>
+          <div class="logi-item-val">$50 / night</div>
+          <div class="logi-item-note">In/out privileges. Most convenient if you're coming and going.</div>
+        </div>
+        <div class="logi-item">
+          <div class="logi-item-label">Hotel Self-Park</div>
+          <div class="logi-item-val">$40 / night</div>
+          <div class="logi-item-note">Adjacent to the hotel.</div>
+        </div>
+        <div class="logi-item">
+          <div class="logi-item-label">Budget Option</div>
+          <div class="logi-item-val">Kiener Plaza Parking Garage</div>
+          <div class="logi-item-note">Short walk from the hotel. Significantly cheaper than hotel rates — it's where the hotel staff parks.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="logi-panel">
+      <div class="logi-label">Event Rooms</div>
+      <div class="logi-title">Where to Find Us</div>
+      <div class="logi-body">
+        <div class="logi-item">
+          <div class="logi-item-label">General Sessions</div>
+          <div class="logi-item-val">Gateway East</div>
+          <div class="logi-item-note">All keynotes, panels, and breakouts. Both days.</div>
+        </div>
+        <div class="logi-item">
+          <div class="logi-item-label">Breakfast &amp; Lunch</div>
+          <div class="logi-item-val">Gateway West</div>
+          <div class="logi-item-note">Both days. Breakfast 7:00–8:00 AM, lunch 11:30 AM.</div>
+        </div>
+        <div class="logi-item">
+          <div class="logi-item-label">Wednesday Evening</div>
+          <div class="logi-item-val">The Terrace, 18th Floor</div>
+          <div class="logi-item-note">Welcome cocktail hour. 7:00–9:00 PM.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="logi-panel">
+      <div class="logi-label">Meals</div>
+      <div class="logi-title">What We're Eating</div>
+      <div class="logi-body">
+        <div class="logi-item">
+          <div class="logi-item-label">Wednesday Cocktail Hour</div>
+          <div class="logi-item-val">Hors d'oeuvres &amp; Full Bar</div>
+          <div class="logi-item-note">Toasted ravioli, beef tenderloin crostini, bacon-wrapped jalapeño chicken, Mediterranean skewers, and more.</div>
+        </div>
+        <div class="logi-item">
+          <div class="logi-item-label">Thursday Lunch</div>
+          <div class="logi-item-val">The Hill Menu</div>
+          <div class="logi-item-note">Chicken Piccata, Whitefish, Orecchiette, Tiramisu, Cannoli.</div>
+        </div>
+        <div class="logi-item">
+          <div class="logi-item-label">Friday Lunch</div>
+          <div class="logi-item-val">Soulard Menu</div>
+          <div class="logi-item-note">Mahi Mahi, Cajun Chicken, Red Beans &amp; Rice, Beignets, Pecan Tart.</div>
+        </div>
+        <a href="menu.pdf" target="_blank" rel="noopener" class="btn-maps" style="margin-top:.5rem">View Full Menu &rarr;</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── CONTACT STRIP ── -->
+<div class="contact-strip">
+  <div class="contact-item">
+    <div class="contact-label">Questions &amp; Day-Of</div>
+    <div class="contact-val"><a href="tel:5737604007">573.760.4007</a></div>
+  </div>
+  <div class="contact-item">
+    <div class="contact-label">Coordinator</div>
+    <div class="contact-val">Joel Cooper</div>
+  </div>
+  <div class="contact-item">
+    <div class="contact-label">Attendee Community</div>
+    <div class="contact-val"><a href="https://chat.whatsapp.com/DfqVSaCDkCNAsK6UI6zoj5" target="_blank" rel="noopener">WhatsApp Group &rarr;</a></div>
+  </div>
+</div>
+
+<!-- ── GALLERY ── -->
+<section class="sect sect-b" id="gallery">
+  <div class="gallery-header">
+    <div class="sect-label">Focus Forum 2027</div>
+    <h2>Gallery</h2>
+    <p>Photos from the conference — growing throughout the day.</p>
+  </div>
+  <div class="slideshow-wrap">
+    <div class="slideshow-stage" id="slideshow-stage">
+      <img class="slide-img" id="slide-img-a" src="" alt=""/>
+      <img class="slide-img" id="slide-img-b" src="" alt=""/>
+      <div class="slide-caption" id="slide-caption"></div>
+      <div class="slide-counter" id="slide-counter"></div>
+      <button class="slide-btn slide-prev" id="slide-prev" aria-label="Previous photo">&#8249;</button>
+      <button class="slide-btn slide-next" id="slide-next" aria-label="Next photo">&#8250;</button>
+    </div>
+    <p class="gallery-empty" id="gallery-empty" style="display:none">No photos yet — check back soon.</p>
+  </div>
+</section>
+
+<!-- ── PEOPLE DIRECTORY ── -->
+<section class="sect sect-a" id="people">
+  <div class="sect-label">Who's Here</div>
+  <h2>Attendees</h2>
+  <p style="font-size:.9375rem;color:var(--muted);margin-bottom:2rem;">Everyone in the room — 44 people, 30+ companies.</p>
+  <div class="people-search-wrap">
+    <input class="people-search" id="people-search" type="search" placeholder="Search by name or company…" autocomplete="off"/>
+  </div>
+
+  <div id="people-list">
+
+    <div class="people-group-label" data-group="speakers">Speakers</div>
+    <div class="person-row" data-search="dale cooper safe slide restoration cooper's consulting visionary conference host">
+      <span class="person-name">Dale Cooper</span>
+      <span class="person-detail">Safe Slide Restoration / Cooper's Consulting<span class="sep">·</span>Visionary / Conference Host</span>
+    </div>
+    <div class="person-row" data-search="adam hill extra life enterprises visionary">
+      <span class="person-name">Adam Hill</span>
+      <span class="person-detail">Extra Life Enterprises<span class="sep">·</span>Visionary</span>
+    </div>
+    <div class="person-row" data-search="marie hill extra life enterprises relationship intimacy coach">
+      <span class="person-name">Marie Hill</span>
+      <span class="person-detail">Extra Life Enterprises<span class="sep">·</span>Relationship &amp; Intimacy Coach</span>
+    </div>
+    <div class="person-row" data-search="marcus truman archangel performance coaching founder">
+      <span class="person-name">Marcus Truman</span>
+      <span class="person-detail">Archangel Performance Coaching<span class="sep">·</span>Founder</span>
+    </div>
+    <div class="person-row" data-search="ben kelley eos worldwide certified eos implementer">
+      <span class="person-name">Ben Kelley</span>
+      <span class="person-detail">EOS Worldwide<span class="sep">·</span>Certified EOS Implementer</span>
+    </div>
+    <div class="person-row" data-search="bailey gilder gr insurance associates integrator">
+      <span class="person-name">Bailey Gilder</span>
+      <span class="person-detail">GR Insurance Associates Inc.<span class="sep">·</span>Integrator</span>
+    </div>
+    <div class="person-row" data-search="greg rogers gr insurance associates visionary">
+      <span class="person-name">Greg Rogers</span>
+      <span class="person-detail">GR Insurance Associates Inc.<span class="sep">·</span>Visionary</span>
+    </div>
+    <div class="person-row" data-search="mark mcmullin alliant ltc pharmacy owner">
+      <span class="person-name">Mark McMullin</span>
+      <span class="person-detail">Alliant LTC Pharmacy<span class="sep">·</span>Owner</span>
+    </div>
+    <div class="person-row" data-search="mary wilkinson hope center indy integrator">
+      <span class="person-name">Mary Wilkinson</span>
+      <span class="person-detail">Hope Center Indy<span class="sep">·</span>Integrator</span>
+    </div>
+    <div class="person-row" data-search="alan thomas duramata mirascope founding software engineer">
+      <span class="person-name">Alan Thomas</span>
+      <span class="person-detail">Duramata / Mirascope<span class="sep">·</span>Founding Software Engineer</span>
+    </div>
+    <div class="person-row" data-search="caleb jones shibu page technologies founding software engineer">
+      <span class="person-name">Caleb Jones Shibu</span>
+      <span class="person-detail">Page Technologies<span class="sep">·</span>Founding Software Engineer</span>
+    </div>
+
+    <div class="people-group-label" data-group="attendees">Attendees</div>
+    <div class="person-row" data-search="allison perry tap business development owner">
+      <span class="person-name">Allison Perry</span>
+      <span class="person-detail">TAP Business Development<span class="sep">·</span>Owner</span>
+    </div>
+    <div class="person-row" data-search="anna renaud renaud carpentry contracting finance hr">
+      <span class="person-name">Anna Renaud</span>
+      <span class="person-detail">Renaud Carpentry &amp; Contracting LLC<span class="sep">·</span>Finance / HR</span>
+    </div>
+    <div class="person-row" data-search="arielle bohnert victory spinal care chiropractor">
+      <span class="person-name">Arielle Bohnert</span>
+      <span class="person-detail">Victory Spinal Care<span class="sep">·</span>Chiropractor</span>
+    </div>
+    <div class="person-row" data-search="ben renaud renaud carpentry contracting visionary">
+      <span class="person-name">Ben Renaud</span>
+      <span class="person-detail">Renaud Carpentry &amp; Contracting LLC<span class="sep">·</span>Visionary</span>
+    </div>
+    <div class="person-row" data-search="billy taylor alliant ltc pharmacy integrator">
+      <span class="person-name">Billy Taylor</span>
+      <span class="person-detail">Alliant LTC Pharmacy<span class="sep">·</span>Integrator</span>
+    </div>
+    <div class="person-row" data-search="brian davis safe slide restoration director of operations">
+      <span class="person-name">Brian Davis</span>
+      <span class="person-detail">Safe Slide Restoration<span class="sep">·</span>Director of Operations</span>
+    </div>
+    <div class="person-row" data-search="cody sutton stonewater financial group integrator">
+      <span class="person-name">Cody Sutton</span>
+      <span class="person-detail">Stonewater Financial Group<span class="sep">·</span>Integrator</span>
+    </div>
+    <div class="person-row" data-search="craig mills melvin mills roofing visionary">
+      <span class="person-name">Craig Mills</span>
+      <span class="person-detail">Melvin Mills Roofing, LLC<span class="sep">·</span>Visionary</span>
+    </div>
+    <div class="person-row" data-search="curtis klieger stonewater financial group visionary">
+      <span class="person-name">Curtis Klieger</span>
+      <span class="person-detail">Stonewater Financial Group<span class="sep">·</span>Visionary</span>
+    </div>
+    <div class="person-row" data-search="dusty gilder gr insurance associates director of growth">
+      <span class="person-name">Dusty Gilder</span>
+      <span class="person-detail">GR Insurance Associates Inc.<span class="sep">·</span>Director of Growth</span>
+    </div>
+    <div class="person-row" data-search="eric meyer meyer schmelzle custom creations visionary">
+      <span class="person-name">Eric Meyer</span>
+      <span class="person-detail">Meyer &amp; Schmelzle Custom Creations<span class="sep">·</span>Visionary</span>
+    </div>
+    <div class="person-row" data-search="eugene gura gura construction visionary">
+      <span class="person-name">Eugene Gura</span>
+      <span class="person-detail">Gura Construction<span class="sep">·</span>Visionary</span>
+    </div>
+    <div class="person-row" data-search="jay cooper aj cooper corporation visionary">
+      <span class="person-name">Jay Cooper</span>
+      <span class="person-detail">AJ Cooper Corporation<span class="sep">·</span>Visionary</span>
+    </div>
+    <div class="person-row" data-search="jennifer gura gura construction finance hr">
+      <span class="person-name">Jennifer Gura</span>
+      <span class="person-detail">Gura Construction<span class="sep">·</span>Finance / HR</span>
+    </div>
+    <div class="person-row" data-search="joel cooper cooper's consulting executive assistant">
+      <span class="person-name">Joel Cooper</span>
+      <span class="person-detail">Cooper's Consulting<span class="sep">·</span>Executive Assistant</span>
+    </div>
+    <div class="person-row" data-search="joseph nelson stewardship investment owner">
+      <span class="person-name">Joseph Nelson</span>
+      <span class="person-detail">Stewardship Investment, Inc.<span class="sep">·</span>Owner</span>
+    </div>
+    <div class="person-row" data-search="kelly miller advantage innovations owner">
+      <span class="person-name">Kelly Miller</span>
+      <span class="person-detail">Advantage Innovations<span class="sep">·</span>Owner</span>
+    </div>
+    <div class="person-row" data-search="kimberly earl victory spinal care integrator">
+      <span class="person-name">Kimberly Earl</span>
+      <span class="person-detail">Victory Spinal Care<span class="sep">·</span>Integrator</span>
+    </div>
+    <div class="person-row" data-search="levi kinnard clearwater recovery institute visionary">
+      <span class="person-name">Levi Kinnard</span>
+      <span class="person-detail">Clearwater Recovery Institute<span class="sep">·</span>Visionary</span>
+    </div>
+    <div class="person-row" data-search="marjie miller advantage innovations controller">
+      <span class="person-name">Marjie Miller</span>
+      <span class="person-detail">Advantage Innovations<span class="sep">·</span>Controller</span>
+    </div>
+    <div class="person-row" data-search="nick zerwig steady ops advisors visionary">
+      <span class="person-name">Nick Zerwig</span>
+      <span class="person-detail">Steady Ops Advisors<span class="sep">·</span>Visionary</span>
+    </div>
+    <div class="person-row" data-search="renee cooper aj cooper corporation finance hr">
+      <span class="person-name">Ren&eacute;e Cooper</span>
+      <span class="person-detail">AJ Cooper Corporation<span class="sep">·</span>Finance / HR</span>
+    </div>
+    <div class="person-row" data-search="richard blyudzhyus delta roofing visionary">
+      <span class="person-name">Richard Blyudzhyus</span>
+      <span class="person-detail">Delta Roofing<span class="sep">·</span>Visionary</span>
+    </div>
+    <div class="person-row" data-search="ryan cooper liberty fencing visionary">
+      <span class="person-name">Ryan Cooper</span>
+      <span class="person-detail">Liberty Fencing<span class="sep">·</span>Visionary</span>
+    </div>
+    <div class="person-row" data-search="scott parsons liberty fencing integrator">
+      <span class="person-name">Scott Parsons</span>
+      <span class="person-detail">Liberty Fencing<span class="sep">·</span>Integrator</span>
+    </div>
+    <div class="person-row" data-search="seth golding safe slide restoration director of finance">
+      <span class="person-name">Seth Golding</span>
+      <span class="person-detail">Safe Slide Restoration<span class="sep">·</span>Director of Finance</span>
+    </div>
+    <div class="person-row" data-search="steven cooper safe slide restoration field operations manager">
+      <span class="person-name">Steven Cooper</span>
+      <span class="person-detail">Safe Slide Restoration<span class="sep">·</span>Field Operations Manager</span>
+    </div>
+    <div class="person-row" data-search="suzi patterson alliant ltc pharmacy">
+      <span class="person-name">Suzi Patterson</span>
+      <span class="person-detail">Alliant LTC Pharmacy</span>
+    </div>
+    <div class="person-row" data-search="tabitha lundstrom stewardship investments integrator">
+      <span class="person-name">Tabitha Lundstrom</span>
+      <span class="person-detail">Stewardship Investments<span class="sep">·</span>Integrator</span>
+    </div>
+    <div class="person-row" data-search="taylor lindeman law office mark mcmullin integrator">
+      <span class="person-name">Taylor Lindeman</span>
+      <span class="person-detail">Law Office of Mark McMullin<span class="sep">·</span>Integrator</span>
+    </div>
+    <div class="person-row" data-search="tony perry safe slide restoration cofounder">
+      <span class="person-name">Tony Perry</span>
+      <span class="person-detail">Safe Slide Restoration<span class="sep">·</span>Cofounder</span>
+    </div>
+    <div class="person-row" data-search="troy mcclanahan collin mcclanahan company operations manager">
+      <span class="person-name">Troy McClanahan</span>
+      <span class="person-detail">The Collin McClanahan Company<span class="sep">·</span>Operations Manager</span>
+    </div>
+    <div class="person-row" data-search="troy wilkinson outdoorsiness integrator">
+      <span class="person-name">Troy Wilkinson</span>
+      <span class="person-detail">Outdoorsiness<span class="sep">·</span>Integrator</span>
+    </div>
+    <div class="person-row" data-search="whitney mcclanahan collin mcclanahan company">
+      <span class="person-name">Whitney McClanahan</span>
+      <span class="person-detail">The Collin McClanahan Company</span>
+    </div>
+    <div class="person-row" data-search="zac abell tzg visionary">
+      <span class="person-name">Zac Abell</span>
+      <span class="person-detail">TZG<span class="sep">·</span>Visionary</span>
+    </div>
+
+    <div id="people-no-results" style="display:none;padding:2rem 0;font-size:.875rem;font-style:italic;color:var(--muted);">No matches found.</div>
+  </div>
+</section>
+
+<!-- ── CHARITY ── -->
+<section class="sect sect-b" id="charity">
+  <div class="charity-inner">
+    <div class="charity-label">
+      <div class="sect-label">Friday Afternoon</div>
+      <h2>Our <span class="h-accent">Charity</span></h2>
+      <p>Day two closes with a presentation by The Hope Center Indy. Bring your generosity — donation via Venmo will be available at the event.</p>
+      <a href="https://www.hopecenterindy.org" target="_blank" rel="noopener" class="charity-link">hopecenterindy.org &rarr;</a>
+    </div>
+    <div class="charity-body">
+      <p>The <strong>Hope Center Indy</strong> operates a 25-acre campus in Indianapolis serving women ages 18–30 coming out of sex trafficking, sexual exploitation, and addiction. Their mission: <strong>to impart hope and healing to every heart.</strong></p>
+      <p>Through vocational training, therapy, and social enterprises — coffee shops and boutiques whose profits fund the mission — survivors are equipped for lives of independence and purpose. <strong>Mary Wilkinson</strong> will be presenting on behalf of Hope Center. The past does not define you. That's not a tagline there. It's the operating principle.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── FEEDBACK ── -->
+<section class="sect sect-a" id="feedback">
+  <div class="feedback-inner">
+    <div class="sect-label">Before You Go</div>
+    <h2>Leave Your <span class="h-accent">Feedback</span></h2>
+    <p class="ff-lede">What landed? What are you taking home? What would you change? We read every word.</p>
+    <a href="feedback.html" class="ff-btn">Share Your Feedback &rarr;</a>
+  </div>
+</section>
+
+<!-- ── PAY (tucked for those who haven't yet) ── -->
+<div class="pay-strip" id="pay">
+  <div class="pay-strip-label">Haven't Paid?</div>
+  <div class="pay-strip-text"><strong>$400 per person.</strong> Send via Venmo @coopersconsulting or Zelle to <strong>573.760.4007</strong> — memo: "Focus Forum."</div>
+  <a href="https://account.venmo.com/u/coopersconsulting" target="_blank" rel="noopener" class="btn-pay">Pay via Venmo &rarr;</a>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-brand">Cooper's Consulting &nbsp;&middot;&nbsp; Focus Forum 2027</div>
+  <div class="footer-contact">
+    <a href="tel:5737604007">573.760.4007</a>
+    &nbsp;&middot;&nbsp;
+    <a href="https://chat.whatsapp.com/DfqVSaCDkCNAsK6UI6zoj5" target="_blank" rel="noopener">Attendee WhatsApp</a>
+    &nbsp;&middot;&nbsp;
+    <a href="/">coopersconsulting.com</a>
+  </div>
+  <div class="footer-copy">&copy; 2027 Cooper's Consulting</div>
+</footer>
+
+</div><!-- /page-frame -->
+
+<script>
+// ── PASSWORD GATE ──
+(function () {
+  const gate  = document.getElementById('pw-gate');
+  const input = document.getElementById('pw-input');
+  const btn   = document.getElementById('pw-btn');
+  const err   = document.getElementById('pw-error');
+  if (sessionStorage.getItem('ff_auth') === '1') { gate.classList.add('unlocked'); return; }
+  document.body.style.overflow = 'hidden';
+  // SHA-256 of "EOS" — password not stored in plain text
+  const CORRECT = 'b6d20684d51a031b9268dba1b5cefca014dca2d47f19a21521607af94379747e';
+  async function attempt() {
+    const val = input.value.trim().toUpperCase();
+    const buf  = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(val));
+    const hash = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+    if (hash === CORRECT) {
+      sessionStorage.setItem('ff_auth', '1');
+      document.body.style.overflow = '';
+      gate.classList.add('unlocked');
+    } else {
+      err.classList.add('show');
+      input.value = '';
+      input.focus();
+      setTimeout(() => err.classList.remove('show'), 2200);
+    }
+  }
+  btn.addEventListener('click', attempt);
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') attempt(); });
+  input.focus();
+})();
+
+// ── NAV SCROLL ──
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+}, { passive: true });
+if (window.scrollY > 40) nav.classList.add('scrolled');
+
+// ── MOBILE MENU ──
+const burgerBtn    = document.getElementById('burger-btn');
+const navOverlay   = document.getElementById('nav-overlay');
+const overlayClose = document.getElementById('overlay-close');
+const openMenu  = () => { navOverlay.classList.add('open'); burgerBtn.setAttribute('aria-expanded','true'); document.body.style.overflow='hidden'; };
+const closeMenu = () => { navOverlay.classList.remove('open'); burgerBtn.setAttribute('aria-expanded','false'); document.body.style.overflow=''; };
+burgerBtn.addEventListener('click', () => { navOverlay.classList.contains('open') ? closeMenu() : openMenu(); });
+overlayClose.addEventListener('click', closeMenu);
+navOverlay.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+
+// ── SCHEDULE DATA ──
+// month is 0-indexed: June = 5
+const SCHED = [
+  { sid:'d1-0', day:1, sh:7,  sm:0,  eh:8,  em:0,  title:'Breakfast',                         room:'Gateway West'        },
+  { sid:'d1-1', day:1, sh:8,  sm:0,  eh:9,  em:0,  title:'Opening & Ice Breaker',              room:'Gateway East'        },
+  { sid:'d1-2', day:1, sh:9,  sm:0,  eh:10, em:0,  title:'Reignite the SPARK',                 room:'Gateway East'        },
+  { sid:'d1-3', day:1, sh:10, sm:0,  eh:10, em:30, title:'Break',                              room:''                    },
+  { sid:'d1-4', day:1, sh:10, sm:30, eh:11, em:30, title:'Emotional Intelligence',             room:'Gateway East'        },
+  { sid:'d1-5', day:1, sh:11, sm:30, eh:13, em:0,  title:'Lunch — The Hill Menu',              room:'Gateway West'        },
+  { sid:'d1-6', day:1, sh:13, sm:0,  eh:14, em:0,  title:'EOS Panel',                          room:'Gateway East'        },
+  { sid:'d1-7', day:1, sh:14, sm:0,  eh:17, em:0,  title:'Visionary / Integrator Breakout',    room:'Gateway East & West' },
+  { sid:'d2-0', day:2, sh:7,  sm:0,  eh:8,  em:0,  title:'Breakfast',                         room:'Gateway West'        },
+  { sid:'d2-1', day:2, sh:8,  sm:0,  eh:9,  em:0,  title:'The Healthy Visionary',              room:'Gateway East'        },
+  { sid:'d2-2', day:2, sh:9,  sm:0,  eh:10, em:0,  title:'How to Make Your Kids Hate You',     room:'Gateway East'        },
+  { sid:'d2-3', day:2, sh:10, sm:0,  eh:10, em:30, title:'Break',                              room:''                    },
+  { sid:'d2-4', day:2, sh:10, sm:30, eh:11, em:30, title:'The VTO Flight Path',                room:'Gateway East'        },
+  { sid:'d2-5', day:2, sh:11, sm:30, eh:13, em:0,  title:'Lunch — Soulard Menu',               room:'Gateway West'        },
+  { sid:'d2-6', day:2, sh:13, sm:0,  eh:14, em:0,  title:'AI Panel: The New Co-Worker',        room:'Gateway East'        },
+  { sid:'d2-7', day:2, sh:14, sm:0,  eh:16, em:0,  title:'Charity & Close',                    room:'Gateway East'        },
+];
+
+function sessDate(s) {
+  const d = s.day === 1 ? 18 : 19;
+  return {
+    start: new Date(2026, 5, d, s.sh, s.sm),
+    end:   new Date(2026, 5, d, s.eh, s.em)
+  };
+}
+
+function findCurNext(now) {
+  let curIdx = -1, nextIdx = -1;
+  for (let i = 0; i < SCHED.length; i++) {
+    const { start, end } = sessDate(SCHED[i]);
+    if (now >= start && now < end) { curIdx = i; break; }
+  }
+  nextIdx = curIdx !== -1
+    ? (curIdx + 1 < SCHED.length ? curIdx + 1 : -1)
+    : SCHED.findIndex(s => { const { start } = sessDate(s); return now < start; });
+  return { curIdx, nextIdx };
+}
+
+// ── NOW BANNER ──
+function updateNowBanner() {
+  const banner   = document.getElementById('now-banner');
+  const now      = new Date();
+  const inDay1   = now >= new Date(2026,5,18,7,0) && now < new Date(2026,5,18,17,0);
+  const inDay2   = now >= new Date(2026,5,19,7,0) && now < new Date(2026,5,19,16,0);
+
+  if (!inDay1 && !inDay2) { banner.classList.add('hidden'); return; }
+  banner.classList.remove('hidden');
+
+  const { curIdx, nextIdx } = findCurNext(now);
+  const nbNextCol = document.getElementById('nb-next-col');
+  const nowLabel  = document.getElementById('nb-now-label');
+  const nowTitle  = document.getElementById('nb-now-title');
+  const nowMeta   = document.getElementById('nb-now-meta');
+  const nextTitle = document.getElementById('nb-next-title');
+  const nextMeta  = document.getElementById('nb-next-meta');
+
+  if (curIdx !== -1) {
+    const cur = SCHED[curIdx];
+    nowLabel.textContent = 'Now';
+    nowTitle.textContent = cur.title;
+    nowMeta.textContent  = cur.room;
+
+    if (nextIdx !== -1) {
+      const nxt = SCHED[nextIdx];
+      const { start: ns } = sessDate(nxt);
+      const mins = Math.round((ns - now) / 60000);
+      nextTitle.textContent = nxt.title;
+      nextMeta.textContent  = (nxt.room || '') + (mins > 0 && mins <= 90 ? ' · in ' + mins + ' min' : '');
+      nbNextCol.style.display = '';
+    } else {
+      nbNextCol.style.display = 'none';
+    }
+  } else if (nextIdx !== -1) {
+    const nxt = SCHED[nextIdx];
+    const { start: ns } = sessDate(nxt);
+    const mins = Math.round((ns - now) / 60000);
+    nowLabel.textContent = 'Up Next';
+    nowTitle.textContent = nxt.title;
+    nowMeta.textContent  = (nxt.room || '') + (mins > 0 && mins <= 90 ? ' · in ' + mins + ' min' : '');
+    nbNextCol.style.display = 'none';
+  }
+}
+
+// ── SESSION STATUS BADGES ──
+function updateSessionStatus() {
+  const now = new Date();
+  const { curIdx, nextIdx } = findCurNext(now);
+
+  SCHED.forEach((s, i) => {
+    const el = document.querySelector('[data-sid="' + s.sid + '"]');
+    if (!el) return;
+    const old = el.querySelector('.sess-status');
+    if (old) old.remove();
+    el.classList.remove('done');
+
+    const { end } = sessDate(s);
+    let html = '';
+    if (i === curIdx) {
+      html = '<span class="sess-status s-now"><span class="sd"></span>Now</span>';
+    } else if (i === nextIdx) {
+      html = '<span class="sess-status s-next"><span class="sd"></span>Up Next</span>';
+    } else if (now >= end) {
+      el.classList.add('done');
+      html = '<span class="sess-status s-done"><span class="sd"></span>Complete</span>';
+    }
+    if (html) el.querySelector('.sess-body').insertAdjacentHTML('afterbegin', html);
+  });
+}
+
+// ── DAY TABS ──
+function switchDay(day) {
+  document.querySelectorAll('.day-tab').forEach(t => {
+    const active = t.id === 'tab-d' + day;
+    t.classList.toggle('active', active);
+    t.setAttribute('aria-selected', active ? 'true' : 'false');
+  });
+  document.querySelectorAll('.day-panel').forEach(p => {
+    p.classList.toggle('active', p.id === 'panel-d' + day);
+  });
+}
+
+function autoSelectDay() {
+  const now = new Date();
+  switchDay(now >= new Date(2026, 5, 19) ? 2 : 1);
+}
+
+// ── ARCH TRAM COUNTDOWN ──
+function archTramText() {
+  const now = new Date();
+  const h = now.getHours(), m = now.getMinutes();
+  if (h < 9 || h >= 21) return 'Opens 9 AM';
+  const rem = 15 - (m % 15);
+  if (rem === 15) return 'Departing now · 9–9 PM';
+  const t = new Date(now);
+  t.setMinutes(m + rem, 0, 0);
+  const hh = t.getHours() % 12 || 12;
+  const mm = String(t.getMinutes()).padStart(2,'0');
+  const ap = t.getHours() < 12 ? 'AM' : 'PM';
+  return 'Next ~' + rem + ' min (' + hh + ':' + mm + ' ' + ap + ')';
+}
+function updateArchUI() {
+  const txt = archTramText();
+  const bar = document.getElementById('slb-arch');
+  const badge = document.getElementById('arch-tram-badge');
+  if (bar) bar.textContent = txt;
+  if (badge) badge.textContent = txt;
+}
+
+// ── LIVE WEATHER (OpenMeteo — no key required) ──
+function fetchWeather() {
+  fetch('https://api.open-meteo.com/v1/forecast?latitude=38.6270&longitude=-90.1994&current_weather=true&temperature_unit=fahrenheit&wind_speed_unit=mph')
+    .then(r => r.json())
+    .then(data => {
+      const w = data.current_weather;
+      const icon = (c => {
+        if (c === 0)         return '☀️';
+        if (c <= 3)          return '⛅';
+        if (c <= 48)         return '🌫️';
+        if (c <= 67)         return '🌧️';
+        if (c <= 77)         return '❄️';
+        if (c <= 82)         return '🌦️';
+        return '⛈️';
+      })(w.weathercode);
+      const el = document.getElementById('slb-weather');
+      if (el) el.textContent = icon + ' ' + Math.round(w.temperature) + '°F';
+    })
+    .catch(() => {});
+}
+
+// ── LIVE CARDINALS (ESPN unofficial scoreboard API) ──
+function fetchCardinals() {
+  fetch('https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard')
+    .then(r => r.json())
+    .then(data => {
+      const el = document.getElementById('slb-cards');
+      if (!el) return;
+      const game = (data.events || []).find(e =>
+        e.competitions[0].competitors.some(c => c.team.abbreviation === 'STL')
+      );
+      if (!game) { el.textContent = 'No game today'; return; }
+      const comp  = game.competitions[0];
+      const stl   = comp.competitors.find(c => c.team.abbreviation === 'STL');
+      const opp   = comp.competitors.find(c => c.team.abbreviation !== 'STL');
+      const state = game.status.type.state;
+      const detail = game.status.type.shortDetail || '';
+      if (state === 'pre')  el.textContent = 'vs ' + opp.team.abbreviation + ' · ' + detail;
+      else if (state === 'in') el.textContent = stl.score + '–' + opp.score + ' ' + opp.team.abbreviation + ' · ' + detail;
+      else el.textContent = 'Final: ' + stl.score + '–' + opp.score + ' vs ' + opp.team.abbreviation;
+    })
+    .catch(() => {
+      const el = document.getElementById('slb-cards');
+      if (el) el.textContent = 'mlb.com';
+    });
+}
+
+// ── PEOPLE SEARCH ──
+(function () {
+  const input = document.getElementById('people-search');
+  if (!input) return;
+  const rows = document.querySelectorAll('#people-list .person-row');
+  const labels = document.querySelectorAll('#people-list .people-group-label');
+  const noRes = document.getElementById('people-no-results');
+  input.addEventListener('input', function () {
+    const q = this.value.trim().toLowerCase();
+    let anyVisible = false;
+    rows.forEach(row => {
+      const match = !q || row.dataset.search.includes(q);
+      row.classList.toggle('hidden', !match);
+      if (match) anyVisible = true;
+    });
+    labels.forEach(lbl => { lbl.style.display = q ? 'none' : ''; });
+    noRes.style.display = anyVisible ? 'none' : 'block';
+  });
+})();
+
+// ── GALLERY FADE-IN ──
+(function () {
+  const PHOTOS = [
+    { src: 'images/gallery-spark-1.jpg',  caption: '' },
+    { src: 'images/gallery-spark-2.jpg',  caption: '' },
+    { src: 'images/gallery-marcus-eq.jpg',caption: '' },
+    { src: 'images/gallery-crowd-1.jpg',  caption: '' },
+    { src: 'images/gallery-crowd-2.jpg',  caption: '' },
+    { src: 'images/gallery-crowd-3.jpg',  caption: '' },
+    { src: 'images/gallery-room-wide.jpg',caption: '' },
+    { src: 'images/IMG_3911.jpeg', caption: '' },
+    { src: 'images/IMG_3913.jpeg', caption: '' },
+    { src: 'images/IMG_3914.jpeg', caption: '' },
+    { src: 'images/IMG_3915.jpeg', caption: '' },
+    { src: 'images/IMG_3916.jpeg', caption: '' },
+    { src: 'images/IMG_3917.jpeg', caption: '' },
+    { src: 'images/IMG_3918.jpeg', caption: '' },
+    { src: 'images/IMG_3919.jpeg', caption: '' },
+    { src: 'images/IMG_3920.jpeg', caption: '' },
+  ];
+  const AUTO_MS = 6000;
+
+  let idx    = 0;
+  let timer  = null;
+  let active = 'a';
+
+  const imgA    = document.getElementById('slide-img-a');
+  const imgB    = document.getElementById('slide-img-b');
+  const caption = document.getElementById('slide-caption');
+  const counter = document.getElementById('slide-counter');
+  const stage   = document.getElementById('slideshow-stage');
+  const prevBtn = document.getElementById('slide-prev');
+  const nextBtn = document.getElementById('slide-next');
+
+  function show(n) {
+    n = ((n % PHOTOS.length) + PHOTOS.length) % PHOTOS.length;
+    idx = n;
+    const photo = PHOTOS[idx];
+    const cur = active === 'a' ? imgA : imgB;
+    const nxt = active === 'a' ? imgB : imgA;
+
+    // Cancel any pending load on nxt before reusing it
+    nxt.onload = nxt.onerror = null;
+
+    function doSwap() {
+      nxt.onload = nxt.onerror = null;
+      nxt.classList.add('slide-active');
+      cur.classList.remove('slide-active');
+      active = active === 'a' ? 'b' : 'a';
+      caption.textContent = photo.caption;
+      counter.textContent = (idx + 1) + ' / ' + PHOTOS.length;
+    }
+
+    nxt.src = photo.src;
+    nxt.alt = photo.caption;
+    if (nxt.complete && nxt.naturalWidth > 0) {
+      doSwap();
+    } else {
+      nxt.onload  = doSwap;
+      nxt.onerror = doSwap;
+    }
+  }
+
+  function advance(dir) {
+    clearInterval(timer);
+    show(idx + dir);
+    timer = setInterval(function () { show(idx + 1); }, AUTO_MS);
+  }
+
+  prevBtn.addEventListener('click', function () { advance(-1); });
+  nextBtn.addEventListener('click', function () { advance(1); });
+
+  // Swipe support for mobile
+  var swipeX = null;
+  stage.addEventListener('touchstart', function (e) { swipeX = e.touches[0].clientX; }, { passive: true });
+  stage.addEventListener('touchend', function (e) {
+    if (swipeX === null) return;
+    var dx = e.changedTouches[0].clientX - swipeX;
+    swipeX = null;
+    if (Math.abs(dx) > 40) advance(dx < 0 ? 1 : -1);
+  }, { passive: true });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowLeft')  advance(-1);
+    if (e.key === 'ArrowRight') advance(1);
+  });
+
+  show(0);
+  timer = setInterval(function () { show(idx + 1); }, AUTO_MS);
+})();
+
+// ── IDS SOLVED TOGGLE ──
+(function () {
+  const KEY = 'ff2026-ids-solved';
+  const solved = new Set(JSON.parse(localStorage.getItem(KEY) || '[]'));
+  document.querySelectorAll('.ids-item[data-id]').forEach(item => {
+    if (solved.has(item.dataset.id)) item.classList.add('solved');
+    item.addEventListener('click', () => {
+      item.classList.toggle('solved');
+      item.classList.contains('solved') ? solved.add(item.dataset.id) : solved.delete(item.dataset.id);
+      localStorage.setItem(KEY, JSON.stringify([...solved]));
+    });
+  });
+})();
+
+// ── INIT ──
+autoSelectDay();
+updateNowBanner();
+updateSessionStatus();
+updateArchUI();
+fetchWeather();
+fetchCardinals();
+setInterval(() => { updateNowBanner(); updateSessionStatus(); updateArchUI(); }, 60000);
+setInterval(fetchCardinals, 300000);
+</script>
+
+<!-- ── APP BOTTOM NAV (mobile) ── -->
+<nav class="app-bottom-nav" aria-label="App navigation">
+  <a href="#schedule">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+      <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
+      <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+    </svg>
+    Schedule
+  </a>
+  <a href="#explore">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+      <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><line x1="7" y1="2" x2="7" y2="22"/>
+      <path d="M21 15V2a5 5 0 0 0-5 5v6h3.5c.8 0 1.5.7 1.5 1.5V15"/><line x1="21" y1="15" x2="21" y2="22"/>
+    </svg>
+    Eat
+  </a>
+  <a href="https://maps.google.com/?q=Hyatt+Regency+St+Louis+at+The+Arch,+315+Chestnut+Street,+St+Louis,+MO+63102" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+    </svg>
+    Hotel
+  </a>
+  <a href="tel:5737604007">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+    </svg>
+    Joel
+  </a>
+</nav>
+
+<script>
+// ── RAZOR FLOW CANVAS ──────────────────────────────────────────
+(function() {
+  const canvas = document.getElementById('razorCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = 700, H = 130;
+  canvas.width = W; canvas.height = H;
+
+  const NODES = [
+    { x: 68,  y: 58, label: 'Gmail',    sub: 'dale@safeslides.com' },
+    { x: 252, y: 58, label: 'n8n',      sub: 'Zephyr · ZR node'  },
+    { x: 448, y: 58, label: 'Ollama',   sub: 'Gemma 4 · local'    },
+    { x: 632, y: 58, label: 'Telegram', sub: "Dale's phone"         },
+  ];
+  const R = 26;
+  const ORANGE = '#E8701A', CREAM = '#F2EBDA', MUTED = 'rgba(242,235,218,0.35)';
+
+  function Packet(delay) { this.t = -(delay || 0); this.edgeIdx = 0; this.pausing = 0; this.done = false; }
+  Packet.prototype.update = function(dt) {
+    if (this.done) return;
+    if (this.t < 0) { this.t += dt; return; }
+    if (this.pausing > 0) { this.pausing -= dt; return; }
+    this.t += 0.36 * dt;
+    if (this.t >= 1) { this.t = 0; this.edgeIdx++; if (this.edgeIdx >= NODES.length - 1) { this.done = true; return; } this.pausing = 0.28; }
+  };
+  Packet.prototype.getPos = function() {
+    if (this.t < 0 || this.done) return null;
+    const a = NODES[this.edgeIdx], b = NODES[this.edgeIdx + 1];
+    if (!a || !b) return null;
+    return { x: a.x + (b.x - a.x) * this.t, y: a.y };
+  };
+
+  var packets = [], spawnTimer = 0, last = null, activeNode = -1;
+  const SPAWN = 2.4;
+
+  function drawNode(n, active) {
+    if (active) {
+      ctx.save(); ctx.shadowColor = ORANGE; ctx.shadowBlur = 18;
+      ctx.beginPath(); ctx.arc(n.x, n.y, R, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(232,112,26,0.12)'; ctx.fill(); ctx.restore();
+    }
+    ctx.beginPath(); ctx.arc(n.x, n.y, R, 0, Math.PI*2);
+    ctx.strokeStyle = active ? ORANGE : 'rgba(232,112,26,0.35)';
+    ctx.lineWidth = active ? 1.5 : 1; ctx.stroke();
+    ctx.beginPath(); ctx.arc(n.x, n.y, R-1, 0, Math.PI*2);
+    ctx.fillStyle = active ? 'rgba(232,112,26,0.1)' : 'rgba(232,112,26,0.04)'; ctx.fill();
+    ctx.fillStyle = active ? CREAM : 'rgba(242,235,218,0.75)';
+    ctx.font = 'bold 10px Cinzel, serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(n.label, n.x, n.y);
+    ctx.fillStyle = MUTED; ctx.font = '8px Georgia, serif';
+    ctx.fillText(n.sub, n.x, n.y + R + 13);
+  }
+  function drawEdge(a, b) {
+    ctx.beginPath(); ctx.moveTo(a.x+R, a.y); ctx.lineTo(b.x-R, b.y);
+    ctx.strokeStyle = 'rgba(232,112,26,0.18)'; ctx.lineWidth = 1;
+    ctx.setLineDash([4,5]); ctx.stroke(); ctx.setLineDash([]);
+    var ex = b.x-R-6, ey = b.y;
+    ctx.beginPath(); ctx.moveTo(ex, ey-4); ctx.lineTo(ex+6, ey); ctx.lineTo(ex, ey+4);
+    ctx.strokeStyle = 'rgba(232,112,26,0.3)'; ctx.lineWidth = 1; ctx.stroke();
+  }
+  function drawPacket(pos) {
+    if (!pos) return;
+    ctx.save(); ctx.shadowColor = ORANGE; ctx.shadowBlur = 12;
+    ctx.beginPath(); ctx.arc(pos.x, pos.y, 5, 0, Math.PI*2);
+    ctx.fillStyle = ORANGE; ctx.fill();
+    ctx.beginPath(); ctx.arc(pos.x-6, pos.y, 3, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(232,112,26,0.3)'; ctx.fill(); ctx.restore();
+  }
+  function frame(ts) {
+    var now = ts/1000, dt = last ? Math.min(now-last, 0.05) : 0; last = now;
+    spawnTimer += dt;
+    if (spawnTimer >= SPAWN) { spawnTimer = 0; packets.push(new Packet(0)); }
+    packets.forEach(function(p){ p.update(dt); });
+    packets = packets.filter(function(p){ return !p.done; });
+    activeNode = -1;
+    packets.forEach(function(p){ if (p.t<0) return; if (p.pausing>0) activeNode=p.edgeIdx+1; else if (p.edgeIdx===0 && p.t<0.15) activeNode=0; });
+    ctx.clearRect(0,0,W,H);
+    for (var i=0; i<NODES.length-1; i++) drawEdge(NODES[i], NODES[i+1]);
+    NODES.forEach(function(n,i){ drawNode(n, i===activeNode); });
+    packets.forEach(function(p){ drawPacket(p.getPos()); });
+    requestAnimationFrame(frame);
+  }
+  packets.push(new Packet(0));
+  requestAnimationFrame(frame);
+})();
+
+// ── PHONE TYPEWRITER ──────────────────────────────────────────
+(function() {
+  var el = document.getElementById('razorBriefText');
+  if (!el) return;
+  var brief = "🌅 Dale — Good morning.\n\nINBOX  ·  3 flagged\n————————————————————\n⚡ REQUIRES RESPONSE\n  Ben Kelley — Focus Forum\n  Session materials ready?\n\n📩 Darrell Mims\n  “Proposal looks strong.\n  Call when you can.”\n\n📩 Encore AV · Devin F.\n  “Screen confirmed —\n  Gateway East. You're set.”\n\nTODAY\n————————————————————\n 9:00 AM  Focus Forum Day 2\n 2:00 PM  AI Panel\n\n————————————————————\nRazor · Zephyr AI · ZR";
+  var cursor = document.createElement('span');
+  cursor.className = 'ai-cursor'; cursor.innerHTML = '&nbsp;';
+  var idx = 0;
+  function typeNext() {
+    if (idx < brief.length) {
+      el.textContent = brief.slice(0, idx+1); el.appendChild(cursor); idx++;
+      var delay = brief[idx-1] === '\n' ? 40 : (Math.random()*18+8);
+      setTimeout(typeNext, delay);
+    } else {
+      setTimeout(function(){ idx=0; el.textContent=''; setTimeout(typeNext,500); }, 6000);
+    }
+  }
+  setTimeout(typeNext, 800);
+})();
+
+// ── STAT COUNTERS ─────────────────────────────────────────────
+(function() {
+  function animCounter(id, target, prefix, dur) {
+    var el = document.getElementById(id); if (!el) return;
+    var start = performance.now();
+    function step(now) {
+      var p = Math.min((now-start)/dur, 1), ease = 1-Math.pow(1-p,3);
+      el.textContent = prefix + Math.round(ease*target);
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  var statRow = document.querySelector('.ai-stat-row');
+  if (!statRow) return;
+  var obs = new IntersectionObserver(function(entries) {
+    if (entries[0].isIntersecting) {
+      animCounter('ctr-workflows', 12, '', 1400);
+      animCounter('ctr-tools', 9, '', 1200);
+      animCounter('ctr-models', 4, '', 1000);
+      obs.disconnect();
+    }
+  }, { threshold: 0.3 });
+  obs.observe(statRow);
+})();
+
+// ── QUERY CAROUSEL ────────────────────────────────────────────
+(function() {
+  var stage = document.getElementById('aiQueryStage');
+  var dotsEl = document.getElementById('aiQDots');
+  var counterEl = document.getElementById('aiQCounter');
+  if (!stage || !dotsEl || !counterEl) return;
+
+  var QUERIES = [
+    { tag:'CRM · Nutshell', query:"Which of our commercial clients haven't placed a service order in over a year?", who:'Lakewood Aquatics · Operations', result:'<strong>Pulled 11 dormant accounts</strong> from the CRM live. Four had open estimates that had gone cold. Identified the last contact date on each. Drafted a re-engagement email for the three most likely to respond.', stat:'Time to answer: under 90 seconds — would have taken a manual CRM search of 60+ records' },
+    { tag:'Finance · QuickBooks', query:'Are we making more money this quarter than we were last year at the same time?', who:'Ridgeline Services · Quarterly Review', result:'<strong>P&amp;L pulled live from QBO.</strong> Revenue up 14% year-over-year. Labor costs up 7%. Net margin improved from 21% to 27%. Flagged one expense category — vehicle fleet — that had climbed with no corresponding revenue increase.', stat:'Would normally require an accountant call or exporting to a spreadsheet' },
+    { tag:'Legal · Case Prep', query:'Our owner has a deposition in three days. Can you get him ready?', who:'Harmon v. Crestline · Pending Litigation', result:'<strong>Read all case files and prior correspondence.</strong> Produced a 4-page deposition brief: key facts, likely lines of questioning, the defense posture, and what not to say. The owner reviewed it once the morning of.', stat:'Brief built in one session — the kind of prep that normally costs $400/hr in attorney time' },
+    { tag:'Client Onboarding · CHΔRON', query:"Marcus runs a commercial plumbing company in Ohio. He's never used AI. Where do we even start?", who:'Holloway Plumbing · New Client', result:'<strong>Mapped his dispatch and quoting workflow</strong> in one interview session. Identified three places AI could save him 4–6 hours a week. Proposed a 3-step onboarding path he could follow without a technical background. He was live within a week.', stat:"The goal of CHΔRON: AI that works for a guy who's never heard of a prompt" },
+    { tag:'Email · Inbox Management', query:'Dale has 47 unread emails. What actually needs attention today?', who:'Razor · Daily Brief', result:'<strong>Flagged 2 requiring a response today.</strong> Summarized 6 threads with context. Noted one vendor contract expiring Friday that had no follow-up. Everything else: filed, labeled, and marked read. Dale opened one message that morning.', stat:'Runs automatically — Dale hasn\'t touched his inbox filter settings in four months' },
+    { tag:'Build · Staff Portal', query:'I need a portal where my 60 field techs can track their certifications and training status.', who:'Pinnacle Field Services · Operations', result:'<strong>Designed, built, and deployed in a single session.</strong> Five-level certification ladder, tech profiles, progress tracking, admin dashboard. Live on Netlify. 60 techs enrolled in week one. Replaced a paper binder and a spreadsheet nobody was updating.', stat:'From request to live URL: one afternoon — no developer hired, no agency briefed' },
+  ];
+
+  var current = 0, autoTimer = null;
+
+  QUERIES.forEach(function(q, i) {
+    var card = document.createElement('div');
+    card.className = 'ai-query-card' + (i===0 ? ' visible' : '');
+    card.innerHTML = '<div class="ai-qcard-inner"><div class="ai-qcard-left"><div class="ai-qcard-tag">'+q.tag+'</div><div class="ai-qcard-query">'+q.query+'</div><div class="ai-qcard-who">'+q.who+'</div></div><div class="ai-qcard-right"><div class="ai-qcard-result-label">What happened</div><div class="ai-qcard-result">'+q.result+'</div><div class="ai-qcard-stat">'+q.stat+'</div></div></div>';
+    stage.appendChild(card);
+    var dot = document.createElement('div');
+    dot.className = 'ai-q-dot' + (i===0 ? ' active' : '');
+    dot.addEventListener('click', function(){ goTo(i); });
+    dotsEl.appendChild(dot);
+  });
+
+  var cards = stage.querySelectorAll('.ai-query-card');
+  var dots  = dotsEl.querySelectorAll('.ai-q-dot');
+
+  function goTo(idx) {
+    cards[current].classList.remove('visible'); dots[current].classList.remove('active');
+    current = (idx + QUERIES.length) % QUERIES.length;
+    cards[current].classList.add('visible'); dots[current].classList.add('active');
+    counterEl.textContent = (current+1) + ' of ' + QUERIES.length;
+    clearInterval(autoTimer); autoTimer = setInterval(function(){ goTo(current+1); }, 5500);
+  }
+
+  document.getElementById('aiQNext').addEventListener('click', function(){ goTo(current+1); });
+  document.getElementById('aiQPrev').addEventListener('click', function(){ goTo(current-1); });
+  counterEl.textContent = '1 of ' + QUERIES.length;
+  autoTimer = setInterval(function(){ goTo(current+1); }, 5500);
+
+  window.addEventListener('load', function() {
+    var maxH = 0;
+    cards.forEach(function(c){ c.style.opacity='1'; c.style.position='relative'; maxH=Math.max(maxH,c.offsetHeight); c.style.opacity=''; c.style.position=''; });
+    stage.style.minHeight = maxH + 'px';
+  });
+})();
+</script>
+</body>
+</html>
