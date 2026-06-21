@@ -509,6 +509,32 @@ footer {
   .qr-cell:first-child { border-top: none; }
 }
 
+/* ── SPEAKER MATERIALS DROPDOWN ── */
+.speaker-mat {
+  margin-top: auto; border-top: 1px solid rgba(232,112,26,.14);
+  padding-top: .875rem;
+}
+.speaker-mat summary {
+  font-family: 'Cinzel', serif; font-size: .62rem; font-weight: 600;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: var(--orange); cursor: pointer; list-style: none;
+  display: flex; align-items: center; gap: .5rem;
+  -webkit-tap-highlight-color: transparent;
+}
+.speaker-mat summary::-webkit-details-marker { display: none; }
+.speaker-mat summary::after {
+  content: '›'; font-size: .9rem; line-height: 1;
+  transition: transform .2s; display: inline-block;
+}
+.speaker-mat[open] summary::after { transform: rotate(90deg); }
+.speaker-mat-links { display: flex; flex-direction: column; gap: .5rem; margin-top: .75rem; }
+.speaker-mat-links .mat-link { font-size: .62rem; }
+
+/* ── REGISTER 2027 ── */
+.register-inner { max-width: 560px; margin: 0 auto; padding: 4rem 5vw; }
+.register-inner h2 { font-size: clamp(1.5rem,2.5vw,2.5rem); margin: .5rem 0 1rem; }
+.register-inner p { font-size: .9375rem; font-style: italic; color: var(--muted); margin-bottom: 2rem; }
+
 /* ── MATERIALS ── */
 .mat-header {
   padding: 4rem 5vw 2.5rem;
@@ -1231,16 +1257,13 @@ section[id], #pay { scroll-margin-top: 128px; }
     </span>
   </a>
   <ul class="nav-links" role="list">
-    <li><a href="#schedule">Schedule</a></li>
-    <li><a href="#materials">Materials</a></li>
-    <li><a href="#ids">IDS</a></li>
     <li><a href="#gallery">Gallery</a></li>
-    <li><a href="#people">People</a></li>
-    <li><a href="#ai">AI Features</a></li>
-    <li><a href="#explore">Explore</a></li>
-    <li><a href="#logistics">Logistics</a></li>
     <li><a href="#feedback">Feedback</a></li>
-    <li><a href="#pay" class="nav-pay">Pay</a></li>
+    <li><a href="register-2027.html">2027</a></li>
+    <li><a href="#speakers">Speakers</a></li>
+    <li><a href="#ai">AI</a></li>
+    <li><a href="#schedule">Schedule</a></li>
+    <li><a href="#people">People</a></li>
   </ul>
   <button class="nav-burger" id="burger-btn" aria-expanded="false" aria-controls="nav-overlay" aria-label="Open navigation menu">
     <svg width="26" height="17" viewBox="0 0 26 17" fill="none" aria-hidden="true">
@@ -1253,38 +1276,22 @@ section[id], #pay { scroll-margin-top: 128px; }
 
 <div id="nav-overlay" class="nav-overlay" role="dialog" aria-modal="true" aria-label="Navigation menu">
   <button id="overlay-close" class="overlay-close" aria-label="Close menu">✕</button>
-  <a href="#schedule">Schedule</a>
-  <a href="#materials">Materials</a>
-  <a href="#ids">IDS</a>
   <a href="#gallery">Gallery</a>
-  <a href="#people">People</a>
-  <a href="#ai">AI Features</a>
-  <a href="#explore">Explore</a>
-  <a href="#logistics">Logistics</a>
   <a href="#feedback">Feedback</a>
-  <a href="#pay">Pay</a>
+  <a href="register-2027.html">Register 2027</a>
+  <a href="#speakers">Speakers</a>
+  <a href="#ai">AI Features</a>
+  <a href="#schedule">Schedule</a>
+  <a href="#people">People</a>
 </div>
 
-<!-- ── NOW BANNER ── -->
-<div id="now-banner" class="now-banner hidden" role="status" aria-live="polite">
-  <div class="nb-current">
-    <div class="nb-pip"><span class="pip-dot"></span><span id="nb-now-label">Now</span></div>
-    <div class="nb-title" id="nb-now-title"></div>
-    <div class="nb-meta" id="nb-now-meta"></div>
-  </div>
-  <div class="nb-next" id="nb-next-col">
-    <div class="nb-pip"><span class="pip-dot"></span><span>Up Next</span></div>
-    <div class="nb-title" id="nb-next-title"></div>
-    <div class="nb-meta" id="nb-next-meta"></div>
-  </div>
-</div>
 
 <div class="page-frame">
 
 <!-- ── HERO ── -->
 <section class="hero" id="main">
   <div class="hero-inner">
-    <p class="hero-kicker">You're In &nbsp;&middot;&nbsp; Cooper's Consulting Presents</p>
+    <p class="hero-kicker">Thank You &nbsp;&middot;&nbsp; Cooper's Consulting</p>
     <img src="images/logo-forum.png" alt="Focus Forum 2026" class="hero-logo"/>
     <p class="hero-date">June 18 &ndash; 19, 2026</p>
     <p class="hero-venue">Hyatt Regency at The Arch &nbsp;&middot;&nbsp; St. Louis, Missouri</p>
@@ -1292,45 +1299,70 @@ section[id], #pay { scroll-margin-top: 128px; }
 
   <div class="quick-ref" role="complementary" aria-label="Quick reference">
     <div class="qr-cell">
-      <div class="qr-label">Sessions Begin</div>
-      <div class="qr-value">8:00 AM</div>
-      <div class="qr-sub">Breakfast from 7:00–8:00 AM</div>
+      <div class="qr-label">Leave Feedback</div>
+      <div class="qr-value">Share Your Thoughts</div>
+      <a href="#feedback" class="qr-btn">Feedback Form &rarr;</a>
     </div>
     <div class="qr-cell">
-      <div class="qr-label">Main Room</div>
-      <div class="qr-value">Gateway East</div>
-      <div class="qr-sub">Meals &amp; breakouts: Gateway West</div>
+      <div class="qr-label">Photo Gallery</div>
+      <div class="qr-value">Conference Photos</div>
+      <a href="#gallery" class="qr-btn">View Gallery &rarr;</a>
     </div>
     <div class="qr-cell">
-      <div class="qr-label">Questions? Call Joel</div>
+      <div class="qr-label">Focus Forum 2027</div>
+      <div class="qr-value">Registration Open</div>
+      <a href="register-2027.html" class="qr-btn">Register Now &rarr;</a>
+    </div>
+    <div class="qr-cell">
+      <div class="qr-label">Questions?</div>
       <div class="qr-value"><a href="tel:5737604007">573.760.4007</a></div>
-      <div class="qr-sub">Joel Cooper, Coordinator</div>
-    </div>
-    <div class="qr-cell">
-      <div class="qr-label">Attendee Group</div>
-      <div class="qr-value" style="font-size:.85rem;letter-spacing:.03em;">WhatsApp Community</div>
-      <a href="https://chat.whatsapp.com/DfqVSaCDkCNAsK6UI6zoj5" target="_blank" rel="noopener" class="qr-btn">Join Group &rarr;</a>
+      <div class="qr-sub">Joel Cooper</div>
     </div>
   </div>
 </section>
 
 <div class="duality-rule"></div>
 
-<!-- ── STL LIVE BAR ── -->
-<div class="stl-live-bar">
-  <div class="slb-cell">
-    <div class="slb-label"><span class="slb-live-dot"></span>St. Louis</div>
-    <div class="slb-value" id="slb-weather">—</div>
+
+<!-- ── GALLERY ── -->
+<section class="sect sect-b" id="gallery">
+  <div class="gallery-header">
+    <div class="sect-label">Focus Forum 2026</div>
+    <h2>Gallery</h2>
+    <p>Photos from the conference.</p>
   </div>
-  <div class="slb-cell">
-    <div class="slb-label"><span class="slb-live-dot"></span>Cardinals</div>
-    <div class="slb-value" id="slb-cards">—</div>
+  <div class="slideshow-wrap">
+    <div class="slideshow-stage" id="slideshow-stage">
+      <img class="slide-img" id="slide-img-a" src="" alt=""/>
+      <img class="slide-img" id="slide-img-b" src="" alt=""/>
+      <div class="slide-caption" id="slide-caption"></div>
+      <div class="slide-counter" id="slide-counter"></div>
+      <button class="slide-btn slide-prev" id="slide-prev" aria-label="Previous photo">&#8249;</button>
+      <button class="slide-btn slide-next" id="slide-next" aria-label="Next photo">&#8250;</button>
+    </div>
+    <p class="gallery-empty" id="gallery-empty" style="display:none">No photos yet — check back soon.</p>
   </div>
-  <div class="slb-cell">
-    <div class="slb-label">Arch Tram</div>
-    <div class="slb-value" id="slb-arch">—</div>
+</section>
+
+<!-- ── FEEDBACK ── -->
+<section class="sect sect-a" id="feedback">
+  <div class="feedback-inner">
+    <div class="sect-label">Before You Go</div>
+    <h2>Leave Your <span style="color:var(--orange)">Feedback</span></h2>
+    <p class="ff-lede">What landed? What are you taking home? What would you change? We read every word.</p>
+    <a href="feedback.html" class="ff-btn">Share Your Feedback &rarr;</a>
   </div>
-</div>
+</section>
+
+<!-- ── REGISTER 2027 ── -->
+<section class="sect sect-b" id="register">
+  <div class="register-inner">
+    <div class="sect-label">What's Next</div>
+    <h2>Focus Forum <span style="color:var(--orange)">2027</span></h2>
+    <p>Same format. Same city. Next level. Registration is open now — seats fill fast and more details are coming soon.</p>
+    <a href="register-2027.html" class="ff-btn">Register for 2027 &rarr;</a>
+  </div>
+</section>
 
 <!-- ── SCHEDULE ── -->
 <section class="sect sect-b" id="schedule">
@@ -1492,8 +1524,8 @@ section[id], #pay { scroll-margin-top: 128px; }
 
 </section>
 
-<!-- ── MATERIALS ── -->
-<section class="sect sect-a" id="materials">
+<!-- ── MATERIALS — folded into speaker cards ── -->
+<section class="sect sect-a" id="materials" style="display:none">
   <div class="mat-header">
     <div class="sect-label">Session Materials</div>
     <h2>Downloads &amp; Docs</h2>
@@ -1603,7 +1635,7 @@ section[id], #pay { scroll-margin-top: 128px; }
 </section>
 
 <!-- ── IDS LIST ── -->
-<section class="sect sect-a" id="ids">
+<section class="sect sect-a" id="ids" style="display:none">
   <div class="sect-label">Identify · Discuss · Solve</div>
   <h2>IDS List</h2>
   <p style="font-size:.9375rem;color:var(--muted);margin-bottom:2rem;">Issues captured during Focus Forum 2026. Tap any issue to mark it solved.</p>
@@ -1684,6 +1716,10 @@ section[id], #pay { scroll-margin-top: 128px; }
       <div class="speaker-role">Founder &nbsp;&middot;&nbsp; Safe Slide Restoration &amp; Cooper's Consulting</div>
       <span class="speaker-session-tag">Opening &nbsp;&middot;&nbsp; Healthy Visionary &nbsp;&middot;&nbsp; EOS Panel &nbsp;&middot;&nbsp; MC</span>
       <p class="speaker-bio">Dale built Safe Slide Restoration over thirty years from a regional outfit into a global operation — 400+ projects a year, an industry-recognized training program, and clients spanning waterparks on every continent. He also founded Cherrywood Farm &amp; Golf Club. The Focus Forum was his idea, built for the business owners he's watched grind without the right framework for far too long. Husband to Cherry, father of 12.</p>
+      <details class="speaker-mat">
+        <summary>Materials</summary>
+        <div class="speaker-mat-links"><span class="mat-empty">Materials coming soon</span></div>
+      </details>
     </div>
 
     <div class="speaker-card">
@@ -1694,6 +1730,14 @@ section[id], #pay { scroll-margin-top: 128px; }
       <div class="speaker-role">Professional EOS Implementer</div>
       <span class="speaker-session-tag">Day One &nbsp;&middot;&nbsp; SPARK Session &nbsp;&middot;&nbsp; EOS Panel</span>
       <p class="speaker-bio">Marie is a Relationship &amp; Intimacy Coach who works with high-performing couples navigating the specific pressures that ambition puts on a marriage. Adam is a former fourth-generation CEO who scaled to 9 figures and grew revenue by $40M within two years of running EOS — and an Ironman finisher. Together they built the SPARK framework: a practical system for couples who lead together to rebuild trust, communicate honestly, and build a shared vision that actually holds up under the weight of a real business.</p>
+      <details class="speaker-mat">
+        <summary>Materials</summary>
+        <div class="speaker-mat-links">
+          <a href="https://game.estherperel.com/products/where-should-we-begin-a-game-of-stories-2nd-edition" target="_blank" rel="noopener" class="mat-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Where Should We Begin — Esther Perel</a>
+          <a href="https://www.amazon.com/gp/product/1544508123" target="_blank" rel="noopener" class="mat-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Vivid Vision — Cameron Herold</a>
+          <a href="https://www.startupspouses.co/free-workbook-download" target="_blank" rel="noopener" class="mat-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Weekly Connection Workbook — Startup Spouses</a>
+        </div>
+      </details>
     </div>
 
     <div class="speaker-card">
@@ -1704,6 +1748,12 @@ section[id], #pay { scroll-margin-top: 128px; }
       <div class="speaker-role">Certified EOS Implementer</div>
       <span class="speaker-session-tag">Day Two &nbsp;&middot;&nbsp; VTO Flight Path &nbsp;&middot;&nbsp; EOS Panel</span>
       <p class="speaker-bio">5+ years guiding leadership teams through EOS. Ben's background spans product design, real estate, and running a design company — a practitioner's lens on the same challenges his clients face. His focus: helping owners work less in the business and earn more, without burning out.</p>
+      <details class="speaker-mat">
+        <summary>Materials</summary>
+        <div class="speaker-mat-links">
+          <a href="https://www.amazon.com/Rocket-Fuel-Essential-Combination-Business/dp/1942952317" target="_blank" rel="noopener" class="mat-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Rocket Fuel — Wickman &amp; Winters</a>
+        </div>
+      </details>
     </div>
 
     <div class="speaker-card">
@@ -1714,6 +1764,14 @@ section[id], #pay { scroll-margin-top: 128px; }
       <div class="speaker-role">Leadership Performance Coach &nbsp;&middot;&nbsp; Archangel Performance</div>
       <span class="speaker-session-tag">Day One &nbsp;&middot;&nbsp; Emotional Intelligence</span>
       <p class="speaker-bio">Former Special Warfare leader with two decades of military service. Marcus coaches elite performers on mental resilience, emotional strength, and leading without losing yourself. He doesn't coach from theory — he coaches from the fire.</p>
+      <details class="speaker-mat">
+        <summary>Materials</summary>
+        <div class="speaker-mat-links">
+          <a href="https://drive.google.com/file/d/15_HEHwO_1zr2w6k8Sbt3uUH8W220YPyX/view?usp=drivesdk" target="_blank" rel="noopener" class="mat-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Tactical EQ Slides — Coach T</a>
+          <a href="https://www.amazon.com/Emotional-Intelligence-2-0-Travis-Bradberry/dp/0974320625" target="_blank" rel="noopener" class="mat-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Emotional Intelligence 2.0 — Travis Bradberry</a>
+          <a href="https://www.amazon.com/Emotional-Intelligence-Habits-Travis-Bradberry/dp/0974719374" target="_blank" rel="noopener" class="mat-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Emotional Intelligence Habits — Travis Bradberry</a>
+        </div>
+      </details>
     </div>
 
     <div class="speaker-card">
@@ -1724,6 +1782,12 @@ section[id], #pay { scroll-margin-top: 128px; }
       <div class="speaker-role">Attorney at Law &nbsp;&middot;&nbsp; Estate Planning &amp; Elder Law</div>
       <span class="speaker-session-tag">Day Two &nbsp;&middot;&nbsp; Legacy Planning</span>
       <p class="speaker-bio">Founder of the Law Office of Mark McMullin in Cape Girardeau, MO. Mark began in finance before pursuing law at Mizzou — finding his calling in estate planning. He helps people be intentional about what happens to them, their family, and everything they've worked to build.</p>
+      <details class="speaker-mat">
+        <summary>Materials</summary>
+        <div class="speaker-mat-links">
+          <a href="https://www.amazon.com/Entrusted-Building-Legacy-That-Lasts/dp/0692558268" target="_blank" rel="noopener" class="mat-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Entrusted — Howell &amp; York</a>
+        </div>
+      </details>
     </div>
 
     <div class="speaker-card">
@@ -1734,6 +1798,10 @@ section[id], #pay { scroll-margin-top: 128px; }
       <div class="speaker-role">Software Engineer &nbsp;&middot;&nbsp; Smallstep</div>
       <span class="speaker-session-tag">Day Two &nbsp;&middot;&nbsp; AI Panel</span>
       <p class="speaker-bio">Builds the infrastructure and tooling that reliable systems run on. Alan's work spans certificate automation at Smallstep and LLM application development at Mirascope — practical experience constructing the systems that AI actually needs to function in the real world. He brings a builder's perspective to the session: what does it take to make these tools trustworthy, maintainable, and genuinely useful rather than just impressive.</p>
+      <details class="speaker-mat">
+        <summary>Materials</summary>
+        <div class="speaker-mat-links"><span class="mat-empty">Nothing yet</span></div>
+      </details>
     </div>
 
     <div class="speaker-card">
@@ -1744,12 +1812,18 @@ section[id], #pay { scroll-margin-top: 128px; }
       <div class="speaker-role">Founding Software Engineer &nbsp;&middot;&nbsp; Page Technologies</div>
       <span class="speaker-session-tag">Day Two &nbsp;&middot;&nbsp; AI Panel</span>
       <p class="speaker-bio">Founding Software Engineer at Page Technologies, building the systems that make AI practical rather than theoretical. He brings a builder's perspective to the AI panel — focused on what it actually takes to deploy intelligent tools in real businesses and keep the human element intact when you do.</p>
+      <details class="speaker-mat">
+        <summary>Materials</summary>
+        <div class="speaker-mat-links"><span class="mat-empty">Nothing yet</span></div>
+      </details>
     </div>
 
   </div>
+</section>
 
-  <!-- ── AI ECOSYSTEM SHOWCASE ── -->
-  <div class="ai-showcase" id="ai">
+<!-- ── AI ECOSYSTEM SHOWCASE ── -->
+<section class="sect sect-a" id="ai">
+  <div class="ai-showcase">
     <div class="ai-showcase-label">What I built</div>
     <div class="ai-showcase-title">A private AI ecosystem.<br>Running 24 hours a day. Costing $0/month.</div>
     <p class="ai-showcase-sub">Every tool here runs on a single machine in my house. No cloud bill. No third-party data handling. The AI knows Dale's business because I built it to — and it's been running unattended since March.</p>
@@ -1829,14 +1903,30 @@ section[id], #pay { scroll-margin-top: 128px; }
 
 </section>
 
-<!-- ── EXPLORE STL ── -->
-<section class="sect sect-b" id="explore">
-  <div class="stl-header">
-    <div class="sect-label">While You're Here</div>
-    <h2>Explore St. Louis</h2>
-    <p>You're in one of the most underrated cities in America. Use the time you have.</p>
-    <p class="stl-advisory"><strong style="color:var(--cream)">Driving advisory —</strong> I-44 through downtown St. Louis is currently closed due to a major sinkhole, with no confirmed reopening date. Check your navigation before heading in and give yourself extra time. <a href="https://www.stlpr.org/government-politics-issues/2026-06-14/huge-hole-closed-interstate-44-downtown-st-louis" target="_blank" rel="noopener">Full story &rarr;</a></p>
+<!-- ── EXPLORE STL — removed post-conference ── -->
+<div style="display:none"><!-- EXPLORE STL REMOVED --></div>
+<!-- ── LOGISTICS — removed post-conference ── -->
+<div style="display:none"><!-- LOGISTICS REMOVED --></div>
+
+<!-- ── CONTACT STRIP ── -->
+<div class="contact-strip">
+  <div class="contact-item">
+    <div class="contact-label">Questions</div>
+    <div class="contact-val"><a href="tel:5737604007">573.760.4007</a></div>
   </div>
+  <div class="contact-item">
+    <div class="contact-label">Coordinator</div>
+    <div class="contact-val">Joel Cooper</div>
+  </div>
+  <div class="contact-item">
+    <div class="contact-label">Attendee Community</div>
+    <div class="contact-val"><a href="https://chat.whatsapp.com/DfqVSaCDkCNAsK6UI6zoj5" target="_blank" rel="noopener">WhatsApp Group &rarr;</a></div>
+  </div>
+</div>
+
+<!-- ── EXPLORE STL — removed ── -->
+<section class="sect sect-b" id="explore" style="display:none">
+  <div class="stl-header"></div>
   <div class="stl-grid">
     <div class="stl-card" style="--img:url('https://explorestlouis.com/wp-content/uploads/2024/06/The-Pitch-at-St.-Louis-Union-Station.jpg')">
       <div class="stl-card-overlay"></div>
@@ -1894,12 +1984,9 @@ section[id], #pay { scroll-margin-top: 128px; }
   </div>
 </section>
 
-<!-- ── LOGISTICS ── -->
-<section class="sect sect-a" id="logistics">
-  <div class="logistics-header">
-    <div class="sect-label">Know Before You Go</div>
-    <h2>Logistics</h2>
-  </div>
+<!-- ── LOGISTICS — removed ── -->
+<section class="sect sect-a" id="logistics" style="display:none">
+  <div class="logistics-header"></div>
   <div class="logistics-grid">
 
     <div class="logi-panel">
@@ -1995,41 +2082,6 @@ section[id], #pay { scroll-margin-top: 128px; }
   </div>
 </section>
 
-<!-- ── CONTACT STRIP ── -->
-<div class="contact-strip">
-  <div class="contact-item">
-    <div class="contact-label">Questions &amp; Day-Of</div>
-    <div class="contact-val"><a href="tel:5737604007">573.760.4007</a></div>
-  </div>
-  <div class="contact-item">
-    <div class="contact-label">Coordinator</div>
-    <div class="contact-val">Joel Cooper</div>
-  </div>
-  <div class="contact-item">
-    <div class="contact-label">Attendee Community</div>
-    <div class="contact-val"><a href="https://chat.whatsapp.com/DfqVSaCDkCNAsK6UI6zoj5" target="_blank" rel="noopener">WhatsApp Group &rarr;</a></div>
-  </div>
-</div>
-
-<!-- ── GALLERY ── -->
-<section class="sect sect-b" id="gallery">
-  <div class="gallery-header">
-    <div class="sect-label">Focus Forum 2026</div>
-    <h2>Gallery</h2>
-    <p>Photos from the conference — growing throughout the day.</p>
-  </div>
-  <div class="slideshow-wrap">
-    <div class="slideshow-stage" id="slideshow-stage">
-      <img class="slide-img" id="slide-img-a" src="" alt=""/>
-      <img class="slide-img" id="slide-img-b" src="" alt=""/>
-      <div class="slide-caption" id="slide-caption"></div>
-      <div class="slide-counter" id="slide-counter"></div>
-      <button class="slide-btn slide-prev" id="slide-prev" aria-label="Previous photo">&#8249;</button>
-      <button class="slide-btn slide-next" id="slide-next" aria-label="Next photo">&#8250;</button>
-    </div>
-    <p class="gallery-empty" id="gallery-empty" style="display:none">No photos yet — check back soon.</p>
-  </div>
-</section>
 
 <!-- ── PEOPLE DIRECTORY ── -->
 <section class="sect sect-a" id="people">
@@ -2250,22 +2302,6 @@ section[id], #pay { scroll-margin-top: 128px; }
   </div>
 </section>
 
-<!-- ── FEEDBACK ── -->
-<section class="sect sect-a" id="feedback">
-  <div class="feedback-inner">
-    <div class="sect-label">Before You Go</div>
-    <h2>Leave Your <span class="h-accent">Feedback</span></h2>
-    <p class="ff-lede">What landed? What are you taking home? What would you change? We read every word.</p>
-    <a href="feedback.html" class="ff-btn">Share Your Feedback &rarr;</a>
-  </div>
-</section>
-
-<!-- ── PAY (tucked for those who haven't yet) ── -->
-<div class="pay-strip" id="pay">
-  <div class="pay-strip-label">Haven't Paid?</div>
-  <div class="pay-strip-text"><strong>$400 per person.</strong> Send via Venmo @coopersconsulting or Zelle to <strong>573.760.4007</strong> — memo: "Focus Forum."</div>
-  <a href="https://account.venmo.com/u/coopersconsulting" target="_blank" rel="noopener" class="btn-pay">Pay via Venmo &rarr;</a>
-</div>
 
 <!-- ── FOOTER ── -->
 <footer>
@@ -2656,42 +2692,47 @@ function fetchCardinals() {
 
 // ── INIT ──
 autoSelectDay();
-updateNowBanner();
 updateSessionStatus();
-updateArchUI();
-fetchWeather();
-fetchCardinals();
-setInterval(() => { updateNowBanner(); updateSessionStatus(); updateArchUI(); }, 60000);
+setInterval(updateSessionStatus, 60000);
 setInterval(fetchCardinals, 300000);
 </script>
 
 <!-- ── APP BOTTOM NAV (mobile) ── -->
 <nav class="app-bottom-nav" aria-label="App navigation">
+  <a href="#gallery">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+      <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+      <polyline points="21 15 16 10 5 21"/>
+    </svg>
+    Gallery
+  </a>
+  <a href="#feedback">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    </svg>
+    Feedback
+  </a>
+  <a href="forum-2027.html">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+      <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
+      <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+      <line x1="12" y1="14" x2="12" y2="18"/><line x1="10" y1="16" x2="14" y2="16"/>
+    </svg>
+    2027
+  </a>
+  <a href="#speakers">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+      <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+      <path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>
+    </svg>
+    Speakers
+  </a>
   <a href="#schedule">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
       <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
       <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
     </svg>
     Schedule
-  </a>
-  <a href="#explore">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-      <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><line x1="7" y1="2" x2="7" y2="22"/>
-      <path d="M21 15V2a5 5 0 0 0-5 5v6h3.5c.8 0 1.5.7 1.5 1.5V15"/><line x1="21" y1="15" x2="21" y2="22"/>
-    </svg>
-    Eat
-  </a>
-  <a href="https://maps.google.com/?q=Hyatt+Regency+St+Louis+at+The+Arch,+315+Chestnut+Street,+St+Louis,+MO+63102" target="_blank" rel="noopener">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
-    </svg>
-    Hotel
-  </a>
-  <a href="tel:5737604007">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-    </svg>
-    Joel
   </a>
 </nav>
 
@@ -2701,14 +2742,19 @@ setInterval(fetchCardinals, 300000);
   const canvas = document.getElementById('razorCanvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
-  const W = 700, H = 130;
-  canvas.width = W; canvas.height = H;
+  const DPR = window.devicePixelRatio || 1;
+  const W = Math.min(700, (canvas.parentElement ? canvas.parentElement.clientWidth : 700) || 700);
+  const H = 130;
+  canvas.width = W * DPR; canvas.height = H * DPR;
+  canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+  ctx.scale(DPR, DPR);
 
+  const sc = W / 700;
   const NODES = [
-    { x: 68,  y: 58, label: 'Gmail',    sub: 'dale@safeslides.com' },
-    { x: 252, y: 58, label: 'n8n',      sub: 'Zephyr · ZR node'  },
-    { x: 448, y: 58, label: 'Ollama',   sub: 'Gemma 4 · local'    },
-    { x: 632, y: 58, label: 'Telegram', sub: "Dale's phone"         },
+    { x: 68*sc,  y: 58, label: 'Gmail',    sub: 'dale@safeslides.com' },
+    { x: 252*sc, y: 58, label: 'n8n',      sub: 'Zephyr · ZR node'  },
+    { x: 448*sc, y: 58, label: 'Ollama',   sub: 'Gemma 4 · local'    },
+    { x: 632*sc, y: 58, label: 'Telegram', sub: "Dale's phone"         },
   ];
   const R = 26;
   const ORANGE = '#E8701A', CREAM = '#F2EBDA', MUTED = 'rgba(242,235,218,0.35)';

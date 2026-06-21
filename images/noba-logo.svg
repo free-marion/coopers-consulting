@@ -1,33 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
-  <defs>
-    <style>
-      @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800&display=swap');
-    </style>
-    <clipPath id="ring-clip">
-      <circle cx="200" cy="200" r="163"/>
-    </clipPath>
-  </defs>
-
-  <!-- Outer ring -->
-  <circle cx="200" cy="200" r="178" fill="none" stroke="#B07D4B" stroke-width="3.5"/>
-  <!-- Inner ring -->
-  <circle cx="200" cy="200" r="163" fill="none" stroke="#B07D4B" stroke-width="1.8"/>
-
-  <!-- Cardinal tick marks (N / S / E / W) -->
-  <line x1="200" y1="13"  x2="200" y2="44"  stroke="#B07D4B" stroke-width="2.5" stroke-linecap="square"/>
-  <line x1="200" y1="387" x2="200" y2="356" stroke="#B07D4B" stroke-width="2.5" stroke-linecap="square"/>
-  <line x1="13"  y1="200" x2="44"  y2="200" stroke="#B07D4B" stroke-width="2.5" stroke-linecap="square"/>
-  <line x1="387" y1="200" x2="356" y2="200" stroke="#B07D4B" stroke-width="2.5" stroke-linecap="square"/>
-
-  <!-- Diagonal X crosshair (clipped to inner ring) -->
-  <g clip-path="url(#ring-clip)">
-    <line x1="37"  y1="37"  x2="363" y2="363" stroke="#B07D4B" stroke-width="5" stroke-linecap="butt"/>
-    <line x1="363" y1="37"  x2="37"  y2="363" stroke="#B07D4B" stroke-width="5" stroke-linecap="butt"/>
-  </g>
-
-  <!-- Letters: O top, N left, B right, A bottom — Barlow Condensed ExtraBold -->
-  <text font-family="'Barlow Condensed', 'Arial Narrow', sans-serif" font-weight="800" font-size="86" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="200" y="112">O</text>
-  <text font-family="'Barlow Condensed', 'Arial Narrow', sans-serif" font-weight="800" font-size="86" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="110" y="202">N</text>
-  <text font-family="'Barlow Condensed', 'Arial Narrow', sans-serif" font-weight="800" font-size="86" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="290" y="202">B</text>
-  <text font-family="'Barlow Condensed', 'Arial Narrow', sans-serif" font-weight="800" font-size="86" fill="#B07D4B" text-anchor="middle" dominant-baseline="central" x="200" y="292">A</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
+  <circle cx="400" cy="400" r="368" fill="none" stroke="#B07D4B" stroke-width="18"/>
+  <circle cx="400" cy="400" r="338" fill="none" stroke="#B07D4B" stroke-width="13"/>
+  <line x1="400" y1="12" x2="400" y2="68" stroke="#B07D4B" stroke-width="18" stroke-linecap="round"/>
+  <line x1="400" y1="732" x2="400" y2="788" stroke="#B07D4B" stroke-width="18" stroke-linecap="round"/>
+  <line x1="12" y1="400" x2="68" y2="400" stroke="#B07D4B" stroke-width="18" stroke-linecap="round"/>
+  <line x1="732" y1="400" x2="788" y2="400" stroke="#B07D4B" stroke-width="18" stroke-linecap="round"/>
+  <line x1="161" y1="161" x2="639" y2="639" stroke="#B07D4B" stroke-width="22" stroke-linecap="round"/>
+  <line x1="639" y1="161" x2="161" y2="639" stroke="#B07D4B" stroke-width="22" stroke-linecap="round"/>
+  <text x="400" y="218" text-anchor="middle" dominant-baseline="central" font-family="'Barlow Condensed','Arial Narrow',sans-serif" font-weight="800" font-size="128" fill="#B07D4B" letter-spacing="-2">O</text>
+  <text x="218" y="402" text-anchor="middle" dominant-baseline="central" font-family="'Barlow Condensed','Arial Narrow',sans-serif" font-weight="800" font-size="128" fill="#B07D4B">N</text>
+  <text x="582" y="402" text-anchor="middle" dominant-baseline="central" font-family="'Barlow Condensed','Arial Narrow',sans-serif" font-weight="800" font-size="128" fill="#B07D4B">B</text>
+  <text x="400" y="590" text-anchor="middle" dominant-baseline="central" font-family="'Barlow Condensed','Arial Narrow',sans-serif" font-weight="800" font-size="128" fill="#B07D4B">A</text>
 </svg>
