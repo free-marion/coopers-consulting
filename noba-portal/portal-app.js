@@ -194,20 +194,23 @@ function toggleTimerFromFloat() {
 
 // ── MEETING RATINGS ──────────────────────────────────────────────────────────
 let memberRatings = {}; // { memberName: rating } for current week
-let ratingHistory = []; // [{ week_start, member_name, rating }]
+let memberAbsent  = {}; // { memberName: true } for current week
+let ratingHistory = []; // [{ week_start, member_name, rating, absent }]
 
 async function loadMeetingRatings() {
   const weeks = [];
   for (let i = 0; i < 6; i++) weeks.push(getWeekStart(-i));
   const { data } = await db.from('meeting_ratings')
-    .select('week_start, member_name, rating')
+    .select('week_start, member_name, rating, absent')
     .eq('group_id', GROUP.id)
     .in('week_start', weeks)
     .order('week_start', { ascending: false });
   ratingHistory = data || [];
   memberRatings = {};
+  memberAbsent  = {};
   ratingHistory.filter(r => r.week_start === getWeekStart()).forEach(r => {
     memberRatings[r.member_name] = r.rating;
+    memberAbsent[r.member_name]  = !!r.absent;
   });
 }
 
@@ -281,15 +284,17 @@ function renderTimer(c) {
                 <span class="member-rating-name">${name.split(' ')[0]}</span>
                 <div class="rating-buttons">
                   ${[1,2,3,4,5,6,7,8,9,10].map(n => `
-                    <button class="rating-btn ${memberRatings[name] === n ? 'rating-btn--active' : ''}"
-                            data-rate="${n}" data-member="${name}">${n}</button>
+                    <button class="rating-btn ${memberRatings[name] === n && !memberAbsent[name] ? 'rating-btn--active' : ''}"
+                            data-rate="${n}" data-member="${name}" ${memberAbsent[name] ? 'disabled' : ''}>${n}</button>
                   `).join('')}
+                  <button class="rating-btn rating-btn--absent ${memberAbsent[name] ? 'rating-btn--active' : ''}"
+                          data-absentbtn data-member="${name}">Absent</button>
                 </div>
               </div>
             `).join('')}
-            ${members.length > 0 && members.every(m => memberRatings[m] != null)
+            ${members.length > 0 && members.every(m => memberRatings[m] != null || memberAbsent[m])
               ? `<button class="btn-conclude" id="concludeBtn">✓ Conclude Meeting</button>`
-              : `<div class="conclude-hint">${Object.keys(memberRatings).length} of ${members.length} rated</div>`
+              : `<div class="conclude-hint">${members.filter(m => memberRatings[m] != null || memberAbsent[m]).length} of ${members.length} rated</div>`
             }
           </div>
         ` : ''}
@@ -309,16 +314,18 @@ function renderTimer(c) {
                 <tbody>
                   ${[...new Set(ratingHistory.map(r => r.week_start))].map(week => {
                     const weekRows = ratingHistory.filter(r => r.week_start === week);
-                    const vals = members.map(m => (weekRows.find(r => r.member_name === m) || {}).rating ?? null);
-                    const filled = vals.filter(v => v !== null);
-                    const avg = filled.length ? (filled.reduce((a,b)=>a+b,0)/filled.length).toFixed(1) : '—';
+                    const rows = members.map(m => weekRows.find(r => r.member_name === m) || null);
+                    const filled = rows.filter(r => r && r.rating != null);
+                    const avg = filled.length ? (filled.reduce((a,b)=>a+b.rating,0)/filled.length).toFixed(1) : '—';
                     const lbl = new Date(week+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
                     const isCurrent = week === getWeekStart();
                     return `<tr${isCurrent ? ' class="hist-row-current"' : ''}>
                       <td class="hist-week-lbl">${lbl}</td>
-                      ${vals.map(v => v !== null
-                        ? `<td class="hist-val" style="color:${v>=8?'#9EA67C':v>=5?'#B07D4B':'#c0392b'}">${v}</td>`
-                        : `<td class="hist-val hist-val--empty">—</td>`
+                      ${rows.map(r => r && r.absent
+                        ? `<td class="hist-val hist-val--absent">Absent</td>`
+                        : r && r.rating != null
+                          ? `<td class="hist-val" style="color:${r.rating>=8?'#9EA67C':r.rating>=5?'#B07D4B':'#c0392b'}">${r.rating}</td>`
+                          : `<td class="hist-val hist-val--empty">—</td>`
                       ).join('')}
                       <td class="hist-avg">${avg}</td>
                     </tr>`;
@@ -371,13 +378,27 @@ function renderTimer(c) {
     renderTimer(c);
   });
 
-  c.querySelectorAll('.rating-btn').forEach(btn => {
+  c.querySelectorAll('.rating-btn[data-rate]').forEach(btn => {
     btn.addEventListener('click', async () => {
       const memberName = btn.dataset.member;
       const rating = parseInt(btn.dataset.rate);
       memberRatings[memberName] = rating;
+      memberAbsent[memberName] = false;
       await db.from('meeting_ratings').upsert({
-        group_id: GROUP.id, week_start: getWeekStart(), member_name: memberName, rating
+        group_id: GROUP.id, week_start: getWeekStart(), member_name: memberName, rating, absent: false
+      }, { onConflict: 'group_id,week_start,member_name' });
+      await loadMeetingRatings();
+      renderTimer(c);
+    });
+  });
+
+  c.querySelectorAll('.rating-btn[data-absentbtn]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const memberName = btn.dataset.member;
+      memberRatings[memberName] = null;
+      memberAbsent[memberName] = true;
+      await db.from('meeting_ratings').upsert({
+        group_id: GROUP.id, week_start: getWeekStart(), member_name: memberName, rating: null, absent: true
       }, { onConflict: 'group_id,week_start,member_name' });
       await loadMeetingRatings();
       renderTimer(c);
@@ -385,7 +406,7 @@ function renderTimer(c) {
   });
 
   c.querySelector('#concludeBtn')?.addEventListener('click', () => {
-    const vals = Object.values(memberRatings);
+    const vals = Object.values(memberRatings).filter(v => v != null);
     const avg = vals.length ? (vals.reduce((a, b) => a + b, 0) / vals.length).toFixed(1) : '—';
     alert(`Meeting concluded! Average rating: ${avg}/10`);
   });
@@ -405,7 +426,7 @@ async function renderScorecard(c) {
   const [{ data: metrics }, { data: entries }, { data: ratingsData }] = await Promise.all([
     db.from('scorecard_metrics').select('*').eq('group_id', GROUP.id).order('member_name').order('sort_order'),
     db.from('scorecard_entries').select('*').eq('group_id', GROUP.id).in('week_start', weeks),
-    db.from('meeting_ratings').select('week_start, member_name, rating').eq('group_id', GROUP.id).in('week_start', weeks).order('week_start', { ascending: false }),
+    db.from('meeting_ratings').select('week_start, member_name, rating, absent').eq('group_id', GROUP.id).in('week_start', weeks).order('week_start', { ascending: false }),
   ]);
 
   const mlist = (metrics || []).sort((a, b) => {
@@ -494,7 +515,7 @@ async function renderScorecard(c) {
               return `<tr>
                 <td class="sc-owner-cell">${m.member_name || ''}</td>
                 <td class="sc-name-cell">${m.name}${m.unit ? `<span class="sc-target"> · ${m.unit}</span>` : ''}</td>
-                <td class="sc-goal-cell">${isYN ? 'Yes/No' : m.target + (m.unit || '')}</td>
+                <td class="sc-goal-cell">${isYN ? 'Yes/No' : m.target + (m.unit ? ' ' + m.unit : '')}</td>
                 ${cells}
                 <td style="white-space:nowrap">
                   <button class="btn-icon sc-edit" data-editmetric="${m.id}" data-name="${m.name.replace(/"/g,'&quot;')}" data-owner="${(m.member_name||'').replace(/"/g,'&quot;')}" data-target="${m.target}" data-unit="${(m.unit||'').replace(/"/g,'&quot;')}" data-type="${m.metric_type || 'number'}">✎</button>
@@ -525,16 +546,18 @@ async function renderScorecard(c) {
               <tbody>
                 ${allWeeks.map(week => {
                   const weekRows = (ratingsData || []).filter(r => r.week_start === week);
-                  const vals = members.map(m => (weekRows.find(r => r.member_name === m) || {}).rating ?? null);
-                  const filled = vals.filter(v => v !== null);
-                  const avg = filled.length ? (filled.reduce((a, b) => a + b, 0) / filled.length).toFixed(1) : '—';
+                  const rows = members.map(m => weekRows.find(r => r.member_name === m) || null);
+                  const filled = rows.filter(r => r && r.rating != null);
+                  const avg = filled.length ? (filled.reduce((a, b) => a + b.rating, 0) / filled.length).toFixed(1) : '—';
                   const lbl = new Date(week + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
                   const isCurrent = week === getWeekStart();
                   return `<tr${isCurrent ? ' class="hist-row-current"' : ''}>
                     <td class="hist-week-lbl">${lbl}</td>
-                    ${vals.map(v => v !== null
-                      ? `<td class="hist-val" style="color:${v >= 8 ? '#9EA67C' : v >= 5 ? '#B07D4B' : '#c0392b'}">${v}</td>`
-                      : `<td class="hist-val hist-val--empty">—</td>`
+                    ${rows.map(r => r && r.absent
+                      ? `<td class="hist-val hist-val--absent">Absent</td>`
+                      : r && r.rating != null
+                        ? `<td class="hist-val" style="color:${r.rating >= 8 ? '#9EA67C' : r.rating >= 5 ? '#B07D4B' : '#c0392b'}">${r.rating}</td>`
+                        : `<td class="hist-val hist-val--empty">—</td>`
                     ).join('')}
                     <td class="hist-avg">${avg}</td>
                   </tr>`;
@@ -686,6 +709,7 @@ let editingRock       = null;
 let pendingMilestones = [];
 let rockReviewMode    = false;
 let reviewIndex       = 0;
+let showArchivedRocks = false;
 
 function msUrgency(dueDate, done) {
   if (done || !dueDate) return '';
@@ -725,12 +749,14 @@ async function renderRocks(c) {
     const bf = (b.owner || '').trim().split(/\s+/)[0].toLowerCase();
     return af.localeCompare(bf);
   });
+  const activeItems   = items.filter(r => !r.archived);
+  const archivedItems = items.filter(r => r.archived);
 
   const STATUS_COLORS = { on_track: '#3d6b38', off_track: '#b45309', complete: '#1d4ed8', dropped: '#4b5563' };
   const STATUS_LABELS = { on_track: 'On Track', off_track: 'Off Track', complete: 'Complete', dropped: 'Dropped' };
 
   // ── REVIEW MODE ────────────────────────────────────────────────────────────
-  const reviewRocks = items.filter(r => r.status !== 'complete' && r.status !== 'dropped');
+  const reviewRocks = activeItems.filter(r => r.status !== 'complete' && r.status !== 'dropped');
   if (rockReviewMode && reviewRocks.length > 0) {
     reviewIndex = Math.min(reviewIndex, reviewRocks.length - 1);
     const rock  = reviewRocks[reviewIndex];
@@ -805,19 +831,26 @@ async function renderRocks(c) {
   }
   // ── END REVIEW MODE ────────────────────────────────────────────────────────
 
+  const shownItems = showArchivedRocks ? archivedItems : activeItems;
+
   c.innerHTML = `
     <div class="list-wrap">
       <div class="list-toolbar">
-        <span class="list-count">${items.filter(r => r.status !== 'complete' && r.status !== 'dropped').length} active rocks</span>
+        <span class="list-count">${showArchivedRocks ? archivedItems.length + ' archived' : activeItems.filter(r => r.status !== 'complete' && r.status !== 'dropped').length + ' active rocks'}</span>
         <div style="display:flex;gap:8px">
-          ${reviewRocks.length > 0 ? `<button class="btn-sm btn-sm--review" id="startReviewBtn">▶ Review Mode</button>` : ''}
-          <button class="btn-sm btn-sm--bronze" id="addRockBtn">+ Add Rock</button>
+          ${showArchivedRocks ? `
+            <button class="btn-sm" id="backToActiveBtn">← Back to Active</button>
+          ` : `
+            ${reviewRocks.length > 0 ? `<button class="btn-sm btn-sm--review" id="startReviewBtn">▶ Review Mode</button>` : ''}
+            ${archivedItems.length > 0 ? `<button class="btn-sm" id="showArchivedBtn">🗄 Archived (${archivedItems.length})</button>` : ''}
+            <button class="btn-sm btn-sm--bronze" id="addRockBtn">+ Add Rock</button>
+          `}
         </div>
       </div>
 
       <div id="rocksList">
-        ${items.length === 0 ? '<p class="empty-state">No rocks yet. Add your first 90-day rock.</p>' : ''}
-        ${items.map(r => {
+        ${shownItems.length === 0 ? `<p class="empty-state">${showArchivedRocks ? 'No archived rocks.' : 'No rocks yet. Add your first 90-day rock.'}</p>` : ''}
+        ${shownItems.map(r => {
           const milestones = (r.milestones || []).sort((a,b) => new Date(a.due_date||0) - new Date(b.due_date||0));
           return `
           <div class="list-item" id="rock-${r.id}">
@@ -831,6 +864,9 @@ async function renderRocks(c) {
               </div>
               <div class="list-item-right">
                 <span class="status-badge" style="background:${STATUS_COLORS[r.status]}20;color:${STATUS_COLORS[r.status]};border:1px solid ${STATUS_COLORS[r.status]}40">${STATUS_LABELS[r.status]}</span>
+                ${showArchivedRocks
+                  ? `<button class="btn-icon rock-unarchive-btn" data-rockid="${r.id}" title="Unarchive rock">↩</button>`
+                  : `<button class="btn-icon rock-archive-btn" data-rockid="${r.id}" title="Archive rock">🗄</button>`}
                 <button class="btn-icon rock-edit-btn" data-rockid="${r.id}" title="Edit rock">✎</button>
                 <button class="btn-icon rock-delete-btn" data-rockid="${r.id}" data-rocktitle="${r.title.replace(/"/g,'&quot;')}" title="Delete rock" style="color:#a00;">✕</button>
                 <button class="btn-icon rock-expand" data-rockid="${r.id}">▾</button>
@@ -932,7 +968,13 @@ async function renderRocks(c) {
   document.getElementById('startReviewBtn')?.addEventListener('click', () => {
     rockReviewMode = true; reviewIndex = 0; renderRocks(c);
   });
-  document.getElementById('addRockBtn').addEventListener('click', () => {
+  document.getElementById('showArchivedBtn')?.addEventListener('click', () => {
+    showArchivedRocks = true; expandedRock = null; editingRock = null; renderRocks(c);
+  });
+  document.getElementById('backToActiveBtn')?.addEventListener('click', () => {
+    showArchivedRocks = false; expandedRock = null; editingRock = null; renderRocks(c);
+  });
+  document.getElementById('addRockBtn')?.addEventListener('click', () => {
     document.getElementById('addRockForm').classList.toggle('hidden');
   });
   document.getElementById('addPendingMsBtn')?.addEventListener('click', () => {
@@ -990,6 +1032,22 @@ async function renderRocks(c) {
     btn.addEventListener('click', async () => {
       if (!confirm(`Delete rock "${btn.dataset.rocktitle}"? This will also delete all its milestones.`)) return;
       await db.from('rocks').delete().eq('id', btn.dataset.rockid);
+      expandedRock = null; editingRock = null; addingMsForRock = null; editingMs = null;
+      renderRocks(c);
+    });
+  });
+
+  c.querySelectorAll('.rock-archive-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      await db.from('rocks').update({ archived: true }).eq('id', btn.dataset.rockid);
+      expandedRock = null; editingRock = null; addingMsForRock = null; editingMs = null;
+      renderRocks(c);
+    });
+  });
+
+  c.querySelectorAll('.rock-unarchive-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      await db.from('rocks').update({ archived: false }).eq('id', btn.dataset.rockid);
       expandedRock = null; editingRock = null; addingMsForRock = null; editingMs = null;
       renderRocks(c);
     });
@@ -1915,6 +1973,9 @@ style.textContent = `
   .rating-btn { width:38px; height:38px; border-radius:3px; border:1px solid var(--lt); background:transparent; color:var(--cream); font-size:.88rem; font-weight:700; cursor:pointer; transition:all .15s; font-family:'DM Sans',sans-serif; }
   .rating-btn:hover { border-color:var(--copper); color:var(--copper); }
   .rating-btn--active { background:var(--copper); border-color:var(--copper); color:var(--cream); }
+  .rating-btn--absent { width:auto; padding:0 12px; font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; }
+  .rating-btn--absent.rating-btn--active { background:var(--mid); border-color:var(--mid); }
+  .rating-btn[disabled] { opacity:.35; cursor:not-allowed; }
   .rating-saved { font-size:.75rem; color:var(--sage); font-style:italic; min-height:1.2em; }
   .rating-history-section { margin-top:24px; padding-top:16px; border-top:1px solid var(--lt); }
   .rating-history-label { font-size:.65rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--mid); margin-bottom:12px; }
@@ -1936,6 +1997,7 @@ style.textContent = `
   .hist-row-current .hist-week-lbl { color:var(--cream); font-weight:700; }
   .hist-val { font-family:'Barlow Condensed',sans-serif; font-size:.9rem; font-weight:700; }
   .hist-val--empty { color:var(--lt) !important; }
+  .hist-val--absent { color:var(--mid) !important; font-style:italic; font-size:.7rem; text-transform:uppercase; letter-spacing:.04em; }
   .hist-avg { font-family:'Barlow Condensed',sans-serif; font-size:.88rem; font-weight:700; color:var(--copper); }
 
   /* FILTER TABS */

@@ -39,11 +39,13 @@ create table if not exists rocks (
   due_date       date,
   status         text default 'on_track', -- on_track | off_track | complete | dropped
   goal_statement text,
+  archived       boolean default false,
   created_at     timestamptz default now()
 );
 
 -- If upgrading an existing database, run:
 -- alter table rocks add column if not exists goal_statement text;
+-- alter table rocks add column if not exists archived boolean not null default false;
 
 -- Milestones: checkpoints under each rock
 create table if not exists milestones (
@@ -80,6 +82,25 @@ create table if not exists vault_items (
   link_url    text,
   created_at  timestamptz default now()
 );
+
+-- Meeting ratings: weekly L10 rating per member
+create table if not exists meeting_ratings (
+  id          uuid    default gen_random_uuid() primary key,
+  group_id    text    not null,
+  member_name text    not null,
+  week_start  date    not null,
+  rating      int,
+  absent      boolean not null default false,
+  created_at  timestamptz default now(),
+  unique(group_id, week_start, member_name)
+);
+
+-- If upgrading an existing database, run:
+-- alter table meeting_ratings add column if not exists absent boolean not null default false;
+-- alter table meeting_ratings alter column rating drop not null;
+
+alter table meeting_ratings enable row level security;
+create policy "public access" on meeting_ratings for all using (true) with check (true);
 
 -- Prayer list: shared prayer requests per group
 create table if not exists prayer_items (
