@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — Cooper's Consulting</title>
+  <link rel="canonical" href="https://coopersconsulting.com/about.html">
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --dark-outline: #2C2416;
+      --brand-orange: #B8471E;
+      --brand-green:  #3C5A2B;
+      --cream:        #F2EBDA;
+      --rule:         rgba(44,36,22,0.12);
+      --muted:        rgba(44,36,22,0.70);
+    }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      background: var(--cream); color: var(--dark-outline);
+      font-family: 'EB Garamond', serif; line-height: 1.68;
+      font-variation-settings: 'wght' 410;
+      -webkit-font-smoothing: antialiased;
+    }
+    h1,h2 { font-family: 'Cinzel', serif; line-height: 1.12; font-weight: 600; letter-spacing: 0.04em; }
+
+    .back-nav {
+      padding: 24px 5vw; display: flex; align-items: center;
+    }
+    .back-nav a {
+      font-family: 'Cinzel', serif; font-size: .8125rem; font-weight: 500;
+      letter-spacing: .07em; text-transform: uppercase;
+      color: var(--brand-orange); text-decoration: none;
+    }
+    .back-nav a:hover { color: var(--dark-outline); }
+
+    .about { max-width: 980px; margin: 0 auto; padding: 2rem 5vw 5rem; display: grid; grid-template-columns: 1fr 1px 1.4fr; gap: 0 4rem; }
+    .about-left { display: flex; flex-direction: column; gap: 1.875rem; }
+    h1.about-name { font-size: clamp(2rem,3vw,3rem); line-height: 1.08; }
+    .about-name .name-o   { color: var(--brand-orange); }
+    .about-name .name-sub { display: block; margin-top: .25rem; font-size: .45em; color: var(--brand-green); letter-spacing: .05em; }
+    .about-rule { width: 30px; height: 2px; background: var(--brand-orange); }
+    .about-photo-wrap { position: relative; display: flex; flex-direction: column; gap: 1rem; }
+    .about-photo {
+      display: block; width: 100%;
+      border: 1px solid rgba(44,36,22,.18);
+      box-shadow: 4px 6px 20px rgba(0,0,0,.22), 2px 2px 6px rgba(0,0,0,.14);
+      filter: sepia(.08) contrast(1.04);
+    }
+    .about-photo.vintage { filter: sepia(.22) contrast(1.06) brightness(.96); }
+    .about-photo-pair { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; align-items: end; }
+    .about-vdivider { background: var(--rule); }
+    .about-right { display: flex; flex-direction: column; gap: 2.375rem; }
+    .fact { display: flex; flex-direction: column; gap: .45rem; }
+    .fact-body  { font-size: .9375rem; color: var(--dark-outline); line-height: 1.72; }
+    .about-link { color: var(--brand-orange); text-decoration: none; border-bottom: 1px solid rgba(184,71,30,.35); }
+    .about-link:hover { border-bottom-color: var(--brand-orange); }
+
+    @media (max-width: 767px) {
+      .about { grid-template-columns: 1fr; gap: 2rem 0; }
+      .about-vdivider { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="back-nav">
+  <a href="index.html">← Cooper's Consulting</a>
+</div>
+
+<section class="about">
+  <div class="about-left">
+    <h1 class="about-name">Dale <span class="name-o">Cooper</span><span class="name-sub">&amp; his son, Joel</span></h1>
+    <div class="about-rule" aria-hidden="true"></div>
+    <div class="about-photo-wrap">
+      <img class="about-photo vintage" src="images/cc-dale-joel-vintage.jpg" alt="Dale and Joel Cooper"/>
+      <div class="about-photo-pair">
+        <img class="about-photo" src="images/cc-dale-headshot.jpg" alt="Dale Cooper"/>
+        <img class="about-photo" src="images/cc-joel-podium.jpg" alt="Joel Cooper"/>
+      </div>
+    </div>
+  </div>
+  <div class="about-vdivider" aria-hidden="true"></div>
+  <div class="about-right">
+    <div class="fact">
+      <p class="fact-body">We bring a unique lens to how organizations operate and improve. Our perspective is shaped by a mix of experience across generations, but more importantly by what has been built, tested, and refined in real businesses. Dale's work in the <a href="https://safeslides.com" target="_blank" rel="noopener" class="about-link">waterslide restoration industry</a>, along with his recent acquisition of a <a href="https://cherrywoodgolf.com" target="_blank" rel="noopener" class="about-link">golf course</a>, led to the development of a disciplined R&amp;D process focused on how organizations actually function.</p>
+    </div>
+    <div class="fact">
+      <p class="fact-body">Ideas were tested against reality. What failed was removed. What worked was kept and strengthened. The result is a practical set of tools that can be applied, adapted, and scaled.</p>
+    </div>
+    <div class="fact">
+      <p class="fact-body">Our approach is grounded in timeless principles such as integrity, humility, and personal responsibility. At the same time, we stay current with the rapid changes driven by AI and emerging technologies.</p>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>
